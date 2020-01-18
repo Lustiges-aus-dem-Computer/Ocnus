@@ -1,9 +1,9 @@
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:oknos/services/local_id_generator.dart';
+import 'package:ocnus/services/local_id_generator.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:oknos/services/definitions.dart';
+import 'package:ocnus/services/definitions.dart';
 
 void main() {
   Logger.level = Level.debug;

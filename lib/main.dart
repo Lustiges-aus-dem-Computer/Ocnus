@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:oknos/services/localization.dart';
+import 'package:ocnus/services/localization.dart';
 import 'package:hive/hive.dart';
-import 'package:oknos/business_logic/category.dart';
+import 'package:ocnus/business_logic/category.dart';
 
 void main() async {
   Hive.registerAdapter(CategoryAdapter());

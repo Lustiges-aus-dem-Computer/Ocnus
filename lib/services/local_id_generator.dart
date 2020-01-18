@@ -1,7 +1,7 @@
 //Generates temporary IDs in case the server cannot be reached
 import 'dart:math';
 import 'logger.dart';
-import 'package:oknos/services/definitions.dart';
+import 'package:ocnus/services/definitions.dart';
 
 class LocalIdGenerator{
   final log = getLogger();

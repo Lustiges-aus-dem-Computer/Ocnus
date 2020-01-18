@@ -1,9 +1,9 @@
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:oknos/services/database_manager.dart';
-import 'package:oknos/business_logic/repository.dart';
-import 'package:oknos/business_logic/category.dart';
+import 'package:ocnus/services/database_manager.dart';
+import 'package:ocnus/business_logic/repository.dart';
+import 'package:ocnus/business_logic/category.dart';
 
 class MockManager extends Mock implements DatabaseManager {}
 

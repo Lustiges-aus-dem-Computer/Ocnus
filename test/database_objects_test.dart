@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:oknos/business_logic/category.dart';
-import 'package:oknos/services/definitions.dart';
+import 'package:ocnus/business_logic/category.dart';
+import 'package:ocnus/services/definitions.dart';
 
 void main() {
   Logger.level = Level.debug;

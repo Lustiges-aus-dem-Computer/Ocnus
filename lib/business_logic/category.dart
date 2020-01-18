@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:oknos/services/local_id_generator.dart';
-import 'package:oknos/services/definitions.dart';
-import 'package:oknos/services/logger.dart';
+import 'package:ocnus/services/local_id_generator.dart';
+import 'package:ocnus/services/definitions.dart';
+import 'package:ocnus/services/logger.dart';
 
 part 'category.g.dart';
 

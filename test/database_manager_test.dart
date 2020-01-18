@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:oknos/business_logic/category.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ocnus/business_logic/category.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:oknos/services/database_manager.dart';
+import 'package:ocnus/services/database_manager.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

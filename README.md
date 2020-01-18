@@ -1,3 +1,3 @@
-# oknos
+# Ocnus
 
-Oknos offers tools for businesses renting differnt types of items. It was developed for costume tentals but can be easily extended to suit other purposes.
+Ocnus offers tools for businesses renting differnt types of items. It was developed for costume tentals but can be easily extended to suit other purposes.

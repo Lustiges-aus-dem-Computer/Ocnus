@@ -1,4 +1,4 @@
-package com.example.oknos
+package com.example.ocnus
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

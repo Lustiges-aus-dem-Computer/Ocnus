@@ -1,0 +1,30 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test-frontend:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      #Dart/Flutter package analyzer
+      - name: Dart Analysis
+        uses: axel-op/dart-package-analyzer/with-full-sdk@stable
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          minAnnotationLevel: info
+      #Set-Up enviorment
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+    #Run Flutter Tests
+      - run: flutter pub get
+      - run: flutter test --coverage
+      #CodeCov
+      - name: CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+          fail_ci_if_error: true

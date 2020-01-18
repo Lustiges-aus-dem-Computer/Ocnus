@@ -1,6 +1,6 @@
-import 'package:oknos/services/database_manager.dart';
-import 'package:oknos/services/logger.dart';
-import 'package:oknos/business_logic/category.dart';
+import 'package:ocnus/services/database_manager.dart';
+import 'package:ocnus/services/logger.dart';
+import 'package:ocnus/business_logic/category.dart';
 import 'category.dart';
 import 'dart:async';
 

@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
-import 'package:oknos/business_logic/category.dart';
+import 'package:ocnus/business_logic/category.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:oknos/services/local_id_generator.dart';
+import 'package:ocnus/services/local_id_generator.dart';
 
 abstract class DatabaseManager{
   Future<void> initialize();
