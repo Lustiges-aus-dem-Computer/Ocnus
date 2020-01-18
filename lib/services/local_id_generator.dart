@@ -10,9 +10,9 @@ class LocalIdGenerator{
   int entropy;
   static const String _base36 = '0123456789abcdefghijklmnopqrstuvwxyz';
   @visibleForTesting
-  int randomNumber;
+  int randomKeyIndex;
 
-  LocalIdGenerator({this.keyLength = 4, this.randomNumber}){
+  LocalIdGenerator({this.keyLength = 4, this.randomKeyIndex}){
     rng = new Random();
     // Number of possible keys of length this.keyLength
     // using only digits and lower-case letters is
@@ -21,15 +21,14 @@ class LocalIdGenerator{
   }
 
   String getId(){
-    int randInt  = randomNumber ?? rng.nextInt(entropy);
+    randomKeyIndex ??= rng.nextInt(entropy);
     int powerOf36;
     String _id = '';
     for(int i=0; i<keyLength; i++){
       powerOf36 = pow(36,(keyLength - i - 1));
-      _id += _base36[randInt ~/ powerOf36];
-      randInt = randInt % powerOf36;
+      _id += _base36[randomKeyIndex ~/ powerOf36];
+      randomKeyIndex = randomKeyIndex % powerOf36;
     }
-    _id = _id.split('').reversed.join();
     log.d('Generated local id $_id');
     return _id;
   }

@@ -1,27 +1,33 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:oknos/services/local_id_generator.dart';
 
-class Category extends Equatable{
-  final bool active;
-  final String id, title, location;
-  final Color color;
-  final DateTime _created, _modified;
+class Category{
+  bool active;
+  String id, title, location;
+  Color color;
+  DateTime created, modified;
+
+  // Two categories are equal if they have the same id
+  @override
+  bool operator ==(Object other) => other is Category && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;  
 
   Category(
-    {
-      this.color,
-      this.title = '',
-      this.location = '',
+    { 
+      @required this.color,
+      @required this.title,
+      @required this.location,
       this.active = true,
-      String note,
       String id,
       DateTime created, 
       DateTime modified,
     }) : this.id = id ?? LocalIdGenerator().getId(), 
-    this._created = created ?? DateTime.now(),
-    this._modified = modified ?? DateTime.now();
+    this.created = created ?? DateTime.now(),
+    this.modified = modified ?? DateTime.now();
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [active, id, title, location, color, created, modified];
 }
