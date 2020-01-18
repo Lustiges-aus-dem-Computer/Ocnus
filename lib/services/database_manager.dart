@@ -38,12 +38,12 @@ class HiveManager implements DatabaseManager{
 
   @override
   Future<List<Category>> getCategories() async{
-    var _categoryList = [];
+    var _categoryList = <Category>[];
     for(int _id in categoryCageBox.keys.toList()){
       _idGenerator.keyIndex = _id;
       _categoryList.add(categoryCageBox.get(_id));
     }
-    return _categoryList as Future<List<Category>>;
+    return await _categoryList;
   }
 
   @override
