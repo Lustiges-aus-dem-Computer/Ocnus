@@ -8,7 +8,6 @@ abstract class DatabaseManager{
   Future<void> dismiss();
   Future<List<Category>> getCategories();
   Future<void> putCategories(List<Category> _categoryList);
-  Future<void> deleteCategories(List<Category> _categoryList);
 }
 
 class HiveManager implements DatabaseManager{
@@ -42,14 +41,6 @@ class HiveManager implements DatabaseManager{
   Future<void> putCategories(List<Category> _categoryList) async{
     for(Category _category in _categoryList){
       categoryCageBox.put(_category.hiveId, _category);
-    }
-    return;
-  }
-
-  @override
-  Future<void> deleteCategories(List<Category> _categoryList) async{
-    for(Category _category in _categoryList){
-      categoryCageBox.delete(_category.hiveId);
     }
     return;
   }

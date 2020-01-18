@@ -13,8 +13,6 @@ void main() {
   Logger.level = Level.debug;
   Hive.registerAdapter(CategoryAdapter());
 
-  Icon icon = Icon(FontAwesomeIcons.blender);
-
     Category testCat = new Category(
         color: 'black',
         title: 'Some Title',
@@ -61,16 +59,6 @@ void main() {
       expect(_readCats[0].title, testCat.title);
       expect(_readCats[0].color, testCat.color);
       expect(_readCats[0].icon, testCat.icon);
-      await _hiveManager.dismiss();
-    });
-
-    test('Delete entry from box', () async {
-      HiveManager _hiveManager = new HiveManager();
-      await _hiveManager.initialize();
-      await _hiveManager.putCategories([testCat]);
-      await _hiveManager.deleteCategories([testCat]);
-      List<Category> _readCats = await _hiveManager.getCategories();
-      expect(_readCats.length, 0);
       await _hiveManager.dismiss();
     });
   });
