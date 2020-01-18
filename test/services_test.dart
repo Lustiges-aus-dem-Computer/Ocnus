@@ -11,10 +11,9 @@ void main() {
   group('Services', () {
     test('Get Icons by Name', () async {
       expect(() => getIconByName('kjbsdciugcsd'), throwsException);
-      for(var _icon in availableIcons){
-        expect(getIconByName(_icon,
-        color: Colors.white).color, Colors.white);
-        }
+      for (var _icon in availableIcons) {
+        expect(getIconByName(_icon, color: Colors.white).color, Colors.white);
+      }
     });
     test('Get Colors by Name', () async {
       expect(() => getColorByName('kjbsdciugcsd'), throwsException);
@@ -25,18 +24,18 @@ void main() {
 
   group('Local Id Generator', () {
     test('Create new ID', () async {
-    var _localIdGen = LocalIdGenerator(keyIndex: 526177, keyLength: 4);
-    expect(_localIdGen.getId(), 'ba01');
-    _localIdGen = LocalIdGenerator(keyIndex: 0);
-    expect(_localIdGen.getId(), '0000');
-    _localIdGen = LocalIdGenerator(keyIndex: 1);
-    expect(_localIdGen.getId(), '0001');
-    _localIdGen = LocalIdGenerator(keyIndex: pow(36, 4) - 1);
-    expect(_localIdGen.getId(), 'zzzz');
-    _localIdGen = LocalIdGenerator(keyIndex: 119376);
-    expect(_localIdGen.getId(), '2k40');
-    _localIdGen = LocalIdGenerator(keyLength: 8, keyIndex: pow(36, 8) - 2);
-    expect(_localIdGen.getId(), 'zzzzzzzy');
+      var _localIdGen = LocalIdGenerator(keyIndex: 526177, keyLength: 4);
+      expect(_localIdGen.getId(), 'ba01');
+      _localIdGen = LocalIdGenerator(keyIndex: 0);
+      expect(_localIdGen.getId(), '0000');
+      _localIdGen = LocalIdGenerator(keyIndex: 1);
+      expect(_localIdGen.getId(), '0001');
+      _localIdGen = LocalIdGenerator(keyIndex: pow(36, 4) - 1);
+      expect(_localIdGen.getId(), 'zzzz');
+      _localIdGen = LocalIdGenerator(keyIndex: 119376);
+      expect(_localIdGen.getId(), '2k40');
+      _localIdGen = LocalIdGenerator(keyLength: 8, keyIndex: pow(36, 8) - 2);
+      expect(_localIdGen.getId(), 'zzzzzzzy');
     });
 
     test('Hive ID', () async {

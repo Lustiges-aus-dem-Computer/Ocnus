@@ -6,14 +6,15 @@ final _log = getLogger();
 
 /// Length of the keys which are menat for human consumption
 const int humanKeyLength = 4;
+
 /// List of icons available within the app
 const List<String> availableIcons = ['blender', 'yinYang'];
-/// List of colors available within the app
-const List<String> availableColors= ['black', 'white'];
 
+/// List of colors available within the app
+const List<String> availableColors = ['black', 'white'];
 
 /// Retrieve a color by a name-string
-Color getColorByName(String _name){
+Color getColorByName(String _name) {
   switch (_name) {
     case 'black':
       return Colors.black;
@@ -22,14 +23,14 @@ Color getColorByName(String _name){
       return Colors.white;
       break;
     default:
-    _log.e('Unknown color $_name requested'
-    'add it to the list of supported colors?');
-    throw Exception('Unknown icon name');
+      _log.e('Unknown color $_name requested'
+          'add it to the list of supported colors?');
+      throw Exception('Unknown icon name');
   }
 }
 
 /// Retrieve an icon by a name-string
-Icon getIconByName(String _name, {Color color = Colors.black}){
+Icon getIconByName(String _name, {Color color = Colors.black}) {
   switch (_name) {
     case 'blender':
       return Icon(FontAwesomeIcons.blender, color: color);
@@ -38,8 +39,8 @@ Icon getIconByName(String _name, {Color color = Colors.black}){
       return Icon(FontAwesomeIcons.yinYang, color: color);
       break;
     default:
-    _log.e('Unknown icon $_name requested'
-    'add it to the list of supported icons?');
-    throw Exception('Unknown icon name');
+      _log.e('Unknown icon $_name requested'
+          'add it to the list of supported icons?');
+      throw Exception('Unknown icon name');
   }
 }

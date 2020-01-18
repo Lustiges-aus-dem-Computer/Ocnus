@@ -11,30 +11,30 @@ void main() {
   Logger.level = Level.debug;
   Hive.registerAdapter(CategoryAdapter());
 
-    var testCat = Category(
-        color: 'black',
-        title: 'Some Title',
-        icon: 'blender',
-        location: 'Behind the cat',
-      );
+  var testCat = Category(
+    color: 'black',
+    title: 'Some Title',
+    icon: 'blender',
+    location: 'Behind the cat',
+  );
 
   setUpAll(() async {
-  // Create a temporary directory.
-  final directory = await Directory.systemTemp.createTemp();
+    // Create a temporary directory.
+    final directory = await Directory.systemTemp.createTemp();
 
-  // Mock out the MethodChannel for the path_provider plugin.
-  const MethodChannel('plugins.flutter.io/path_provider')
-      .setMockMethodCallHandler((var methodCall) async {
-    // If you're getting the apps documents directory, return the path to the
-    // temp directory on the test environment instead.
-    if (methodCall.method == 'getApplicationDocumentsDirectory') {
-      return directory.path;
-    }
-    return null;
+    // Mock out the MethodChannel for the path_provider plugin.
+    const MethodChannel('plugins.flutter.io/path_provider')
+        .setMockMethodCallHandler((var methodCall) async {
+      // If you're getting the apps documents directory, return the path to the
+      // temp directory on the test environment instead.
+      if (methodCall.method == 'getApplicationDocumentsDirectory') {
+        return directory.path;
+      }
+      return null;
+    });
   });
-});
 
-  group('Hive', (){
+  group('Hive', () {
     test('Open and close box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();

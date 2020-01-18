@@ -6,17 +6,15 @@ import 'package:ocnus/services/definitions.dart';
 void main() {
   Logger.level = Level.debug;
 
-  group('Categry', (){
-
+  group('Categry', () {
     var testCat = Category(
-        color: 'black',
-        title: 'Some Title',
-        icon: 'blender',
-        location: 'Behind the cat',
-      );
-      
-    test('Create new Category', () async {
+      color: 'black',
+      title: 'Some Title',
+      icon: 'blender',
+      location: 'Behind the cat',
+    );
 
+    test('Create new Category', () async {
       var _now = DateTime.now();
 
       expect(testCat.color, 'black');
@@ -28,13 +26,14 @@ void main() {
       expect(testCat.created.isBefore(_now), true);
       expect(testCat.modified.isBefore(_now), true);
 
-      expect(() => Category(
-        color: 'black',
-        title: 'Some Title',
-        location: 'Behind the cat',
-        icon: 'blender',
-        id: '1'*(humanKeyLength+1)),
-        throwsException);
+      expect(
+          () => Category(
+              color: 'black',
+              title: 'Some Title',
+              location: 'Behind the cat',
+              icon: 'blender',
+              id: '1' * (humanKeyLength + 1)),
+          throwsException);
     });
 
     test('Change Category', () async {

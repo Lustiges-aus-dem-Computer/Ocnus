@@ -11,8 +11,10 @@ enum AppTexts {
 /// Class for handling localizations in the app
 class FlutterBlocLocalizations {
   final _log = getLogger();
+
   /// Localizer
   final Locale locale;
+
   /// Constructor taking the localizer instance
   FlutterBlocLocalizations(this.locale);
 
@@ -26,18 +28,18 @@ class FlutterBlocLocalizations {
 
   static final Map<String, Map<AppTexts, String>> _localizedValues = {
     'en': {
-        AppTexts.appTitle: 'Oknos',
-      },
+      AppTexts.appTitle: 'Oknos',
+    },
     'de': {
-        AppTexts.appTitle: 'Oknos',
-      },
+      AppTexts.appTitle: 'Oknos',
+    },
   };
 
   /// Return the title of the app
-  String get appTitle{
+  String get appTitle {
     _log.d('Returning texts for language: ', locale.languageCode);
     return _localizedValues[locale.languageCode][AppTexts.appTitle];
-    }
+  }
 }
 
 /// Delegate handling construction of FlutterBlocLocalization instances
@@ -52,8 +54,8 @@ class FlutterBlocLocalizationsDelegate
 
   // We currently support both english and german
   @override
-  bool isSupported(Locale locale){
-    return locale.languageCode.toLowerCase().contains('de')
-    || locale.languageCode.toLowerCase().contains('en');
+  bool isSupported(Locale locale) {
+    return locale.languageCode.toLowerCase().contains('de') ||
+        locale.languageCode.toLowerCase().contains('en');
   }
 }
