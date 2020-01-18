@@ -1,7 +1,7 @@
+import 'dart:math';
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ocnus/services/local_id_generator.dart';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ocnus/services/definitions.dart';
 
@@ -17,7 +17,7 @@ void main() {
 
   group('Local Id Generator', () {
     test('Create new ID', () async {
-    LocalIdGenerator _localIdGen = LocalIdGenerator(keyIndex: 526177, keyLength: 4);
+    var _localIdGen = LocalIdGenerator(keyIndex: 526177, keyLength: 4);
     expect(_localIdGen.getId(), 'ba01');
     _localIdGen = LocalIdGenerator(keyIndex: 0);
     expect(_localIdGen.getId(), '0000');
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('Hive ID', () async {
-      LocalIdGenerator _localIdGen = LocalIdGenerator(keyLength: 4);
+      var _localIdGen = LocalIdGenerator(keyLength: 4);
       expect(_localIdGen.getHiveId('ba01'), 526177);
       expect(_localIdGen.getHiveId('0000'), 0);
       expect(_localIdGen.getHiveId('0001'), 1);

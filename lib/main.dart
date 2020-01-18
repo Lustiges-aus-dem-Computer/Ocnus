@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ocnus/services/localization.dart';
 import 'package:hive/hive.dart';
-import 'package:ocnus/business_logic/category.dart';
+import 'business_logic/category.dart';
+import 'services/localization.dart';
 
 void main() async {
   Hive.registerAdapter(CategoryAdapter());
   runApp(Oknos());
   }
 
+/// Main class of the app
 class Oknos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

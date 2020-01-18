@@ -8,7 +8,7 @@ void main() {
 
   group('Categry', (){
 
-    Category testCat = new Category(
+    var testCat = Category(
         color: 'black',
         title: 'Some Title',
         icon: 'blender',
@@ -17,7 +17,7 @@ void main() {
       
     test('Create new Category', () async {
 
-      DateTime _now = DateTime.now();
+      var _now = DateTime.now();
 
       expect(testCat.color, 'black');
       expect(testCat.title, 'Some Title');
@@ -28,17 +28,17 @@ void main() {
       expect(testCat.created.isBefore(_now), true);
       expect(testCat.modified.isBefore(_now), true);
 
-      expect(() => new Category(
+      expect(() => Category(
         color: 'black',
         title: 'Some Title',
         location: 'Behind the cat',
         icon: 'blender',
-        id: '1'*(globalKeyLength+1)),
+        id: '1'*(humanKeyLength+1)),
         throwsException);
     });
 
     test('Change Category', () async {
-      DateTime _now = DateTime.now();
+      var _now = DateTime.now();
 
       await Future.delayed(Duration(milliseconds: 50));
 

@@ -10,13 +10,13 @@ class MockManager extends Mock implements DatabaseManager {}
 
 void main() {
   Logger.level = Level.debug;
-  Category testCatLocal = new Category(
+  var testCatLocal = Category(
         color: 'black',
         title: 'Some Title',
         icon: 'blender',
         location: 'Local',
       );
-  Category testCatRemote = new Category(
+  var testCatRemote = Category(
         color: 'black',
         title: 'Some Title',
         icon: 'blender',
@@ -25,28 +25,41 @@ void main() {
 
   group('Category Repository', () {
     var mockManagerLocal = MockManager();
-    when(mockManagerLocal.putCategories([testCatLocal])).thenAnswer((_) => Future.value());
-    when(mockManagerLocal.getCategories()).thenAnswer((_) => Future.value([testCatLocal]));
+    when(mockManagerLocal.putCategories([testCatLocal]))
+    .thenAnswer((_) => Future.value());
+    
+    when(mockManagerLocal.getCategories())
+    .thenAnswer((_) => Future.value([testCatLocal]));
+
     var mockManagerRemote = MockManager();
-    when(mockManagerRemote.putCategories([testCatRemote])).thenAnswer((_) => Future.value());
-    when(mockManagerRemote.getCategories()).thenAnswer((_) => Future.value([testCatRemote]));
+    when(mockManagerRemote.putCategories([testCatRemote]))
+    .thenAnswer((_) => Future.value());
+
+    when(mockManagerRemote.getCategories())
+    .thenAnswer((_) => Future.value([testCatRemote]));
+
     test('Create Category Repository', () async {
       expect(() => CategoryRepository(), throwsException);
     });
     test('Save to Category Repository', () async {
-      CategoryRepository _repository = CategoryRepository(localDatabaseManager: mockManagerLocal, remoteDatabaseManager: mockManagerRemote);
+      var _repository = CategoryRepository(
+        localDatabaseManager: mockManagerLocal, 
+        remoteDatabaseManager: mockManagerRemote);
 
       await _repository.saveCategories([testCatLocal]);
     });
     test('Get Data from local Category Repository', () async {
-      CategoryRepository _repository = CategoryRepository(localDatabaseManager: mockManagerLocal);
+      var _repository = CategoryRepository(
+        localDatabaseManager: mockManagerLocal);
       await _repository.saveCategories([testCatLocal]);
       expect(await _repository.loadCategories(), [testCatLocal]);
     });
     test('Get Data from remote Category Repository', () async {
-      CategoryRepository _repository = CategoryRepository(remoteDatabaseManager: mockManagerRemote);
+      var _repository = CategoryRepository(
+        remoteDatabaseManager: mockManagerRemote);
       await _repository.saveCategories([testCatRemote]);
-      expect(() async => await _repository.loadCategories(remote: false), throwsException);
+      expect(() async => 
+      await _repository.loadCategories(remote: false), throwsException);
       expect(await _repository.loadCategories(remote: true), [testCatRemote]);
     });
   });

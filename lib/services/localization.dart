@@ -2,15 +2,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'logger.dart';
 
+/// List of possivle app-texts
 enum AppTexts {
-  AppTitle
+  /// Name of the app
+  appTitle
 }
 
+/// Class for handling localizations in the app
 class FlutterBlocLocalizations {
-  final log = getLogger();
+  final _log = getLogger();
+  /// Localizer
   final Locale locale;
+  /// Constructor taking the localizer instance
   FlutterBlocLocalizations(this.locale);
 
+  /// Returns the localizer based on the BuildContext
   static FlutterBlocLocalizations of(BuildContext context) {
     return Localizations.of<FlutterBlocLocalizations>(
       context,
@@ -18,21 +24,23 @@ class FlutterBlocLocalizations {
     );
   }
 
-  static Map<String, Map<AppTexts, String>> _localizedValues = {
+  static final Map<String, Map<AppTexts, String>> _localizedValues = {
     'en': {
-        AppTexts.AppTitle: 'Oknos',
+        AppTexts.appTitle: 'Oknos',
       },
     'de': {
-        AppTexts.AppTitle: 'Oknos',
+        AppTexts.appTitle: 'Oknos',
       },
   };
 
+  /// Return the title of the app
   String get appTitle{
-    log.d('Returning texts for language: ' + locale.languageCode);
-    return _localizedValues[locale.languageCode][AppTexts.AppTitle];
+    _log.d('Returning texts for language: ', locale.languageCode);
+    return _localizedValues[locale.languageCode][AppTexts.appTitle];
     }
 }
 
+/// Delegate handling construction of FlutterBlocLocalization instances
 class FlutterBlocLocalizationsDelegate
     extends LocalizationsDelegate<FlutterBlocLocalizations> {
   @override

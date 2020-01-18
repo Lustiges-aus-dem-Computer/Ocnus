@@ -11,7 +11,7 @@ void main() {
   Logger.level = Level.debug;
   Hive.registerAdapter(CategoryAdapter());
 
-    Category testCat = new Category(
+    var testCat = Category(
         color: 'black',
         title: 'Some Title',
         icon: 'blender',
@@ -24,7 +24,7 @@ void main() {
 
   // Mock out the MethodChannel for the path_provider plugin.
   const MethodChannel('plugins.flutter.io/path_provider')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+      .setMockMethodCallHandler((var methodCall) async {
     // If you're getting the apps documents directory, return the path to the
     // temp directory on the test environment instead.
     if (methodCall.method == 'getApplicationDocumentsDirectory') {
@@ -36,23 +36,23 @@ void main() {
 
   group('Hive', (){
     test('Open and close box', () async {
-      HiveManager _hiveManager = new HiveManager();
+      var _hiveManager = HiveManager();
       await _hiveManager.initialize();
       await _hiveManager.dismiss();
     });
 
     test('Write to box', () async {
-      HiveManager _hiveManager = new HiveManager();
+      var _hiveManager = HiveManager();
       await _hiveManager.initialize();
       await _hiveManager.putCategories([testCat]);
       await _hiveManager.dismiss();
     });
 
     test('Read from box', () async {
-      HiveManager _hiveManager = new HiveManager();
+      var _hiveManager = HiveManager();
       await _hiveManager.initialize();
       await _hiveManager.putCategories([testCat]);
-      List<Category> _readCats = await _hiveManager.getCategories();
+      var _readCats = await _hiveManager.getCategories();
       expect(_readCats[0].id, testCat.id);
       expect(_readCats[0].title, testCat.title);
       expect(_readCats[0].color, testCat.color);
