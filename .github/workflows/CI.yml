@@ -8,19 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      #Dart/Flutter package analyzer
-      - name: Dart Analysis
-        uses: axel-op/dart-package-analyzer/with-full-sdk@stable
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          minAnnotationLevel: info
       #Set-Up enviorment
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '1.12.x'
           channel: 'dev'
     #Run Flutter Tests
-      - run: sudo chown -R *
+      - run: sudo chmod 777 -R *
       - run: flutter pub get
       - run: flutter test --coverage
       #CodeCov
@@ -30,3 +23,9 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage/lcov.info
           fail_ci_if_error: true
+      #Dart/Flutter package analyzer
+      - name: Dart Analysis
+        uses: axel-op/dart-package-analyzer/with-full-sdk@stable
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          minAnnotationLevel: info
