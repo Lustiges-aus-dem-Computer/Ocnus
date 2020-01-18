@@ -43,7 +43,7 @@ class HiveManager implements DatabaseManager{
       _idGenerator.keyIndex = _id;
       _categoryList.add(categoryCageBox.get(_id));
     }
-    return _categoryList;
+    return _categoryList as Future<List<Category>>;
   }
 
   @override

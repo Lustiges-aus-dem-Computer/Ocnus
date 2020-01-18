@@ -35,8 +35,6 @@ void main() {
 });
 
   group('Hive', (){
-    List<Category> _readCats;
-    
     test('Open and close box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
@@ -54,7 +52,7 @@ void main() {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
       await _hiveManager.putCategories([testCat]);
-      _readCats = await _hiveManager.getCategories();
+      List<dynamic> _readCats = await _hiveManager.getCategories();
       expect(_readCats[0].id, testCat.id);
       expect(_readCats[0].title, testCat.title);
       expect(_readCats[0].color, testCat.color);
