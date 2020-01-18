@@ -43,7 +43,13 @@ void main() {
       await Future.delayed(Duration(milliseconds: 50));
 
       testCat.title = 'New Title';
+      testCat.icon = 'yinYang';
+      testCat.color = 'white';
+      testCat.active = false;
       expect(testCat.title, 'New Title');
+      expect(testCat.icon, 'yinYang');
+      expect(testCat.color, 'white');
+      expect(testCat.active, false);
       expect(testCat.modified.isAfter(_now), true);
     });
   });

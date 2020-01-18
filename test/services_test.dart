@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ocnus/services/local_id_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:ocnus/services/definitions.dart';
+import 'package:ocnus/services/local_id_generator.dart';
 
 void main() {
   Logger.level = Level.debug;
@@ -11,7 +11,15 @@ void main() {
   group('Services', () {
     test('Get Icons by Name', () async {
       expect(() => getIconByName('kjbsdciugcsd'), throwsException);
-      expect(getIconByName('blender', color: Colors.white).color, Colors.white);
+      for(var _icon in availableIcons){
+        expect(getIconByName(_icon,
+        color: Colors.white).color, Colors.white);
+        }
+    });
+    test('Get Colors by Name', () async {
+      expect(() => getColorByName('kjbsdciugcsd'), throwsException);
+      expect(getColorByName('black'), Colors.black);
+      expect(getColorByName('white'), Colors.white);
     });
   });
 

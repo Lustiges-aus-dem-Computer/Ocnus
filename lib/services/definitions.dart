@@ -6,6 +6,11 @@ final _log = getLogger();
 
 /// Length of the keys which are menat for human consumption
 const int humanKeyLength = 4;
+/// List of icons available within the app
+const List<String> availableIcons = ['blender', 'yinYang'];
+/// List of colors available within the app
+const List<String> availableColors= ['black', 'white'];
+
 
 /// Retrieve a color by a name-string
 Color getColorByName(String _name){
@@ -28,6 +33,9 @@ Icon getIconByName(String _name, {Color color = Colors.black}){
   switch (_name) {
     case 'blender':
       return Icon(FontAwesomeIcons.blender, color: color);
+      break;
+    case 'yinYang':
+      return Icon(FontAwesomeIcons.yinYang, color: color);
       break;
     default:
     _log.e('Unknown icon $_name requested'
