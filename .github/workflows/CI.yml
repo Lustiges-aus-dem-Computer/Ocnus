@@ -17,9 +17,10 @@ jobs:
       #Set-Up enviorment
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          flutter-version: '1.12.x'
+          channel: 'dev'
     #Run Flutter Tests
-      - run: sudo flutter pub get
+      - run: flutter pub get
       - run: flutter test --coverage
       #CodeCov
       - name: CodeCov
