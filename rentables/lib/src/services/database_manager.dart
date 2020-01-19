@@ -55,10 +55,6 @@ class HiveManager implements DatabaseManager {
   Future<void> initialize() async {
     _log.d('Initializing Hive database manager');
     await Hive.initFlutter();
-    /// Note: as these boxes are not lazy, they need to be opened in hirarchical
-    /// order, otherwise things will go wrong when Hive tries to create the
-    /// items in the boxes. If the data model becomes more complex, we might
-    /// consider switching-over to lazy boxes
     _log.d('Opening category box');
     categoryCageBox = await Hive.openBox<Category>('categoryCageBox');
     _log.d('Opening item box');
