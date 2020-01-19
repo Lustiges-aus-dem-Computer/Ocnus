@@ -3,8 +3,8 @@ name: CI
 on: [push]
 
 jobs:
-  test-frontend:
-    name: Ocnus CI
+  Ocnus-CI:
+    name: Rentables
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -13,19 +13,28 @@ jobs:
         with:
           channel: 'dev'
     #Run Flutter Tests
-      - run: sudo chmod 777 -R *
-      - run: flutter pub get
-      - run: flutter test --coverage
-      #CodeCov
-      - name: CodeCov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/lcov.info
-          fail_ci_if_error: true
+      - name: Run Flutter tests
+        working-directory: ./rentables
+        run: |
+          sudo chmod 777 -R *
+          flutter pub get
+          flutter test --coverage
       #Dart/Flutter package analyzer
       - name: Dart Analysis
         uses: axel-op/dart-package-analyzer/with-full-sdk@stable
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           minAnnotationLevel: info
+
+  Code-Coverage:
+    name: Code Code-Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - run: cat ./rentables/coverage/lcov.info >> ./coverage/lcov.info
+    #CodeCov
+      - name: CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+          fail_ci_if_error: true

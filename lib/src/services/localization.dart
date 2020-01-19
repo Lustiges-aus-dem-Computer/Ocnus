@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'logger.dart';
+import 'package:rentables/rentables.dart';
 
 /// List of possivle app-texts
 enum AppTexts {

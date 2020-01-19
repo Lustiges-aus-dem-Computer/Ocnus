@@ -1,7 +1,8 @@
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ocnus/business_logic/category.dart';
-import 'package:ocnus/business_logic/reservation.dart';
+
+import '../rentables.dart';
+
 
 void main() {
   Logger.level = Level.debug;

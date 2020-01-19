@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'business_logic/category.dart';
-import 'services/localization.dart';
+import 'src/services/localization.dart';
 
 void main() async {
-  Hive.registerAdapter(CategoryAdapter());
   runApp(Oknos());
 }
 

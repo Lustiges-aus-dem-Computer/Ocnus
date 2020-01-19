@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:ocnus/services/definitions.dart';
-import 'package:ocnus/services/local_id_generator.dart';
+
+import '../rentables.dart';
 
 void main() {
   Logger.level = Level.debug;
