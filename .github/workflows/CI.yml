@@ -14,10 +14,12 @@ jobs:
           channel: 'dev'
     #Run Flutter Tests
       - name: Run Flutter tests
+        working-directory: ./rentables
         run: |
           sudo chmod 777 -R *
           flutter pub get
           flutter test --coverage .
+          cat coverage/lcov.info >> ../coverage/lcov.info
       - name: CodeCov
         uses: codecov/codecov-action@v1
         with:

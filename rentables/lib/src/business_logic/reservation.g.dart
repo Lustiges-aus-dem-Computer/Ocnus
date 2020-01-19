@@ -6,9 +6,10 @@ part of 'reservation.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
+/// Hive-Adapter for the Reservation class (auto-generated)
 class ReservationAdapter extends TypeAdapter<Reservation> {
   @override
-  final typeId = 1;
+  final int typeId = 1;
 
   @override
   Reservation read(BinaryReader reader) {

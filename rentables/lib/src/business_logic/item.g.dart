@@ -6,9 +6,10 @@ part of 'item.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
+/// Hive-Adapter for the Item class (auto-generated)
 class ItemAdapter extends TypeAdapter<Item> {
   @override
-  final typeId = 3;
+  final int typeId = 3;
 
   @override
   Item read(BinaryReader reader) {

@@ -66,7 +66,7 @@ class Reservation {
     @required this.customerName,
     @required this.customerPhone,
     @required this.customerMail,
-    @required this.item,
+    this.item,
     @required this.startDate,
     @required this.endDate,
     this.fetchedOn,

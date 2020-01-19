@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 
-import '../rentables.dart';
+import 'package:rentables/rentables.dart';
 
 void main() {
   Logger.level = Level.debug;

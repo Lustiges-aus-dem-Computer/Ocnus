@@ -6,9 +6,10 @@ part of 'category.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
+/// Hive-Adapter for the Category class (auto-generated)
 class CategoryAdapter extends TypeAdapter<Category> {
   @override
-  final typeId = 0;
+  final int typeId = 0;
 
   @override
   Category read(BinaryReader reader) {
