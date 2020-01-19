@@ -16,45 +16,48 @@ class ReservationAdapter extends TypeAdapter<Reservation> {
     var fields = <int, dynamic>{
       for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Reservation()
-      .._id = fields[0] as String
-      .._employee = fields[1] as String
-      .._customerName = fields[2] as String
-      .._customerPhone = fields[3] as String
-      .._customerMail = fields[4] as String
-      .._startDate = fields[5] as DateTime
-      .._endDate = fields[6] as DateTime
-      .._fetchedOn = fields[7] as DateTime
-      .._returnedOn = fields[8] as DateTime
-      ..created = fields[9] as DateTime
-      ..modified = fields[10] as DateTime;
+    return Reservation(
+      employee: fields[1] as String,
+      customerName: fields[2] as String,
+      customerPhone: fields[3] as String,
+      customerMail: fields[4] as String,
+      startDate: fields[6] as DateTime,
+      endDate: fields[7] as DateTime,
+      fetchedOn: fields[8] as DateTime,
+      returnedOn: fields[9] as DateTime,
+      id: fields[0] as String,
+      created: fields[10] as DateTime,
+      modified: fields[11] as DateTime,
+    )..itemId = fields[5] as String;
   }
 
   @override
   void write(BinaryWriter writer, Reservation obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
-      ..write(obj._id)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj._employee)
+      ..write(obj.employee)
       ..writeByte(2)
-      ..write(obj._customerName)
+      ..write(obj.customerName)
       ..writeByte(3)
-      ..write(obj._customerPhone)
+      ..write(obj.customerPhone)
       ..writeByte(4)
-      ..write(obj._customerMail)
+      ..write(obj.customerMail)
       ..writeByte(5)
-      ..write(obj._startDate)
+      ..write(obj.itemId)
       ..writeByte(6)
-      ..write(obj._endDate)
+      ..write(obj.startDate)
       ..writeByte(7)
-      ..write(obj._fetchedOn)
+      ..write(obj.endDate)
       ..writeByte(8)
-      ..write(obj._returnedOn)
+      ..write(obj.fetchedOn)
       ..writeByte(9)
-      ..write(obj.created)
+      ..write(obj.returnedOn)
       ..writeByte(10)
+      ..write(obj.created)
+      ..writeByte(11)
       ..write(obj.modified);
   }
 }

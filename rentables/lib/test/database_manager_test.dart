@@ -12,6 +12,7 @@ void main() {
   Logger.level = Level.debug;
   Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(ReservationAdapter());
+  Hive.registerAdapter(ItemAdapter());
 
   var testCat = Category(
     color: 'black',
@@ -20,8 +21,17 @@ void main() {
     location: 'Behind the cat',
   );
 
+  var testItem = Item(
+      title: 'New Item',
+      size: 'L',
+      type: 'm',
+      description: 'This is a test item',
+      category: testCat
+    );
+
   var testRes = Reservation(
       employee: 'Jürgen',
+      item: testItem,
       customerName: 'Ernst August',
       customerMail: 'ernst_august@neuland.de',
       customerPhone: '+49 3094 988 78 00',
@@ -61,6 +71,13 @@ void main() {
       await _hiveManager.dismiss();
     });
 
+    test('Write Items to box', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putItems([testItem]);
+      await _hiveManager.dismiss();
+    });
+
     test('Write Reservations to box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
@@ -72,7 +89,6 @@ void main() {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
       await _hiveManager.putCategories([testCat]);
-      await _hiveManager.putReservations([testRes]);
 
       List<dynamic> _readCats = await _hiveManager.getCategories();
 
@@ -89,9 +105,10 @@ void main() {
       await _hiveManager.initialize();
       await _hiveManager.putReservations([testRes]);
 
-      List<dynamic> _readRes = await _hiveManager.getReservations();
+      List<dynamic> _readRes = await _hiveManager.getReservations(testRes.item);
 
       expect(_readRes[0].id, testRes.id);
+      expect(_readRes[0].item, testRes.item);
       expect(_readRes[0].customerMail, testRes.customerMail);
       expect(_readRes[0].customerName, testRes.customerName);
       expect(_readRes[0].employee, testRes.employee);
@@ -101,6 +118,37 @@ void main() {
       expect(_readRes[0].endDate.day, testRes.endDate.day);
       expect(_readRes[0].fetchedOn.day, testRes.fetchedOn.day);
       expect(_readRes[0].returnedOn.day, testRes.returnedOn.day);
+
+      /// Test nested properties
+      expect(_readRes[0].item.category.id, testRes.item.category.id);
+      expect(_readRes[0].item.category.location, 
+      testRes.item.category.location);
+      expect(_readRes[0].item.category.modified, 
+      testRes.item.category.modified);
+      expect(_readRes[0].item.category.created, 
+      testRes.item.category.created);
+
+      await _hiveManager.dismiss();
+    });
+
+    test('Read Items from box', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putItems([testItem]);
+      
+      List<dynamic> _itemIds = await _hiveManager.getItemIds();
+      List<dynamic> _readItems = await _hiveManager.getItems(_itemIds);
+
+      expect(_readItems[0].id, testItem.id);
+      expect(_readItems[0].active, testItem.active);
+      expect(_readItems[0].category.id, testItem.category.id);
+      expect(_readItems[0].description, testItem.description);
+      expect(_readItems[0].size, testItem.size);
+      expect(_readItems[0].title, testItem.title);
+      expect(_readItems[0].created.day, testItem.created.day);
+      expect(_readItems[0].modified.day, testItem.modified.day);
+      expect(_readItems[0].type, testItem.type);
+
       await _hiveManager.dismiss();
     });
   });

@@ -5,7 +5,10 @@ import 'logger.dart';
 final _log = getLogger();
 
 /// Length of the keys which are menat for human consumption
-const int humanKeyLength = 4;
+const int globalKeyLength = 6;
+
+/// Minimum length of any rental
+const Duration minimumRentalPeriod = Duration(days: 1);
 
 /// List of icons available within the app
 const List<String> availableIcons = ['blender', 'yinYang'];
@@ -23,7 +26,7 @@ Color getColorByName(String _name) {
       return Colors.white;
       break;
     default:
-      _log.e('Unknown color $_name requested'
+      _log.e('Unknown color $_name requested - '
           'add it to the list of supported colors?');
       throw Exception('Unknown icon name');
   }
@@ -39,7 +42,7 @@ Icon getIconByName(String _name, {Color color = Colors.black}) {
       return Icon(FontAwesomeIcons.yinYang, color: color);
       break;
     default:
-      _log.e('Unknown icon $_name requested'
+      _log.e('Unknown icon $_name requested - '
           'add it to the list of supported icons?');
       throw Exception('Unknown icon name');
   }

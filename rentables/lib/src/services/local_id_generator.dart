@@ -18,11 +18,11 @@ class LocalIdGenerator {
   int keyIndex;
 
   /// Generator for the human-readeable ID class
-  LocalIdGenerator({this.keyLength = humanKeyLength, this.keyIndex}) {
+  LocalIdGenerator({this.keyLength = globalKeyLength, this.keyIndex}) {
     // Number of possible keys of length this.keyLength
     // using only digits and lower-case letters is
     // keyLength ^ 36
-    entropy = keyLength ^ 36;
+    entropy = pow(36, keyLength);
   }
 
   /// calculate the human-readeable ID
@@ -36,7 +36,7 @@ class LocalIdGenerator {
       _id += _base36[keyIndex ~/ powerOf36];
       keyIndex = keyIndex % powerOf36;
     }
-    _log.d('Generated local id $_id');
+    _log.d('Generated id $_id');
     return _id;
   }
 

@@ -26,13 +26,13 @@ void main() {
     test('Create new ID', () async {
       var _localIdGen = LocalIdGenerator(keyIndex: 526177, keyLength: 4);
       expect(_localIdGen.getId(), 'ba01');
-      _localIdGen = LocalIdGenerator(keyIndex: 0);
+      _localIdGen = LocalIdGenerator(keyIndex: 0, keyLength: 4);
       expect(_localIdGen.getId(), '0000');
-      _localIdGen = LocalIdGenerator(keyIndex: 1);
+      _localIdGen = LocalIdGenerator(keyIndex: 1, keyLength: 4);
       expect(_localIdGen.getId(), '0001');
-      _localIdGen = LocalIdGenerator(keyIndex: pow(36, 4) - 1);
+      _localIdGen = LocalIdGenerator(keyIndex: pow(36, 4) - 1, keyLength: 4);
       expect(_localIdGen.getId(), 'zzzz');
-      _localIdGen = LocalIdGenerator(keyIndex: 119376);
+      _localIdGen = LocalIdGenerator(keyIndex: 119376, keyLength: 4);
       expect(_localIdGen.getId(), '2k40');
       _localIdGen = LocalIdGenerator(keyLength: 8, keyIndex: pow(36, 8) - 2);
       expect(_localIdGen.getId(), 'zzzzzzzy');

@@ -1,6 +1,7 @@
 import '../services/database_manager.dart';
 import '../services/logger.dart';
 import 'category.dart';
+import 'item.dart';
 import 'reservation.dart';
 
 /// Abstract class for all types of repositories
@@ -80,26 +81,70 @@ class ReservationRepository extends Repository {
   Future<void> saveReservations(List<Reservation> _reservationList) async {
     if (remoteDatabaseManager != null) {
       // Should we be awaiting this?
-      _log.d('Saving resevations to remote database');
+      _log.d('Saving reservations to remote database');
       await remoteDatabaseManager.putReservations(_reservationList);
     }
     if (localDatabaseManager != null) {
-      _log.d('Saving resevations to local database');
+      _log.d('Saving reservations to local database');
       await localDatabaseManager.putReservations(_reservationList);
     }
   }
 
   /// Call the load-method of the associaded database managers
-  Future<List<Reservation>> loadReservations({bool remote = false}) async {
+  Future<List<Reservation>> loadReservations(Item _item,
+  {bool remote = false}) async {
     if (remoteDatabaseManager != null && remote) {
-      _log.d('Loading reservations from remote database');
-      return remoteDatabaseManager.getReservations();
+      _log.d('Loading reservations for item $_item from remote database');
+      return remoteDatabaseManager.getReservations(_item);
     }
     if (localDatabaseManager != null) {
-      _log.d('Loading reservations from local database');
-      return localDatabaseManager.getReservations();
+      _log.d('Loading reservations for item $_item from local database');
+      return localDatabaseManager.getReservations(_item);
     } else {
       _log.e('Found valid database for loading reservation data');
+      throw Exception('No valid database manager specified');
+    }
+  }
+}
+
+
+/// Repository for rentable items
+class ItemRepository extends Repository {
+  final _log = getLogger();
+
+  /// Constructor for repository class
+  ItemRepository(
+      {DatabaseManager remoteDatabaseManager,
+      DatabaseManager localDatabaseManager})
+      : super(
+            remoteDatabaseManager: remoteDatabaseManager,
+            localDatabaseManager: localDatabaseManager);
+
+  /// Call the save-method of the associaded database managers
+  Future<void> saveItems(List<Item> _itemList) async {
+    if (remoteDatabaseManager != null) {
+      // Should we be awaiting this?
+      _log.d('Saving items to remote database');
+      await remoteDatabaseManager.putItems(_itemList);
+    }
+    if (localDatabaseManager != null) {
+      _log.d('Saving items to local database');
+      await localDatabaseManager.putItems(_itemList);
+    }
+  }
+
+  /// Call the load-method of the associaded database managers
+  Future<List<Item>> loadItems(List<String> _idList,
+  {bool remote = false}) async {
+    if (remoteDatabaseManager != null && remote) {
+      _log.d('Loading items from remote database by list of IDs');
+      return remoteDatabaseManager.getItems(_idList);
+    }
+    if (localDatabaseManager != null) {
+      _log.d('Loading items from local database by list of IDs');
+      return localDatabaseManager.getItems(_idList);
+    } else {
+      _log.e('Found valid database for loading item data');
       throw Exception('No valid database manager specified');
     }
   }
