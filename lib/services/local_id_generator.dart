@@ -41,7 +41,7 @@ class LocalIdGenerator {
   }
 
   /// Create unsigned integer from key for use in hive
-  int getHiveId(String _id) {
+  int getHiveIdFromString(String _id) {
     var _hiveId = 0;
     for (var i = 0; i < _id.length; i++) {
       _hiveId += pow(36, _id.length - i - 1) * _base36.indexOf(_id[i]);

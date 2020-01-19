@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import '../services/definitions.dart';
-import '../services/local_id_generator.dart';
+import 'package:uuid/uuid.dart';
 import '../services/logger.dart';
 
 part 'category.g.dart';
@@ -19,19 +18,16 @@ class Category {
   String _location;
   @HiveField(4)
   String _color;
-
-  /// Creation date of the instance
   @HiveField(5)
-  DateTime created;
-
-  /// Date the instance was last modified
-  @HiveField(6)
-  DateTime modified;
-  @HiveField(7)
   String _icon;
 
-  /// ID used for caging in Hive
-  int hiveId;
+  /// Creation date of the instance
+  @HiveField(6)
+  DateTime created;
+  /// Date the instance was last modified
+  @HiveField(7)
+  DateTime modified;
+
   final _log = getLogger();
 
   /// Constructor for class handling categories of rentable items
@@ -49,19 +45,13 @@ class Category {
         _location = location,
         _icon = icon,
         _active = active,
-        _id = id ?? LocalIdGenerator().getId(),
-        created = created ?? DateTime.now(),
-        modified = modified ?? DateTime.now() {
-    if (this.id.length != humanKeyLength) {
-      var _length = this.id.length;
-      _log.e('Used an invalid key-length!\nLength used:'
-          '$_length\nCorrect length: $humanKeyLength');
-      throw Exception('Invalid key-length');
+        _id = id ??
+            Uuid().v4(),
+        created = DateTime.now(),
+        modified = DateTime.now() {
+    _log.d('UUID $this.id assigned to category');
     }
-    hiveId = LocalIdGenerator().getHiveId(this.id);
-  }
 
-  // All setters need to update the modified propterty
   /// Icon used to visualize the category in the UI
   String get icon => _icon;
 
@@ -83,6 +73,8 @@ class Category {
   /// Update the "modified" date after a property was updated
   void update() => modified = DateTime.now();
 
+  /// All setters need to update the modified propterty
+
   /// Setter for icon created explicitely so modified date is updated
   set icon(String valIn) {
     _icon = valIn;
@@ -95,10 +87,9 @@ class Category {
     update();
   }
 
-  /// Setter for id created explicitely so modified date and hiveId are updated
+  /// Setter for id created explicitely so modified date is updated
   set id(String valIn) {
     _id = valIn;
-    hiveId = LocalIdGenerator().getHiveId(id);
     update();
   }
 

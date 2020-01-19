@@ -1,6 +1,7 @@
 import '../services/database_manager.dart';
 import '../services/logger.dart';
 import 'category.dart';
+import 'reservation.dart';
 
 /// Abstract class for all types of repositories
 abstract class Repository {
@@ -58,6 +59,47 @@ class CategoryRepository extends Repository {
       return localDatabaseManager.getCategories();
     } else {
       _log.e('Found valid database for loading category data');
+      throw Exception('No valid database manager specified');
+    }
+  }
+}
+
+/// Repository for reservation entires
+class ReservationRepository extends Repository {
+  final _log = getLogger();
+
+  /// Constructor for repository class
+  ReservationRepository(
+      {DatabaseManager remoteDatabaseManager,
+      DatabaseManager localDatabaseManager})
+      : super(
+            remoteDatabaseManager: remoteDatabaseManager,
+            localDatabaseManager: localDatabaseManager);
+
+  /// Call the save-method of the associaded database managers
+  Future<void> saveReservations(List<Reservation> _reservationList) async {
+    if (remoteDatabaseManager != null) {
+      // Should we be awaiting this?
+      _log.d('Saving resevations to remote database');
+      await remoteDatabaseManager.putReservations(_reservationList);
+    }
+    if (localDatabaseManager != null) {
+      _log.d('Saving resevations to local database');
+      await localDatabaseManager.putReservations(_reservationList);
+    }
+  }
+
+  /// Call the load-method of the associaded database managers
+  Future<List<Reservation>> loadReservations({bool remote = false}) async {
+    if (remoteDatabaseManager != null && remote) {
+      _log.d('Loading reservations from remote database');
+      return remoteDatabaseManager.getReservations();
+    }
+    if (localDatabaseManager != null) {
+      _log.d('Loading reservations from local database');
+      return localDatabaseManager.getReservations();
+    } else {
+      _log.e('Found valid database for loading reservation data');
       throw Exception('No valid database manager specified');
     }
   }

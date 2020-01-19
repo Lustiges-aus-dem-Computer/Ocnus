@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:ocnus/services/database_manager.dart';
 import 'package:ocnus/business_logic/repository.dart';
 import 'package:ocnus/business_logic/category.dart';
+import 'package:ocnus/business_logic/reservation.dart';
 
 class MockManager extends Mock implements DatabaseManager {}
 
@@ -21,6 +22,28 @@ void main() {
     icon: 'blender',
     location: 'Remote',
   );
+
+  var testResLocal = Reservation(
+      employee: 'Jürgen',
+      customerName: 'Local',
+      customerMail: 'ernst_august@neuland.de',
+      customerPhone: '+49 3094 988 78 00',
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 3)),
+      fetchedOn: DateTime.now().add(Duration(days: 2)),
+      returnedOn: DateTime.now().add(Duration(days: 5))
+    );
+
+    var testResRemote = Reservation(
+      employee: 'Jürgen',
+      customerName: 'Remote',
+      customerMail: 'ernst_august@neuland.de',
+      customerPhone: '+49 3094 988 78 00',
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 3)),
+      fetchedOn: DateTime.now().add(Duration(days: 2)),
+      returnedOn: DateTime.now().add(Duration(days: 5))
+    );
 
   group('Category Repository', () {
     var mockManagerLocal = MockManager();
@@ -60,6 +83,47 @@ void main() {
       expect(() async => await _repository.loadCategories(remote: false),
           throwsException);
       expect(await _repository.loadCategories(remote: true), [testCatRemote]);
+    });
+  });
+
+  group('Reservation Repository', () {
+    var mockManagerLocal = MockManager();
+    when(mockManagerLocal.putReservations([testResLocal]))
+        .thenAnswer((_) => Future.value());
+
+    when(mockManagerLocal.getReservations())
+        .thenAnswer((_) => Future.value([testResLocal]));
+
+    var mockManagerRemote = MockManager();
+    when(mockManagerRemote.putReservations([testResRemote]))
+        .thenAnswer((_) => Future.value());
+
+    when(mockManagerRemote.getReservations())
+        .thenAnswer((_) => Future.value([testResRemote]));
+
+    test('Create Category Repository', () async {
+      expect(() => ReservationRepository(), throwsException);
+    });
+    test('Save to Category Repository', () async {
+      var _repository = ReservationRepository(
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      await _repository.saveReservations([testResLocal]);
+    });
+    test('Get Data from local Category Repository', () async {
+      var _repository =
+          ReservationRepository(localDatabaseManager: mockManagerLocal);
+      await _repository.saveReservations([testResLocal]);
+      expect(await _repository.loadReservations(), [testResLocal]);
+    });
+    test('Get Data from remote Category Repository', () async {
+      var _repository =
+          ReservationRepository(remoteDatabaseManager: mockManagerRemote);
+      await _repository.saveReservations([testResRemote]);
+      expect(() async => await _repository.loadReservations(remote: false),
+          throwsException);
+      expect(await _repository.loadReservations(remote: true), [testResRemote]);
     });
   });
 }
