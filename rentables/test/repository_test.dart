@@ -96,8 +96,12 @@ void main() {
     test('Get Data from remote Category Repository', () async {
       var _repository =
           CategoryRepository(remoteDatabaseManager: mockManagerRemote);
+      var _repositoryLoc =
+          CategoryRepository(localDatabaseManager: mockManagerLocal);
       await _repository.saveCategories([testCatRemote]);
       expect(() async => await _repository.loadCategories(remote: false),
+          throwsException);
+      expect(() async => await _repositoryLoc.loadCategories(remote: true),
           throwsException);
       expect(await _repository.loadCategories(remote: true), [testCatRemote]);
     });
@@ -137,9 +141,13 @@ void main() {
     test('Get Data from remote Reservation Repository', () async {
       var _repository =
           ReservationRepository(remoteDatabaseManager: mockManagerRemote);
+      var _repositoryLoc =
+          ReservationRepository(localDatabaseManager: mockManagerLocal);
       await _repository.saveReservations([testResRemote]);
       expect(() async => await _repository.loadReservations(testItemLocal, 
       remote: false), throwsException);
+      expect(() async => await _repositoryLoc.loadReservations(testItemRemote, 
+      remote: true), throwsException);
       expect(await _repository.loadReservations(testItemRemote, 
       remote: true), [testResRemote]);
     });
@@ -177,12 +185,25 @@ void main() {
       await _repository.saveItems([testItemLocal]);
       expect(await _repository.loadItems([testItemLocal.id]), [testItemLocal]);
     });
+    test('Get item search terms', () async {
+      var _repository =
+          ItemRepository(localDatabaseManager: mockManagerLocal);
+      await _repository.saveItems([testItemLocal]);
+      var _title = testItemLocal.title;
+      var _description = testItemLocal.description;
+      expect(await _repository.getSearchterms([testItemLocal.id]),
+       ['$_title $_description']);
+    });
     test('Get Data from remote Item Repository', () async {
       var _repository =
           ItemRepository(remoteDatabaseManager: mockManagerRemote);
+      var _repositoryLoc =
+          ItemRepository(localDatabaseManager: mockManagerLocal);
       await _repository.saveItems([testItemRemote]);
       expect(() async => await _repository
       .loadItems([testItemRemote.id], remote: false), throwsException);
+      expect(() async => await _repositoryLoc
+      .loadItems([testItemRemote.id], remote: true), throwsException);
       expect(await _repository
       .loadItems([testItemRemote.id], remote: true), [testItemRemote]);
     });

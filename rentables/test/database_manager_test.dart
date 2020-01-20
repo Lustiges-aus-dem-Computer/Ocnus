@@ -90,7 +90,7 @@ void main() {
       await _hiveManager.putCategories([testCat]);
 
       List<dynamic> _readCats = await _hiveManager.getCategories();
-
+      print(_readCats);
       expect(_readCats[0].id, testCat.id);
       expect(_readCats[0].title, testCat.title);
       expect(_readCats[0].color, testCat.color);

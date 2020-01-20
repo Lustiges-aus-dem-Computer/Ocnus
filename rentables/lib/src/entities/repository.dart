@@ -18,7 +18,7 @@ abstract class Repository {
   Repository({this.remoteDatabaseManager, this.localDatabaseManager}) {
     if (remoteDatabaseManager == null && localDatabaseManager == null) {
       _log.e('Cannot initialize repository without'
-          'eigther a local or remote database manager');
+          ' eigther a local or remote database manager');
       throw Exception('Invalid database manager settings');
     }
   }
@@ -51,7 +51,11 @@ class CategoryRepository extends Repository {
 
   /// Call the load-method of the associaded database managers
   Future<List<Category>> loadCategories({bool remote = false}) async {
-    if (remoteDatabaseManager != null && remote) {
+    if (remote) {
+      if(remoteDatabaseManager == null){
+        _log.e('Requested server update but no remote manager specified');
+        throw Exception('No active remote database manager found');
+      }
       _log.d('Loading Categories from remote database');
       return remoteDatabaseManager.getCategories();
     }
@@ -93,7 +97,11 @@ class ReservationRepository extends Repository {
   /// Call the load-method of the associaded database managers
   Future<List<Reservation>> loadReservations(Item _item,
   {bool remote = false}) async {
-    if (remoteDatabaseManager != null && remote) {
+    if (remote) {
+      if(remoteDatabaseManager == null){
+        _log.e('Requested server update but no remote manager specified');
+        throw Exception('No active remote database manager found');
+      }
       _log.d('Loading reservations for item $_item from remote database');
       return remoteDatabaseManager.getReservations(_item);
     }
@@ -136,7 +144,11 @@ class ItemRepository extends Repository {
   /// Call the load-method of the associaded database managers
   Future<List<Item>> loadItems(List<String> _idList,
   {bool remote = false}) async {
-    if (remoteDatabaseManager != null && remote) {
+    if (remote) {
+      if(remoteDatabaseManager == null){
+        _log.e('Requested server update but no remote manager specified');
+        throw Exception('No active remote database manager found');
+      }
       _log.d('Loading items from remote database by list of IDs');
       return remoteDatabaseManager.getItems(_idList);
     }
@@ -147,5 +159,18 @@ class ItemRepository extends Repository {
       _log.e('Found valid database for loading item data');
       throw Exception('No valid database manager specified');
     }
+  }
+
+  /// Load itmes from box and construct search-keys needed
+  /// for fuzzy searching in the UI
+  Future<List<String>> getSearchterms(List<String> _idList) async {
+    var _itemList = await loadItems(_idList,remote: false);
+    var _searchKeys = <String>[];
+    for(var _item in _itemList){
+      var _title = _item.title;
+      var _description = _item.description;
+      _searchKeys.add('$_title $_description');
+    }
+    return _searchKeys;
   }
 }

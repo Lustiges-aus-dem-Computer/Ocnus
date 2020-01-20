@@ -71,18 +71,16 @@ class HiveManager implements DatabaseManager {
 
   @override
   Future<List<Category>> getCategories() async {
-    _log.d('Loading categories to Hive');
-    var _categoryList = <Category>[];
-    for (int _id in categoryCageBox.keys.toList()) {
-      _categoryList.add(categoryCageBox.get(_id));
-    }
-    return _categoryList;
+    _log.d('Loading categories from Hive');
+    return List<Category>.from(
+      categoryCageBox.keys.map((_id) => categoryCageBox.get(_id)
+    ));
   }
 
   @override
   Future<void> putCategories(List<Category> _categoryList) async {
     _log.d('Wrinting categories to Hive');
-    for (var _category in _categoryList) {
+    for(var _category in _categoryList){
       categoryCageBox.put(_category.hiveId, _category);
     }
     return;
@@ -92,22 +90,19 @@ class HiveManager implements DatabaseManager {
   Future<List<Reservation>> getReservations(Item _item) async {
     var _id = _item.id;
     _log.d('Loading reservations for item $_id from Hive');
-    var _reservationList = <Reservation>[];
-    print(_id);
-    print(reservationCageBox.values.where((_reservation) 
-    => _reservation.itemId == _id).toList());
-    for (var _reservation in reservationCageBox.values.where((_reservation) 
-    => _reservation.itemId == _id)) {
-      _reservation.item = _item;
-      _reservationList.add(_reservation);
-    }
-    return _reservationList;
+    return List<Reservation>.from(
+      reservationCageBox.values.where((_reservation) => 
+      _reservation.itemId == _id).map((_reservation)
+      {
+        _reservation.item = _item;
+        return _reservation;
+      }));
   }
 
   @override
   Future<void> putReservations(List<Reservation> _reservationList) async {
     _log.d('Writing reservations to Hive');
-    for (var _reservation in _reservationList) {
+    for(var _reservation in _reservationList){
       reservationCageBox.put(_reservation.hiveId, _reservation);
     }
     return;
@@ -116,11 +111,8 @@ class HiveManager implements DatabaseManager {
   @override
   Future<List<String>> getItemIds() async {
     _log.d('Loading Item IDs from Hive');
-    var _idList = <String>[];
-    for(var _key in itemCageBox.keys){
-      _idList.add(LocalIdGenerator(keyIndex: _key).getId());
-    }
-    return _idList;
+    return List<String>.from(itemCageBox.keys.map((_key) => 
+    LocalIdGenerator(keyIndex: _key).getId()));
   }
 
   @override
@@ -141,7 +133,7 @@ class HiveManager implements DatabaseManager {
   @override
   Future<void> putItems(List<Item> _itemList) async {
     _log.d('Writing items to Hive');
-    for (var _item in _itemList) {
+    for(var _item in _itemList){
       itemCageBox.put(_item.hiveId, _item);
     }
     return;
