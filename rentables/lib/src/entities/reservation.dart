@@ -66,7 +66,7 @@ class Reservation {
     @required this.customerName,
     @required this.customerPhone,
     @required this.customerMail,
-    this.item,
+    @required this.item,
     @required this.startDate,
     @required this.endDate,
     this.fetchedOn,
@@ -78,14 +78,22 @@ class Reservation {
     created ??= DateTime.now();
     modified ??= DateTime.now();
     id ??= _localIdGen.getId();
-    if(item != null){itemId = item.id;}
+    if(item != null){
+      itemId = item.id;
+      item.reservations.add(id);
+      item.reservationsHive.add(_localIdGen.getHiveIdFromString(id));
+    }
     hiveId = _localIdGen.getHiveIdFromString(id);
     _log.d('ID $id assigned to item');
     }
 
   /// Update the "modified" date after a property was updated
   void update(){
-    if(item != null){itemId = item.id;}
+    if(item != null){
+      itemId = item.id;
+      item.reservations.add(id);
+      item.reservationsHive.add(_localIdGen.getHiveIdFromString(id));
+    }
     modified = DateTime.now();
 
     /// Sanity checks for dates

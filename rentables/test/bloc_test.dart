@@ -110,5 +110,19 @@ void main() {
     CategoriesLoaded([testCatLocal, testCatRemote]),
     CategoriesLoaded([testCatLocal, testCatRemoteUpdate])],
     );
+
+    blocTest(
+    'Delete Category -> Loaded',
+    build: () => CategoryBlock(categoryRepository: _catRepLocal),
+    act: (bloc){
+      bloc.add(LoadCategoriesFromCage());
+      bloc.add(AddCategory(testCatRemote));
+      bloc.add(DeleteCategory(testCatRemoteUpdate));
+      return;
+      },
+    expect: [CategoriesLoading(), CategoriesLoaded([testCatLocal]), 
+    CategoriesLoaded([testCatLocal, testCatRemote]),
+    CategoriesLoaded([testCatLocal])],
+    );
   });
 }

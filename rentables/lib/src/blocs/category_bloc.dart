@@ -31,6 +31,9 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
     else if(event is UpdateCategory){
       yield* _mapUpdateCategoryToState(event.category);
     }
+    else if(event is DeleteCategory){
+      yield* _mapDeleteCategoryToState(event.category);
+    }
   }
 
   Stream<CategoriesState> _mapLoadCategoriesToState({remote}) async* {
@@ -69,6 +72,19 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
       yield CategoriesLoaded(_newCategories);
       /// Save updated list to cage and server (if available)
       categoryRepository.saveCategories(_newCategories);
+    }
+  }
+
+  Stream<CategoriesState> _mapDeleteCategoryToState(Category _category) async* {
+    if (state is CategoriesLoaded) {
+      final _newCategories 
+      = List<Category>.from(
+        (state as CategoriesLoaded).categoriesList.where(
+          (_catTmp) => _catTmp.id != _category.id
+        ));
+      yield CategoriesLoaded(_newCategories);
+      /// Delete category from cage and server (if available)
+      categoryRepository.deleteCategories([_category.id]);
     }
   }
 }

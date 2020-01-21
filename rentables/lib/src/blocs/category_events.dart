@@ -26,3 +26,12 @@ class UpdateCategory extends CategoriesEvent {
   /// Constructor for update category event
   UpdateCategory(this.category);
 }
+
+/// Evend triggering deletion of a category
+class DeleteCategory extends CategoriesEvent {
+  /// Category to be updated
+  final Category category;
+
+  /// Constructor for delete category event
+  DeleteCategory(this.category);
+}

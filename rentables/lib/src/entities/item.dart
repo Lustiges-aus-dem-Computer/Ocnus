@@ -30,21 +30,28 @@ class Item {
   @HiveField(5)
   String size;
 
+  /// List of reservations associated with an item
+  List<String> reservations = [];
+
+  /// List of reservations associated with an item for Hive saving
+  @HiveField(6)
+  List<int> reservationsHive = [];
+
   /// Link to item-category
   Category category;
 
   /// ID of the category - used for saving to Hive
-  @HiveField(6)
+  @HiveField(7)
   String categoryId;
 
   /// ID used for saving to Hive
   int hiveId;
 
   /// Creation date of the instance
-  @HiveField(7)
+  @HiveField(8)
   DateTime created;
   /// Date the instance was last modified
-  @HiveField(8)
+  @HiveField(9)
   DateTime modified;
 
   final _log = getLogger();

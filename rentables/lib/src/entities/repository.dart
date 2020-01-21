@@ -67,6 +67,18 @@ class CategoryRepository extends Repository {
       throw Exception('No valid database manager specified');
     }
   }
+
+  /// Call the delete-method of the associaded database managers
+  Future<void> deleteCategories(List<String> idList) async {
+    if (localDatabaseManager != null) {
+      _log.d('Delete Categories from local database');
+      await localDatabaseManager.deleteCategories(idList);
+    }
+    if (remoteDatabaseManager != null) {
+      _log.e('Delete Categories from remote database');
+      await remoteDatabaseManager.deleteCategories(idList);
+    }
+  }
 }
 
 /// Repository for reservation entires
@@ -113,6 +125,18 @@ class ReservationRepository extends Repository {
       throw Exception('No valid database manager specified');
     }
   }
+
+  /// Call the delete-method of the associaded database managers
+  Future<void> deleteReservations(List<String> idList) async {
+    if (localDatabaseManager != null) {
+      _log.d('Delete Reservations from local database');
+      await localDatabaseManager.deleteReservations(idList);
+    }
+    if (remoteDatabaseManager != null) {
+      _log.e('Delete Reservations from remote database');
+      await remoteDatabaseManager.deleteReservations(idList);
+    }
+  }
 }
 
 
@@ -142,19 +166,19 @@ class ItemRepository extends Repository {
   }
 
   /// Call the load-method of the associaded database managers
-  Future<List<Item>> loadItems(List<String> _idList,
-  {bool remote = false}) async {
+  Future<List<Item>> loadItems({List<String> idList,
+  bool remote = false}) async {
     if (remote) {
       if(remoteDatabaseManager == null){
         _log.e('Requested server update but no remote manager specified');
         throw Exception('No active remote database manager found');
       }
       _log.d('Loading items from remote database by list of IDs');
-      return remoteDatabaseManager.getItems(_idList);
+      return remoteDatabaseManager.getItems(idList: idList);
     }
     if (localDatabaseManager != null) {
       _log.d('Loading items from local database by list of IDs');
-      return localDatabaseManager.getItems(_idList);
+      return localDatabaseManager.getItems(idList: idList);
     } else {
       _log.e('Found valid database for loading item data');
       throw Exception('No valid database manager specified');
@@ -163,8 +187,8 @@ class ItemRepository extends Repository {
 
   /// Load itmes from box and construct search-keys needed
   /// for fuzzy searching in the UI
-  Future<List<String>> getSearchterms(List<String> _idList) async {
-    var _itemList = await loadItems(_idList,remote: false);
+  Future<List<String>> getSearchterms() async {
+    var _itemList = await loadItems(remote: false);
     var _searchKeys = <String>[];
     for(var _item in _itemList){
       var _title = _item.title;
@@ -172,5 +196,17 @@ class ItemRepository extends Repository {
       _searchKeys.add('$_title $_description');
     }
     return _searchKeys;
+  }
+
+  /// Call the delete-method of the associaded database managers
+  Future<void> deleteItems(List<String> idList) async {
+    if (localDatabaseManager != null) {
+      _log.d('Delete Items from local database');
+      await localDatabaseManager.deleteItems(idList);
+    }
+    if (remoteDatabaseManager != null) {
+      _log.e('Delete Items from remote database');
+      await remoteDatabaseManager.deleteItems(idList);
+    }
   }
 }

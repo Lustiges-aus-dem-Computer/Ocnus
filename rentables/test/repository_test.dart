@@ -70,12 +70,18 @@ void main() {
     when(mockManagerLocal.getCategories())
         .thenAnswer((_) => Future.value([testCatLocal]));
 
+    when(mockManagerLocal.deleteCategories([testCatLocal.id]))
+        .thenAnswer((_) => Future.value());
+
     var mockManagerRemote = MockManager();
     when(mockManagerRemote.putCategories([testCatRemote]))
         .thenAnswer((_) => Future.value());
 
     when(mockManagerRemote.getCategories())
         .thenAnswer((_) => Future.value([testCatRemote]));
+    
+    when(mockManagerRemote.deleteCategories([testCatRemote.id]))
+        .thenAnswer((_) => Future.value());
 
     test('Create Category Repository', () async {
       expect(() => CategoryRepository(), throwsException);
@@ -86,6 +92,14 @@ void main() {
           remoteDatabaseManager: mockManagerRemote);
 
       await _repository.saveCategories([testCatLocal]);
+    });
+    test('Delete from Category Repository', () async {
+      var _repository = CategoryRepository(
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      await _repository.saveCategories([testCatLocal]);
+      await _repository.deleteCategories([testCatLocal.id]);
     });
     test('Get Data from local Category Repository', () async {
       var _repository =
@@ -115,12 +129,18 @@ void main() {
     when(mockManagerLocal.getReservations(testItemLocal))
         .thenAnswer((_) => Future.value([testResLocal]));
 
+    when(mockManagerLocal.deleteReservations([testItemLocal.id]))
+        .thenAnswer((_) => Future.value());
+
     var mockManagerRemote = MockManager();
     when(mockManagerRemote.putReservations([testResRemote]))
         .thenAnswer((_) => Future.value());
 
     when(mockManagerRemote.getReservations(testItemRemote))
         .thenAnswer((_) => Future.value([testResRemote]));
+
+    when(mockManagerRemote.deleteReservations([testItemRemote.id]))
+        .thenAnswer((_) => Future.value());
 
     test('Create Reservation Repository', () async {
       expect(() => ReservationRepository(), throwsException);
@@ -131,6 +151,14 @@ void main() {
           remoteDatabaseManager: mockManagerRemote);
 
       await _repository.saveReservations([testResLocal]);
+    });
+    test('Delete from Category Repository', () async {
+      var _repository = ReservationRepository(
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      await _repository.saveReservations([testResLocal]);
+      await _repository.deleteReservations([testResLocal.id]);
     });
     test('Get Data from local Reservation Repository', () async {
       var _repository =
@@ -159,15 +187,24 @@ void main() {
     when(mockManagerLocal.putItems([testItemLocal]))
         .thenAnswer((_) => Future.value());
 
-    when(mockManagerLocal.getItems([testItemLocal.id]))
+    when(mockManagerLocal.getItems(idList: [testItemLocal.id]))
         .thenAnswer((_) => Future.value([testItemLocal]));
+
+    when(mockManagerLocal.getItems())
+        .thenAnswer((_) => Future.value([testItemLocal]));
+
+    when(mockManagerLocal.deleteItems([testItemLocal.id]))
+        .thenAnswer((_) => Future.value());
 
     var mockManagerRemote = MockManager();
     when(mockManagerRemote.putItems([testItemRemote]))
         .thenAnswer((_) => Future.value());
 
-    when(mockManagerRemote.getItems([testItemRemote.id]))
+    when(mockManagerRemote.getItems(idList: [testItemRemote.id]))
         .thenAnswer((_) => Future.value([testItemRemote]));
+
+    when(mockManagerRemote.deleteItems([testItemRemote.id]))
+        .thenAnswer((_) => Future.value());
 
     test('Create Item Repository', () async {
       expect(() => ReservationRepository(), throwsException);
@@ -179,11 +216,21 @@ void main() {
 
       await _repository.saveItems([testItemLocal]);
     });
+    test('Delete from Category Repository', () async {
+      var _repository = ItemRepository(
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      await _repository.saveItems([testItemLocal]);
+      await _repository.deleteItems([testItemLocal.id]);
+    });
     test('Get Data from local Item Repository', () async {
       var _repository =
           ItemRepository(localDatabaseManager: mockManagerLocal);
-      await _repository.saveItems([testItemLocal]);
-      expect(await _repository.loadItems([testItemLocal.id]), [testItemLocal]);
+      await _repository.saveItems([testItemLocal, testItemRemote]);
+      /// Load a specific list of items
+      expect(await _repository.loadItems(
+        idList: [testItemLocal.id]), [testItemLocal]);
     });
     test('Get item search terms', () async {
       var _repository =
@@ -191,8 +238,7 @@ void main() {
       await _repository.saveItems([testItemLocal]);
       var _title = testItemLocal.title;
       var _description = testItemLocal.description;
-      expect(await _repository.getSearchterms([testItemLocal.id]),
-       ['$_title $_description']);
+      expect(await _repository.getSearchterms(), ['$_title $_description']);
     });
     test('Get Data from remote Item Repository', () async {
       var _repository =
@@ -201,11 +247,11 @@ void main() {
           ItemRepository(localDatabaseManager: mockManagerLocal);
       await _repository.saveItems([testItemRemote]);
       expect(() async => await _repository
-      .loadItems([testItemRemote.id], remote: false), throwsException);
+      .loadItems(idList: [testItemRemote.id], remote: false), throwsException);
       expect(() async => await _repositoryLoc
-      .loadItems([testItemRemote.id], remote: true), throwsException);
+      .loadItems(idList: [testItemRemote.id], remote: true), throwsException);
       expect(await _repository
-      .loadItems([testItemRemote.id], remote: true), [testItemRemote]);
+      .loadItems(idList: [testItemRemote.id], remote: true), [testItemRemote]);
     });
   });
 }
