@@ -153,9 +153,9 @@ class HiveManager implements DatabaseManager {
     _log.d('Loading Items $idList from Hive');
     var _itemList = <Item>[];
     for (var _id in idList ?? itemCageBox.keys) {
-      var _item = await itemCageBox.get(
-        /// idList contatins the string keys so they need to be transformed
+      /// idList contatins the string keys so they need to be transformed
         /// into the corresponding Hive keys before the call
+      var _item = await itemCageBox.get(
         idList == null ? _id : LocalIdGenerator().getHiveIdFromString(_id));
         if(_item.categoryId != null)
         {
