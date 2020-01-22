@@ -6,4 +6,6 @@
 
 # Ocnus
 
-Ocnus is a cross-platform application for businesses renting out various types of items. It was developed for costume tentals but can be easily extended to suit other purposes.
+Ocnus is a cross-platform application for businesses renting out various types of items. It was developed for costume rentals but can be easily extended to suit other purposes.
+
+It is currently under active developement and not ready for productive use.
