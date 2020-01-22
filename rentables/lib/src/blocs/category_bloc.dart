@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../rentables.dart';
-export 'category_events.dart';
 export 'states.dart';
 
 /// Bloc element (https://bloclibrary.dev/#/) for handling categories
@@ -36,7 +35,7 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
     }
   }
 
-  Stream<CategoriesState> _mapLoadCategoriesToState({remote}) async* {
+  Stream<CategoriesState> _mapLoadCategoriesToState({bool remote}) async* {
     try {
       final categories = 
       await categoryRepository.loadCategories(remote: remote);
@@ -58,7 +57,7 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
         ..add(_category);
       yield CategoriesLoaded(_newCategories);
       /// Save updated list to cage and server (if available)
-      categoryRepository.saveCategories(_newCategories);
+      categoryRepository.saveCategories([_category]);
     }
   }
 
@@ -71,7 +70,7 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
         ));
       yield CategoriesLoaded(_newCategories);
       /// Save updated list to cage and server (if available)
-      categoryRepository.saveCategories(_newCategories);
+      categoryRepository.saveCategories([_category]);
     }
   }
 

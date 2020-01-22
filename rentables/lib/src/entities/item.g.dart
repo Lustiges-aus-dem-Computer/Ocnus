@@ -24,15 +24,17 @@ class ItemAdapter extends TypeAdapter<Item> {
       type: fields[4] as String,
       active: fields[0] as bool,
       id: fields[1] as String,
-      created: fields[7] as DateTime,
-      modified: fields[8] as DateTime,
-    )..categoryId = fields[6] as String;
+      created: fields[8] as DateTime,
+      modified: fields[9] as DateTime,
+    )
+      ..reservationsHive = (fields[6] as List)?.cast<int>()
+      ..categoryId = fields[7] as String;
   }
 
   @override
   void write(BinaryWriter writer, Item obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.active)
       ..writeByte(1)
@@ -46,10 +48,12 @@ class ItemAdapter extends TypeAdapter<Item> {
       ..writeByte(5)
       ..write(obj.size)
       ..writeByte(6)
-      ..write(obj.categoryId)
+      ..write(obj.reservationsHive)
       ..writeByte(7)
-      ..write(obj.created)
+      ..write(obj.categoryId)
       ..writeByte(8)
+      ..write(obj.created)
+      ..writeByte(9)
       ..write(obj.modified);
   }
 }

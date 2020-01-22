@@ -80,7 +80,7 @@ class Reservation {
     id ??= _localIdGen.getId();
     if(item != null){
       itemId = item.id;
-      item.reservations.add(id);
+      item.reservations.add(this);
       item.reservationsHive.add(_localIdGen.getHiveIdFromString(id));
     }
     hiveId = _localIdGen.getHiveIdFromString(id);
@@ -91,21 +91,25 @@ class Reservation {
   void update(){
     if(item != null){
       itemId = item.id;
-      item.reservations.add(id);
+      item.reservations.add(this);
       item.reservationsHive.add(_localIdGen.getHiveIdFromString(id));
     }
     modified = DateTime.now();
 
     /// Sanity checks for dates
     /// All rentals last at least for minimumRentalPeriod
-    if(fetchedOn.isAfter(endDate)){
-      endDate = fetchedOn.add(minimumRentalPeriod);
+    if(fetchedOn != null){
+      if(fetchedOn.isAfter(endDate)){
+        endDate = fetchedOn.add(minimumRentalPeriod);
+      }
     }
     if(startDate.isAfter(endDate)){
       endDate = startDate.add(minimumRentalPeriod);
     }
-    if(returnedOn.isBefore(fetchedOn)){
-      fetchedOn = returnedOn.add(-minimumRentalPeriod);
+    if(returnedOn != null){
+      if(returnedOn.isBefore(fetchedOn)){
+        fetchedOn = returnedOn.add(-minimumRentalPeriod);
+      }
     }
   }
 }

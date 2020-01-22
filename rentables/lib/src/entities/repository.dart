@@ -1,5 +1,6 @@
 import '../services/database_manager.dart';
 import '../services/logger.dart';
+import '../services/reservation_check.dart';
 import 'category.dart';
 import 'item.dart';
 import 'reservation.dart';
@@ -93,17 +94,42 @@ class ReservationRepository extends Repository {
             remoteDatabaseManager: remoteDatabaseManager,
             localDatabaseManager: localDatabaseManager);
 
+  /// Check if a save-operation could be performed without conflicts
+  Future<bool> checkValidUpdate({List<Reservation> reservationList, 
+  bool remote}) async {
+    _log.d('Checking reservations-update for validity');
+    remote ??= remoteDatabaseManager != null;
+    /// Check if the reservations to be saved are actually valid
+    for(var _reservation in reservationList){
+      /// Load all reservations for the relevant item
+      if(!checkReservationValidity(existingReservations: 
+        await loadReservations(_reservation.item, remote: remote),
+        newReservation: _reservation)){
+           _log.d('Update NOT valid');
+          return false;
+          }
+    }
+    _log.d('Update valid');
+    return true;
+  }
+
   /// Call the save-method of the associaded database managers
-  Future<void> saveReservations(List<Reservation> _reservationList) async {
-    if (remoteDatabaseManager != null) {
-      // Should we be awaiting this?
-      _log.d('Saving reservations to remote database');
-      await remoteDatabaseManager.putReservations(_reservationList);
+  Future<void> saveReservations(List<Reservation> _reservationList, 
+  {bool forceValid = false}) async {
+    var valid = forceValid ? true : await checkValidUpdate(
+      reservationList: _reservationList, remote: remoteDatabaseManager != null);
+    if(valid){
+      if(remoteDatabaseManager != null){
+        // Should we be awaiting this?
+        _log.d('Saving reservations to remote database');
+        await remoteDatabaseManager.putReservations(_reservationList);
+      }
+      if (localDatabaseManager != null) {
+        _log.d('Saving reservations to local database');
+        await localDatabaseManager.putReservations(_reservationList);
+      }
     }
-    if (localDatabaseManager != null) {
-      _log.d('Saving reservations to local database');
-      await localDatabaseManager.putReservations(_reservationList);
-    }
+    return;
   }
 
   /// Call the load-method of the associaded database managers
@@ -114,11 +140,11 @@ class ReservationRepository extends Repository {
         _log.e('Requested server update but no remote manager specified');
         throw Exception('No active remote database manager found');
       }
-      _log.d('Loading reservations for item $_item from remote database');
+      _log.d('Loading reservations for item ${_item.id} from remote database');
       return remoteDatabaseManager.getReservations(_item);
     }
     if (localDatabaseManager != null) {
-      _log.d('Loading reservations for item $_item from local database');
+      _log.d('Loading reservations for item ${_item.id} from local database');
       return localDatabaseManager.getReservations(_item);
     } else {
       _log.e('Found valid database for loading reservation data');

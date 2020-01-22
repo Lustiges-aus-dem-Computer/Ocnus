@@ -102,7 +102,6 @@ void main() {
       await _hiveManager.putCategories([testCat]);
 
       List<dynamic> _readCats = await _hiveManager.getCategories();
-      print(_readCats);
       expect(_readCats[0].id, testCat.id);
       expect(_readCats[0].title, testCat.title);
       expect(_readCats[0].color, testCat.color);
@@ -193,6 +192,25 @@ void main() {
       await _hiveManager.putItems([testItem]);
       await _hiveManager.deleteItems([testItem.id]);
       expect((await _hiveManager.getItems()).length, 0);
+
+      await _hiveManager.clear();
+    });
+
+    /// This is the only in-memory box so we test reading it from disk
+    test('Read Categories from disk', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putCategories([testCat]);
+
+      await _hiveManager.dismiss();
+      await _hiveManager.initialize();
+
+      List<dynamic> _readCats = await _hiveManager.getCategories();
+      expect(_readCats[0].id, testCat.id);
+      expect(_readCats[0].title, testCat.title);
+      expect(_readCats[0].color, testCat.color);
+      expect(_readCats[0].icon, testCat.icon);
+      expect(_readCats[0].active, testCat.active);
 
       await _hiveManager.clear();
     });

@@ -41,3 +41,42 @@ class CategoriesNotLoaded extends CategoriesState {
   @override
   List<Object> get props => [];
 }
+
+
+
+/// Abstract class for possible reservation states
+abstract class ReservationsState extends Equatable{
+  /// Constructor is constant because this and inheriting
+  /// classes need to be immutable
+  const ReservationsState();
+}
+
+/// State for when reservations are loading
+class ReservationsLoading extends ReservationsState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when reservations have been loaded
+class ReservationsLoaded extends ReservationsState {
+  /// List of categories that have been loaded
+  final List<Reservation> reservationsList;
+
+  /// Constructor initializing an emply categories list
+  const ReservationsLoaded([this.reservationsList = const []]);
+
+  @override
+  List<Reservation> get props => reservationsList;
+}
+
+/// State for when an invalid reservation was added
+class ReservationsInvalid extends ReservationsState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when reservations have not been loaded
+class ReservationsNotLoaded extends ReservationsState {
+  @override
+  List<Object> get props => [];
+}

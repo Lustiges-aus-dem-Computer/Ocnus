@@ -29,6 +29,7 @@ abstract class DatabaseManager {
   Future<void> deleteReservations(List<String> idList);
 
   /// Function to request saving reservations to the database
+  /// Returns true if the reservation was sucessfull
   Future<void> putReservations(List<Reservation> _reservationList);
 
   /// Function to request loading items from the database
@@ -74,26 +75,24 @@ class HiveManager implements DatabaseManager {
   @override
   Future<void> dismiss() async {
     _log.d('Dismissing Hive database manager');
-    categoryCageBox.close();
-    itemCageBox.close();
-    reservationCageBox.close();
+    await categoryCageBox.close();
+    await itemCageBox.close();
+    await reservationCageBox.close();
   }
 
   /// Needed for testing to clean-up the boxes
   @visibleForTesting
   Future<void> clear() async {
     _log.d('Clear Hive database manager');
-    categoryCageBox.clear();
-    itemCageBox.clear();
-    reservationCageBox.clear();
+    await categoryCageBox.clear();
+    await itemCageBox.clear();
+    await reservationCageBox.clear();
   }
 
   @override
   Future<List<Category>> getCategories() async {
     _log.d('Loading categories from Hive');
-    return List<Category>.from(
-      categoryCageBox.keys.map((_id) => categoryCageBox.get(_id)
-    ));
+    return List<Category>.from(categoryCageBox.toMap().values);
   }
 
   @override

@@ -45,9 +45,9 @@ void main() {
       customerMail: 'ernst_august@neuland.de',
       customerPhone: '+49 3094 988 78 00',
       startDate: DateTime.now(),
-      endDate: DateTime.now().add(Duration(days: 3)),
-      fetchedOn: DateTime.now().add(Duration(days: 2)),
-      returnedOn: DateTime.now().add(Duration(days: 5))
+      endDate: DateTime.now().add(Duration(days: 1)),
+      fetchedOn: DateTime.now().add(Duration(days: 1)),
+      returnedOn: DateTime.now().add(Duration(days: 2))
   );
 
   var testResRemote = Reservation(
@@ -56,10 +56,10 @@ void main() {
       customerName: 'Remote',
       customerMail: 'ernst_august@neuland.de',
       customerPhone: '+49 3094 988 78 00',
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(Duration(days: 3)),
-      fetchedOn: DateTime.now().add(Duration(days: 2)),
-      returnedOn: DateTime.now().add(Duration(days: 5))
+      startDate: DateTime.now().add(Duration(days: 10)),
+      endDate: DateTime.now().add(Duration(days: 15)),
+      fetchedOn: DateTime.now().add(Duration(days: 9)),
+      returnedOn: DateTime.now().add(Duration(days: 18))
     );
 
   group('Category Repository', () {
@@ -145,14 +145,25 @@ void main() {
     test('Create Reservation Repository', () async {
       expect(() => ReservationRepository(), throwsException);
     });
+    test('Check if an update would be valid', () async {
+      var _repository = ReservationRepository(
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      expect(await _repository.checkValidUpdate(
+        reservationList: [testResRemote], remote: true), false);
+      expect(await _repository.checkValidUpdate(
+        reservationList: [testResLocal], remote: false), false);
+    });
     test('Save to Reservation Repository', () async {
       var _repository = ReservationRepository(
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
+      await _repository.saveReservations([testResRemote]);
       await _repository.saveReservations([testResLocal]);
     });
-    test('Delete from Category Repository', () async {
+    test('Delete from Reservation Repository', () async {
       var _repository = ReservationRepository(
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
@@ -171,7 +182,6 @@ void main() {
           ReservationRepository(remoteDatabaseManager: mockManagerRemote);
       var _repositoryLoc =
           ReservationRepository(localDatabaseManager: mockManagerLocal);
-      await _repository.saveReservations([testResRemote]);
       expect(() async => await _repository.loadReservations(testItemLocal, 
       remote: false), throwsException);
       expect(() async => await _repositoryLoc.loadReservations(testItemRemote, 

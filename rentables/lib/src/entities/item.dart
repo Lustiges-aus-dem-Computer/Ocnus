@@ -31,7 +31,7 @@ class Item {
   String size;
 
   /// List of reservations associated with an item
-  List<String> reservations = [];
+  List<Reservation> reservations = [];
 
   /// List of reservations associated with an item for Hive saving
   @HiveField(6)
