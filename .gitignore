@@ -15,3 +15,6 @@ pubspec.lock
 *.js_
 *.js.deps
 *.js.map
+
+#Avoid comitting keys
+android/app/google-services.json

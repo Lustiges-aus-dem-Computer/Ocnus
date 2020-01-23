@@ -246,9 +246,8 @@ void main() {
       var _repository =
           ItemRepository(localDatabaseManager: mockManagerLocal);
       await _repository.saveItems([testItemLocal]);
-      var _title = testItemLocal.title;
-      var _description = testItemLocal.description;
-      expect(await _repository.getSearchterms(), ['$_title $_description']);
+      expect(await _repository.getSearchterms(), {testItemLocal.id: 
+      '${testItemLocal.title} ${testItemLocal.description}'});
     });
     test('Get Data from remote Item Repository', () async {
       var _repository =

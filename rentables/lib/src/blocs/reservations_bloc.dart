@@ -38,11 +38,12 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
   Stream<ReservationsState> _mapLoadReservationsToState(
     {Item item, bool remote}) async* {
     try {
-      final reservations = 
+      var reservations = 
       await reservationRepository.loadReservations(item, remote: remote);
+      reservations ??= <Reservation>[];
       yield ReservationsLoaded(reservations);
     }
-    /// In case we have no valid cage
+    /// In case we have no valid cage / server
     on Exception catch (_) {
       yield ReservationsNotLoaded();
     }

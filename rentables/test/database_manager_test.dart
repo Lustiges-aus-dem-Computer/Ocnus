@@ -169,9 +169,21 @@ void main() {
     test('Delete Categories from box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
+      await _hiveManager.putItems([testItem, testItem2]);
       await _hiveManager.putCategories([testCat]);
+
+      expect(testItem.category, isNotNull);
+      expect(testItem2.category, isNotNull);
+
       await _hiveManager.deleteCategories([testCat.id]);
       expect((await _hiveManager.getCategories()).length, 0);
+
+      /// Check that categories have been removed from linked items
+      var _items = 
+      await _hiveManager.getItems(idList: [testItem.id, testItem2.id]);
+
+      expect(_items[0].category, null);
+      expect(_items[1].category, null);
 
       await _hiveManager.clear();
     });
@@ -190,8 +202,16 @@ void main() {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
       await _hiveManager.putItems([testItem]);
+
+      expect(testItem.reservations.length, 1);
+
       await _hiveManager.deleteItems([testItem.id]);
       expect((await _hiveManager.getItems()).length, 0);
+
+      /// Check that reservations have been removed
+      var _reservations = await _hiveManager.getReservations(testItem);
+      expect(_reservations, []);
+
 
       await _hiveManager.clear();
     });

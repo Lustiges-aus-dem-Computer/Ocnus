@@ -59,10 +59,10 @@ class ReservationsLoading extends ReservationsState {
 
 /// State for when reservations have been loaded
 class ReservationsLoaded extends ReservationsState {
-  /// List of categories that have been loaded
+  /// List of reservations that have been loaded
   final List<Reservation> reservationsList;
 
-  /// Constructor initializing an emply categories list
+  /// Constructor initializing an emply reservations list
   const ReservationsLoaded([this.reservationsList = const []]);
 
   @override
@@ -77,6 +77,52 @@ class ReservationsInvalid extends ReservationsState {
 
 /// State for when reservations have not been loaded
 class ReservationsNotLoaded extends ReservationsState {
+  @override
+  List<Object> get props => [];
+}
+
+
+
+/// Abstract class for possible items states
+abstract class ItemsState extends Equatable{
+  /// Constructor is constant because this and inheriting
+  /// classes need to be immutable
+  const ItemsState();
+}
+
+/// State for when items are loading
+class ItemsLoading extends ItemsState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when items have been loaded
+class ItemsLoaded extends ItemsState {
+  /// List of items that have been loaded
+  final List<Item> itemList;
+
+  /// Constructor initializing an emply items list
+  const ItemsLoaded([this.itemList = const []]);
+
+  @override
+  List<Item> get props => itemList;
+}
+
+/// State for when item search strings have been loaded
+class ItemsSearchTermsLoaded extends ItemsState {
+  /// List of search strings that have been loaded
+  final Map<String,String> itemSearchTerms;
+
+  /// Constructor initializing an emply term list
+  const ItemsSearchTermsLoaded([this.itemSearchTerms = const {}]);
+
+  @override
+  List<String> get props => List<String>.from(itemSearchTerms.values);
+}
+
+/// State for when items have not been loaded
+/// Will be used for both items and search strings alike
+class ItemsNotLoaded extends ItemsState {
   @override
   List<Object> get props => [];
 }

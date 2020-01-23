@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../services/database_manager.dart';
 import '../services/logger.dart';
 import '../services/reservation_check.dart';
@@ -192,7 +194,7 @@ class ItemRepository extends Repository {
   }
 
   /// Call the load-method of the associaded database managers
-  Future<List<Item>> loadItems({List<String> idList,
+  Future<List<Item>> loadItems({@required List<String> idList,
   bool remote = false}) async {
     if (remote) {
       if(remoteDatabaseManager == null){
@@ -213,13 +215,13 @@ class ItemRepository extends Repository {
 
   /// Load itmes from box and construct search-keys needed
   /// for fuzzy searching in the UI
-  Future<List<String>> getSearchterms() async {
+  Future<Map<String, String>> getSearchterms() async {
     var _itemList = await loadItems(remote: false);
-    var _searchKeys = <String>[];
+    var _searchKeys = <String,String>{};
     for(var _item in _itemList){
       var _title = _item.title;
       var _description = _item.description;
-      _searchKeys.add('$_title $_description');
+      _searchKeys[_item.id] = ('$_title $_description');
     }
     return _searchKeys;
   }

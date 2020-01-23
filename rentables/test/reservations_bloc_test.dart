@@ -90,11 +90,11 @@ void main() {
     act: (bloc) => bloc.add(LoadReservationsFromCage(testItemLocal)),
     expect: [ReservationsLoading(), ReservationsLoaded([testResLocal])],
     );
-
+    
     blocTest(
     'Loading from Cage -> Loaded - Error',
     build: () => ReservationBlock(reservationRepository: _resRepRemote),
-    act: (bloc) => bloc.add(LoadReservationsFromCage(testItemLocal)),
+    act: (bloc) => bloc.add(LoadReservationsFromCage(testItemRemote)),
     expect: [ReservationsLoading(), ReservationsNotLoaded()],
     );
 
@@ -108,7 +108,7 @@ void main() {
     blocTest(
     'Loading from Server -> Loaded - Error',
     build: () => ReservationBlock(reservationRepository: _resRepLocal),
-    act: (bloc) => bloc.add(LoadReservationsFromServer(testItemRemote)),
+    act: (bloc) => bloc.add(LoadReservationsFromServer(testItemLocal)),
     expect: [ReservationsLoading(), ReservationsNotLoaded()],
     );
 

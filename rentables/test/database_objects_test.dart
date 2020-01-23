@@ -64,7 +64,6 @@ void main() {
       description: 'This is a test-item'
     );
 
-
     var testRes = Reservation(
       employee: 'Jürgen',
       item: testItem,

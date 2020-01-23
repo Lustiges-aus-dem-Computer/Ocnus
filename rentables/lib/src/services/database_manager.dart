@@ -12,34 +12,43 @@ abstract class DatabaseManager {
   /// Function to dismiss the manager
   Future<void> dismiss();
 
-  /// Function to request loading categories from the database
+  /// API-wrapper to request loading categories from the database
+  /// If no categories are found, an empty list should be returned
   Future<List<Category>> getCategories();
 
-  /// Function to request deleting categories from the database
+  /// API-wrapper to request deleting categories from the database
+  /// Databases should handle removing all references to the deleted
+  /// category in linked items before commiting the category deletion
   Future<void> deleteCategories(List<String> idList);
 
-  /// Function to request saving categories to the database
+  /// API-wrapper to request saving categories to the database
   Future<void> putCategories(List<Category> _categoryList);
 
-  /// Function to request loading reservations for 
+  /// API-wrapper to request loading reservations for 
   /// a given item from the database
+  /// This takes an item as it makes it easier to return
+  /// the reservation. The API-call should only use the item ID
+  /// If no reservations are found, an empty list should be returned
   Future<List<Reservation>> getReservations(Item _item);
 
-  /// Function to request deleting reservations from the database
+  /// API-wrapper to request deleting reservations from the database
   Future<void> deleteReservations(List<String> idList);
 
-  /// Function to request saving reservations to the database
+  /// API-wrapper to request saving reservations to the database
   /// Returns true if the reservation was sucessfull
   Future<void> putReservations(List<Reservation> _reservationList);
 
-  /// Function to request loading items from the database
+  /// API-wrapper to request loading items from the database
   /// provided a list of IDs
+  /// If no items are found, an empty list should be returned
   Future<List<Item>> getItems({List<String> idList});
 
-  /// Function to request deleting items from the database
+  /// API-wrapper to request deletion of items from the database
+  /// Databases should take care of deleting all linked reservations
+  /// before commiting the item deletion
   Future<void> deleteItems(List<String> idList);
 
-  /// Function to request saving items to the database
+  /// API-wrapper to request saving items to the database
   Future<void> putItems(List<Item> _itemList);
 }
 
@@ -154,7 +163,7 @@ class HiveManager implements DatabaseManager {
     var _itemList = <Item>[];
     for (var _id in idList ?? itemCageBox.keys) {
       /// idList contatins the string keys so they need to be transformed
-        /// into the corresponding Hive keys before the call
+      /// into the corresponding Hive keys before the call
       var _item = await itemCageBox.get(
         idList == null ? _id : LocalIdGenerator().getHiveIdFromString(_id));
         if(_item.categoryId != null)
