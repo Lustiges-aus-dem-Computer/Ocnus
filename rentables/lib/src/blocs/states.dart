@@ -109,15 +109,15 @@ class ItemsLoaded extends ItemsState {
 }
 
 /// State for when item search strings have been loaded
-class ItemsSearchTermsLoaded extends ItemsState {
+class ItemsSearchParametersLoaded extends ItemsState {
   /// List of search strings that have been loaded
-  final Map<String,String> itemSearchTerms;
+  final Map<String,Map<searchParameters, String>> itemSearchParameters;
 
   /// Constructor initializing an emply term list
-  const ItemsSearchTermsLoaded([this.itemSearchTerms = const {}]);
+  const ItemsSearchParametersLoaded([this.itemSearchParameters = const {}]);
 
   @override
-  List<String> get props => List<String>.from(itemSearchTerms.values);
+  List<String> get props => List<String>.from(itemSearchParameters.keys);
 }
 
 /// State for when items have not been loaded

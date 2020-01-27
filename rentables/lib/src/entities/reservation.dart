@@ -1,100 +1,98 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../services/definitions.dart';
-import '../services/local_id_generator.dart';
 import '../services/logger.dart';
-import 'item.dart';
 
 part 'reservation.g.dart';
 
 /// Class handling reservations of rentable items
 @HiveType(typeId: 1)
-class Reservation {
-  final LocalIdGenerator _localIdGen =  LocalIdGenerator();
-
+class Reservation extends Equatable{
   /// ID of the reservation
   @HiveField(0)
-  String id;
+  final String id;
   /// Name of the employee who created the reservation
   @HiveField(1)
-  String employee;
+  final String employee;
   /// Name of the customer requesting the reservation
   @HiveField(2)
-  String customerName;
+  final String customerName;
   /// Phone number of the customer requesting the reservation
   @HiveField(3)
-  String customerPhone;
+  final String customerPhone;
   /// Email address of the customer requesting the reservation
   @HiveField(4)
-  String customerMail;
-
-  /// Link to the item the reservation is linked to
-  Item item;
+  final String customerMail;
 
   /// ID of the item - used for saving to Hive
   @HiveField(5)
-  String itemId;
-
-  /// ID used for saving to Hive
-  int hiveId;
+  final String itemId;
 
   /// Start date of the reservation
   @HiveField(6)
-  DateTime startDate;
+  final DateTime startDate;
   /// End date of the reservation
   @HiveField(7)
-  DateTime endDate;
+  final DateTime endDate;
   /// Date the reserved item was picked up
   @HiveField(8)
-  DateTime fetchedOn;
+  final DateTime fetchedOn;
   /// Date the reserved item was returned
   @HiveField(9)
-  DateTime returnedOn;
+  final DateTime returnedOn;
 
   /// Creation date of the instance
   @HiveField(10)
-  DateTime created;
+  final DateTime created;
   /// Date the instance was last modified
   @HiveField(11)
-  DateTime modified;
+  final DateTime modified;
 
   final _log = getLogger();
 
   /// Constructor for class handling reservations of rentable items
-  Reservation({
+  Reservation(
+    {
     @required this.employee,
     @required this.customerName,
     @required this.customerPhone,
     @required this.customerMail,
-    @required this.item,
     @required this.startDate,
     @required this.endDate,
+    @required this.itemId,
+    @required this.created,
+    @required this.modified,
+    @required this.id,
     this.fetchedOn,
     this.returnedOn,
-    this.id,
-    this.created,
-    this.modified,
-  }){
-    created ??= DateTime.now();
-    modified ??= DateTime.now();
-    id ??= _localIdGen.getId();
-    if(item != null){
-      itemId = item.id;
-      item.reservations.add(this);
-      item.reservationsHive.add(_localIdGen.getHiveIdFromString(id));
-    }
-    hiveId = _localIdGen.getHiveIdFromString(id);
-    _log.d('ID $id assigned to item');
+  })
+    {
+    _log.d('Reservation $id created');
     }
 
-  /// Update the "modified" date after a property was updated
-  void update(){
-    if(item != null){
-      itemId = item.id;
-      item.reservations.add(this);
-      item.reservationsHive.add(_localIdGen.getHiveIdFromString(id));
-    }
-    modified = DateTime.now();
+  /// Create a copy of a reservation and take in changing parameters
+  Reservation copyWith(
+    Reservation _reservation,
+    {
+      String employee,
+      String customerName,
+      String customerPhone,
+      String customerMail,
+      DateTime startDate,
+      DateTime endDate,
+      DateTime fetchedOn,
+      DateTime returnedOn,
+    }){
+
+    employee ??= _reservation.employee;
+    customerName ??= _reservation.customerName;
+    customerPhone ??= _reservation.customerPhone;
+    customerMail ??= _reservation.customerMail;
+    startDate ??= _reservation.startDate;
+    endDate ??= _reservation.endDate;
+    fetchedOn ??= _reservation.fetchedOn;
+    returnedOn ??= _reservation.returnedOn;
 
     /// Sanity checks for dates
     /// All rentals last at least for minimumRentalPeriod
@@ -111,5 +109,23 @@ class Reservation {
         fetchedOn = returnedOn.add(-minimumRentalPeriod);
       }
     }
+
+    return Reservation(
+      employee: employee,
+      customerName: customerName,
+      customerPhone: customerPhone,
+      customerMail: customerMail,
+      startDate: startDate,
+      endDate: endDate,
+      itemId: itemId,
+      fetchedOn: fetchedOn,
+      returnedOn: returnedOn,
+      created: _reservation.created,
+      modified: DateTime.now(),
+      id: _reservation.id
+      );
   }
+
+  @override
+  List<Object> get props => [id];
 }

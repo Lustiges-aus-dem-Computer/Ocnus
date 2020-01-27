@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import '../services/local_id_generator.dart';
 import '../services/logger.dart';
 
 part 'category.g.dart';
@@ -8,8 +7,6 @@ part 'category.g.dart';
 /// Class handling categories of rentable items
 @HiveType(typeId: 0)
 class Category{
-  final LocalIdGenerator _localIdGen =  LocalIdGenerator();
-
   /// Is the category active
   @HiveField(0)
   bool active;
@@ -29,9 +26,6 @@ class Category{
   @HiveField(5)
   String icon;
 
-  /// ID used for saving to Hive
-  int hiveId;
-
   /// Creation date of the instance
   @HiveField(6)
   DateTime created;
@@ -47,18 +41,47 @@ class Category{
     @required this.title,
     @required this.location,
     @required this.icon,
+    @required this.id,
+    @required this.created,
+    @required this.modified,
     this.active = true,
-    this.id,
-    this.created,
-    this.modified,
   }){
-    created ??= DateTime.now();
-    modified ??= DateTime.now();
-    id ??= _localIdGen.getId();
-    hiveId = _localIdGen.getHiveIdFromString(id);
-    _log.d('ID $id assigned to item');
+    _log.d('Category $id created');
   }
 
-  /// Update the "modified" date after a property was updated
-  void update() => modified = DateTime.now();
+ 
+  /// Create a copy of an item and take in changing parameters
+  Category copyWith(
+    Category _category,
+    {
+      String color,
+      String title,
+      String location,
+      String icon,
+      DateTime created,
+      DateTime modified,
+      String id,
+      bool active = true,
+    }){
+
+    color ??= color;
+    title ??= title;
+    location ??= location;
+    icon ??= icon;
+    active ??= active;
+
+    return Category(
+      color: color,
+      title: title,
+      location: location,
+      icon: icon,
+      id: _category.id,
+      created: _category.created,
+      active: active,
+      modified: DateTime.now(),
+      );
+  }
+
+  @override
+  List<Object> get props => [id];
 }

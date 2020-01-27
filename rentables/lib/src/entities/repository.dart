@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import '../services/database_manager.dart';
 import '../services/logger.dart';
 import '../services/reservation_check.dart';
@@ -8,7 +6,7 @@ import 'item.dart';
 import 'reservation.dart';
 
 /// Abstract class for all types of repositories
-abstract class Repository {
+class Repository {
   final _log = getLogger();
 
   /// References the remote database
@@ -25,19 +23,6 @@ abstract class Repository {
       throw Exception('Invalid database manager settings');
     }
   }
-}
-
-/// Repository for category entires
-class CategoryRepository extends Repository {
-  final _log = getLogger();
-
-  /// Constructor for repository class
-  CategoryRepository(
-      {DatabaseManager remoteDatabaseManager,
-      DatabaseManager localDatabaseManager})
-      : super(
-            remoteDatabaseManager: remoteDatabaseManager,
-            localDatabaseManager: localDatabaseManager);
 
   /// Call the save-method of the associaded database managers
   Future<void> saveCategories(List<Category> _categoryList) async {
@@ -82,19 +67,6 @@ class CategoryRepository extends Repository {
       await remoteDatabaseManager.deleteCategories(idList);
     }
   }
-}
-
-/// Repository for reservation entires
-class ReservationRepository extends Repository {
-  final _log = getLogger();
-
-  /// Constructor for repository class
-  ReservationRepository(
-      {DatabaseManager remoteDatabaseManager,
-      DatabaseManager localDatabaseManager})
-      : super(
-            remoteDatabaseManager: remoteDatabaseManager,
-            localDatabaseManager: localDatabaseManager);
 
   /// Check if a save-operation could be performed without conflicts
   Future<bool> checkValidUpdate({List<Reservation> reservationList, 
@@ -105,7 +77,7 @@ class ReservationRepository extends Repository {
     for(var _reservation in reservationList){
       /// Load all reservations for the relevant item
       if(!checkReservationValidity(existingReservations: 
-        await loadReservations(_reservation.item, remote: remote),
+        await loadReservations(_reservation.itemId, remote: remote),
         newReservation: _reservation)){
            _log.d('Update NOT valid');
           return false;
@@ -135,19 +107,19 @@ class ReservationRepository extends Repository {
   }
 
   /// Call the load-method of the associaded database managers
-  Future<List<Reservation>> loadReservations(Item _item,
+  Future<List<Reservation>> loadReservations(String _itemId,
   {bool remote = false}) async {
     if (remote) {
       if(remoteDatabaseManager == null){
         _log.e('Requested server update but no remote manager specified');
         throw Exception('No active remote database manager found');
       }
-      _log.d('Loading reservations for item ${_item.id} from remote database');
-      return remoteDatabaseManager.getReservations(_item);
+      _log.d('Loading reservations for item $_itemId from remote database');
+      return remoteDatabaseManager.getReservations(_itemId);
     }
     if (localDatabaseManager != null) {
-      _log.d('Loading reservations for item ${_item.id} from local database');
-      return localDatabaseManager.getReservations(_item);
+      _log.d('Loading reservations for item $_itemId from local database');
+      return localDatabaseManager.getReservations(_itemId);
     } else {
       _log.e('Found valid database for loading reservation data');
       throw Exception('No valid database manager specified');
@@ -165,21 +137,7 @@ class ReservationRepository extends Repository {
       await remoteDatabaseManager.deleteReservations(idList);
     }
   }
-}
-
-
-/// Repository for rentable items
-class ItemRepository extends Repository {
-  final _log = getLogger();
-
-  /// Constructor for repository class
-  ItemRepository(
-      {DatabaseManager remoteDatabaseManager,
-      DatabaseManager localDatabaseManager})
-      : super(
-            remoteDatabaseManager: remoteDatabaseManager,
-            localDatabaseManager: localDatabaseManager);
-
+  
   /// Call the save-method of the associaded database managers
   Future<void> saveItems(List<Item> _itemList) async {
     if (remoteDatabaseManager != null) {
@@ -194,7 +152,7 @@ class ItemRepository extends Repository {
   }
 
   /// Call the load-method of the associaded database managers
-  Future<List<Item>> loadItems({@required List<String> idList,
+  Future<List<Item>> loadItems({List<String> idList,
   bool remote = false}) async {
     if (remote) {
       if(remoteDatabaseManager == null){
@@ -202,11 +160,11 @@ class ItemRepository extends Repository {
         throw Exception('No active remote database manager found');
       }
       _log.d('Loading items from remote database by list of IDs');
-      return remoteDatabaseManager.getItems(idList: idList);
+      return remoteDatabaseManager.getItems(idList);
     }
     if (localDatabaseManager != null) {
       _log.d('Loading items from local database by list of IDs');
-      return localDatabaseManager.getItems(idList: idList);
+      return localDatabaseManager.getItems(idList);
     } else {
       _log.e('Found valid database for loading item data');
       throw Exception('No valid database manager specified');
@@ -215,15 +173,16 @@ class ItemRepository extends Repository {
 
   /// Load itmes from box and construct search-keys needed
   /// for fuzzy searching in the UI
-  Future<Map<String, String>> getSearchterms() async {
+  Future<Map<String,Map<searchParameters, String>>> 
+  getSearchParameters() async {
     var _itemList = await loadItems(remote: false);
-    var _searchKeys = <String,String>{};
+    var _searchParameters = <String,Map<searchParameters, String>>{};
     for(var _item in _itemList){
-      var _title = _item.title;
-      var _description = _item.description;
-      _searchKeys[_item.id] = ('$_title $_description');
+      _searchParameters[_item.id] = {
+        searchParameters.category: _item.categoryId,
+        searchParameters.searchTerm: '${_item.title} ${_item.description}'};
     }
-    return _searchKeys;
+    return _searchParameters;
   }
 
   /// Call the delete-method of the associaded database managers

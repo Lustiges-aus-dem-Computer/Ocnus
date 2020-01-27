@@ -33,6 +33,7 @@ void main() {
       size: 'L',
       type: 'm',
       description: 'This is a test-item',
+      thumbnailLink: 'http:://api_request',
       category: testCatLocal
     );
     var testItemRemote = Item(
@@ -40,6 +41,7 @@ void main() {
       size: 'L',
       type: 'm',
       description: 'This is a test-item',
+      thumbnailLink: 'http:://api_request',
       category: testCatRemote
     );
     var testItemLocalUpdate = Item(
@@ -47,6 +49,7 @@ void main() {
       size: 'L',
       type: 'm',
       description: 'This is a test-item',
+      thumbnailLink: 'http:://api_request',
       category: testCatLocal
     );
     testItemLocalUpdate.id = testItemLocal.id;
@@ -57,6 +60,9 @@ void main() {
       .thenAnswer((_) => Future.value());
 
     when(mockManagerLocal.getItems(idList: [testItemLocal.id]))
+      .thenAnswer((_) => Future.value([testItemLocal]));
+
+    when(mockManagerLocal.getItems())
       .thenAnswer((_) => Future.value([testItemLocal]));
 
     var mockManagerRemote = MockManager();
@@ -84,6 +90,16 @@ void main() {
     expect: [ItemsLoading(), ItemsLoaded([testItemLocal])],
     );
     
+    blocTest(
+    'Loading Search Terms -> Search Terms Loaded',
+    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    act: (bloc) => bloc.add(LoadItemSearchParameters()),
+    expect: [ItemsLoading(), ItemsSearchParametersLoaded({testItemLocal.id: 
+    {searchParameters.category: testItemLocal.categoryId,
+     searchParameters.searchTerm: 
+     '${testItemLocal.title} ${testItemLocal.description}'}})],
+    );
+
     blocTest(
     'Loading from Cage -> Loaded - Error',
     build: () => ItemBloc(itemRepository: _itmRepRemote),

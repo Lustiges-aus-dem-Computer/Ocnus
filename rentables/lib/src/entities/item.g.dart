@@ -6,7 +6,7 @@ part of 'item.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-/// Hive-Adapter for the Item class (auto-generated)
+/// Auto-generated Hive-adapter for the item class
 class ItemAdapter extends TypeAdapter<Item> {
   @override
   final int typeId = 3;
@@ -22,6 +22,7 @@ class ItemAdapter extends TypeAdapter<Item> {
       title: fields[2] as String,
       description: fields[3] as String,
       type: fields[4] as String,
+      thumbnailLink: fields[10] as String,
       active: fields[0] as bool,
       id: fields[1] as String,
       created: fields[8] as DateTime,
@@ -34,7 +35,7 @@ class ItemAdapter extends TypeAdapter<Item> {
   @override
   void write(BinaryWriter writer, Item obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.active)
       ..writeByte(1)
@@ -54,6 +55,8 @@ class ItemAdapter extends TypeAdapter<Item> {
       ..writeByte(8)
       ..write(obj.created)
       ..writeByte(9)
-      ..write(obj.modified);
+      ..write(obj.modified)
+      ..writeByte(10)
+      ..write(obj.thumbnailLink);
   }
 }

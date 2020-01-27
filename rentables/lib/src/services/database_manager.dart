@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -26,10 +27,8 @@ abstract class DatabaseManager {
 
   /// API-wrapper to request loading reservations for 
   /// a given item from the database
-  /// This takes an item as it makes it easier to return
-  /// the reservation. The API-call should only use the item ID
   /// If no reservations are found, an empty list should be returned
-  Future<List<Reservation>> getReservations(Item _item);
+  Future<List<Reservation>> getReservations(String _itemId);
 
   /// API-wrapper to request deleting reservations from the database
   Future<void> deleteReservations(List<String> idList);
@@ -41,7 +40,7 @@ abstract class DatabaseManager {
   /// API-wrapper to request loading items from the database
   /// provided a list of IDs
   /// If no items are found, an empty list should be returned
-  Future<List<Item>> getItems({List<String> idList});
+  Future<List<Item>> getItems([List<String> idList]);
 
   /// API-wrapper to request deletion of items from the database
   /// Databases should take care of deleting all linked reservations
@@ -63,9 +62,12 @@ class HiveManager implements DatabaseManager {
   /// Hive box for saving reservations -> lazy because there
   /// might be a significant amount of data stored
   LazyBox<Reservation> reservationCageBox;
-  /// Hive box for saving itams -> lazy because there
+  /// Hive box for saving items -> lazy because there
   /// might be a significant amount of data stored
   LazyBox<Item> itemCageBox;
+  /// Hive box for saving images -> lazy because there
+  /// might be a significant amount of data stored
+  LazyBox<List<int>> thumbnailCageBox;
 
   /// Initialize the hive box
   @override
@@ -79,6 +81,9 @@ class HiveManager implements DatabaseManager {
     _log.d('Opening reservations box');
     reservationCageBox = 
     await Hive.openLazyBox<Reservation>('reservationCageBox');
+    _log.d('Opening image box');
+    thumbnailCageBox = 
+    await Hive.openLazyBox<Uint8List>('imageCagedBox');
   }
 
   @override
@@ -87,6 +92,7 @@ class HiveManager implements DatabaseManager {
     await categoryCageBox.close();
     await itemCageBox.close();
     await reservationCageBox.close();
+    await thumbnailCageBox.close();
   }
 
   /// Needed for testing to clean-up the boxes
@@ -96,6 +102,22 @@ class HiveManager implements DatabaseManager {
     await categoryCageBox.clear();
     await itemCageBox.clear();
     await reservationCageBox.clear();
+    await thumbnailCageBox.clear();
+  }
+
+  /// Writing thumbnail image to the local cage
+  Future<void> putThumbnail(Uint8List _imageBytes, {String imageId}) async{
+    _log.d('Writing thumbnail to Hive');
+    thumbnailCageBox.put(LocalIdGenerator()
+    .getHiveIdFromString(imageId), _imageBytes);
+    return;
+  }
+
+  /// Reading thumbnail image from the local cage
+  Future<Uint8List> getThumbnail(String imageId) async{
+    _log.d('Reading thumbnail from Hive');
+    return thumbnailCageBox.get(LocalIdGenerator()
+    .getHiveIdFromString(imageId));
   }
 
   @override
@@ -117,21 +139,25 @@ class HiveManager implements DatabaseManager {
   Future<void> putCategories(List<Category> _categoryList) async {
     _log.d('Wrinting categories to Hive');
     for(var _category in _categoryList){
-      categoryCageBox.put(_category.hiveId, _category);
+      categoryCageBox.put(
+        LocalIdGenerator().getHiveIdFromString(_category.id), _category);
     }
     return;
   }
 
   @override
-  Future<List<Reservation>> getReservations(Item _item) async {
-    _log.d('Loading reservations for item ${_item.id} from Hive');
+  Future<List<Reservation>> getReservations(String _itemId) async {
+    _log.d('Loading reservations for item $_itemId from Hive');
+    var reservationsHive = 
+    List<String>.from((await getItems([_itemId]))[0]
+    .reservations.map((_id) => 
+    LocalIdGenerator().getHiveIdFromString(_id)));
     return Future.wait(
       List.from(
         reservationCageBox.keys.where((_key) => 
-        _item.reservationsHive.contains(_key)).map(
+        reservationsHive.contains(_key)).map(
           (_key) async {
             var _reservation = await reservationCageBox.get(_key);
-            _reservation.item = _item;
             return _reservation;
           }
         )
@@ -143,7 +169,8 @@ class HiveManager implements DatabaseManager {
   Future<void> putReservations(List<Reservation> _reservationList) async {
     _log.d('Writing reservations to Hive');
     for(var _reservation in _reservationList){
-      await reservationCageBox.put(_reservation.hiveId, _reservation);
+      await reservationCageBox.put(
+        LocalIdGenerator().getHiveIdFromString(_reservation.id), _reservation);
     }
     return;
   }
@@ -158,7 +185,7 @@ class HiveManager implements DatabaseManager {
   }
 
   @override
-  Future<List<Item>> getItems({List<String> idList}) async {
+  Future<List<Item>> getItems([List<String> idList]) async {
     _log.d('Loading Items $idList from Hive');
     var _itemList = <Item>[];
     for (var _id in idList ?? itemCageBox.keys) {
@@ -166,11 +193,6 @@ class HiveManager implements DatabaseManager {
       /// into the corresponding Hive keys before the call
       var _item = await itemCageBox.get(
         idList == null ? _id : LocalIdGenerator().getHiveIdFromString(_id));
-        if(_item.categoryId != null)
-        {
-          _item.category = categoryCageBox.get(LocalIdGenerator()
-          .getHiveIdFromString(_item.categoryId));
-        }
         _itemList.add(_item);
     }
     return _itemList;
@@ -180,11 +202,8 @@ class HiveManager implements DatabaseManager {
   Future<void> putItems(List<Item> _itemList) async {
     _log.d('Writing items to Hive');
     for(var _item in _itemList){
-      if(_item.categoryId != null){
-        categoryCageBox.put(LocalIdGenerator()
-          .getHiveIdFromString(_item.categoryId), _item.category);
-      }
-      await itemCageBox.put(_item.hiveId, _item);
+      await itemCageBox.put(
+        LocalIdGenerator().getHiveIdFromString(_item.id), _item);
     }
     return;
   }

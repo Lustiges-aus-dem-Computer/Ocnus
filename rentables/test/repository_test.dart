@@ -1,7 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
 import 'package:rentables/rentables.dart';
 
 /// Mocking the database manager
@@ -27,6 +26,7 @@ void main() {
       size: 'L',
       type: 'm',
       description: 'This is a test-item',
+      thumbnailLink: 'http:://api_request',
       category: testCatLocal
     );
 
@@ -35,6 +35,7 @@ void main() {
       size: 'L',
       type: 'm',
       description: 'This is a test-item',
+      thumbnailLink: 'http:://api_request',
       category: testCatRemote
     );
 
@@ -246,8 +247,10 @@ void main() {
       var _repository =
           ItemRepository(localDatabaseManager: mockManagerLocal);
       await _repository.saveItems([testItemLocal]);
-      expect(await _repository.getSearchterms(), {testItemLocal.id: 
-      '${testItemLocal.title} ${testItemLocal.description}'});
+      expect(await _repository.getSearchParameters(), {testItemLocal.id: 
+      {searchParameters.category: testItemLocal.categoryId,
+       searchParameters.searchTerm: 
+       '${testItemLocal.title} ${testItemLocal.description}'}});
     });
     test('Get Data from remote Item Repository', () async {
       var _repository =

@@ -25,8 +25,8 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
     else if(event is LoadItemsFromServer){
       yield* _mapLoadItemsToState(itemsList: event.itemList, remote: true);
     }
-    else if(event is LoadItemSearchTerms){
-      yield* _mapLoadSearchTermsToState();
+    else if(event is LoadItemSearchParameters){
+      yield* _mapLoadSearchParametersToState();
     }
     else if(event is AddItem){
       yield* _mapAddItemToState(event.item);
@@ -39,9 +39,10 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
     }
   }
 
-  Stream<ItemsState> _mapLoadSearchTermsToState() async* {
+  Stream<ItemsState> _mapLoadSearchParametersToState() async* {
     try {
-      yield ItemsSearchTermsLoaded(await itemRepository.getSearchterms());
+      yield ItemsSearchParametersLoaded(
+        await itemRepository.getSearchParameters());
     }
     /// In case we have no valid cage
     on Exception catch (_) {

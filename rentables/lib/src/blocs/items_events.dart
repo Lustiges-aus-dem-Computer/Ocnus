@@ -22,7 +22,7 @@ class LoadItemsFromCage extends ItemsEvent {
 }
 
 /// Event triggering loading of items
-class LoadItemSearchTerms extends ItemsEvent {}
+class LoadItemSearchParameters extends ItemsEvent {}
 
 /// Evend triggering addition of a new item
 class AddItem extends ItemsEvent {

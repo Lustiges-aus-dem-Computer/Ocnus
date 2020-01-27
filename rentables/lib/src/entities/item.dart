@@ -1,58 +1,57 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../rentables.dart';
-import '../services/local_id_generator.dart';
 import '../services/logger.dart';
 
 part 'item.g.dart';
 
+/// Enum used as keys for search parameters
+enum searchParameters {
+  /// Key for the category of an item in the search parameters
+  category,
+  /// Key for the serach-term of an item in the search parameters
+  /// this is used for fuzzy-search in the frontend
+  searchTerm
+}
+
 /// Class handling categories of rentable items
 @HiveType(typeId: 3)
-class Item {
-  final LocalIdGenerator _localIdGen =  LocalIdGenerator();
+class Item extends Equatable{
 
   /// Is the item still active?
   @HiveField(0)
-  bool active;
+  final bool active;
   /// Id D of the item
   @HiveField(1)
-  String id;
+  final String id;
   /// Name of the item
   @HiveField(2)
-  String title;
+  final String title;
   /// Description for the item
   @HiveField(3)
-  String description;
+  final String description;
   /// Type of item
   @HiveField(4)
-  String type;
+  final String type;
   /// Size of the item
   @HiveField(5)
-  String size;
+  final String size;
 
   /// List of reservations associated with an item
-  List<Reservation> reservations = [];
-
-  /// List of reservations associated with an item for Hive saving
   @HiveField(6)
-  List<int> reservationsHive = [];
-
-  /// Link to item-category
-  Category category;
+  final List<String> reservations = [];
 
   /// ID of the category - used for saving to Hive
   @HiveField(7)
-  String categoryId;
-
-  /// ID used for saving to Hive
-  int hiveId;
+  final String categoryId;
 
   /// Creation date of the instance
   @HiveField(8)
-  DateTime created;
+  final DateTime created;
   /// Date the instance was last modified
   @HiveField(9)
-  DateTime modified;
+  final DateTime modified;
 
   final _log = getLogger();
 
@@ -62,29 +61,50 @@ class Item {
     @required this.title,
     @required this.description,
     @required this.type,
-    this.category,
+    @required this.created,
+    @required this.modified,
+    @required this.id,
+    this.categoryId,
     this.active = true,
-    this.id,
-    this.created,
-    this.modified,
   }){
-    created ??= DateTime.now();
-    modified ??= DateTime.now();
-    id ??= _localIdGen.getId();
-    hiveId = _localIdGen.getHiveIdFromString(id);
-    if(category != null){categoryId = category.id;}
-    _log.d('ID $id assigned to item');
-
-    ///Types should only be of length 1
-    if(!'mdfc'.contains(type) || type.length != 1){
-      _log.e('Item-Types should only be one of the folowing: m/d/f/c');
-      throw Exception('Invalid length of type-parameter');
-    }
+    _log.d('Item $id created');
   }
 
-  /// Update the "modified" date after a property was updated
-  void update(){
-    if(category != null){categoryId = category.id;}
-    modified = DateTime.now();
-    }
+  /// Create a copy of an item and take in changing parameters
+  Item copyWith(
+    Item _item,
+    {
+    String size,
+    String title,
+    String description,
+    String type,
+    DateTime created,
+    DateTime modified,
+    String id,
+    String categoryId,
+    bool active = true,
+    }){
+
+    size ??= size;
+    title ??= title;
+    description ??= description;
+    type ??= type;
+    categoryId ??= categoryId;
+    active ??= active;
+
+    return Item(
+      size: size,
+      title: title,
+      description: description,
+      type: type,
+      active: active,
+      id: _item.id,
+      created: _item.created,
+      categoryId: categoryId,
+      modified: DateTime.now(),
+      );
+  }
+
+  @override
+  List<Object> get props => [id];
 }

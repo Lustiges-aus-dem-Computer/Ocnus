@@ -1,6 +1,5 @@
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:rentables/rentables.dart';
 
 void main() {
@@ -8,6 +7,9 @@ void main() {
 
   group('Category', () {
     var testCat = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'black',
       title: 'Some Title',
       icon: 'blender',
@@ -23,50 +25,50 @@ void main() {
       expect(testCat.active, true);
       expect(testCat.icon, 'blender');
       expect(testCat.id, isNotNull);
-      expect(testCat.hiveId, isNotNull);
       expect(testCat.created.isBefore(_now), true);
       expect(testCat.modified.isBefore(_now), true);
     });
 
-    test('Change Category', () async {
+    test('Copy Category', () async {
       var _now = DateTime.now();
 
       await Future.delayed(Duration(milliseconds: 50));
 
-      testCat.title = 'New Title';
-      testCat.icon = 'yinYang';
-      testCat.color = 'white';
-      testCat.location = 'New location';
-      testCat.active = false;
-      testCat.update();
-      expect(testCat.title, 'New Title');
-      expect(testCat.icon, 'yinYang');
-      expect(testCat.color, 'white');
-      expect(testCat.location, 'New location');
-      expect(testCat.active, false);
-      expect(testCat.modified.isAfter(_now), true);
+      var testCatCopy = testCat.copyWith(testCat,
+        title: 'New Title',
+        icon: 'yinYang',
+        color: 'white',
+        location: 'New location',
+        active: false,
+      );
+
+      expect(testCatCopy.title, 'New Title');
+      expect(testCatCopy.icon, 'yinYang');
+      expect(testCatCopy.color, 'white');
+      expect(testCatCopy.location, 'New location');
+      expect(testCatCopy.active, false);
+      expect(testCatCopy.modified.isAfter(_now), true);
     });
   });
 
 
   group('Reservation', () {
     var testItem = Item(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       title: 'New Item',
       size: 'L',
       type: 'm',
-      description: 'This is a test-item'
-    );
-
-    var testItem2 = Item(
-      title: 'All-New Item',
-      size: 'L',
-      type: 'm',
-      description: 'This is a test-item'
+      description: 'This is a test-item',
     );
 
     var testRes = Reservation(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       employee: 'Jürgen',
-      item: testItem,
+      itemId: testItem.id,
       customerName: 'Ernst August',
       customerMail: 'ernst_august@neuland.de',
       customerPhone: '+49 3094 988 78 00',
@@ -83,85 +85,90 @@ void main() {
       expect(testRes.customerPhone, '+49 3094 988 78 00');
       expect(testRes.itemId, testItem.id);
       expect(testRes.id, isNotNull);
-      expect(testRes.hiveId, isNotNull);
       expect(testRes.startDate, DateTime.utc(2020, 01, 01));
       expect(testRes.endDate, DateTime.utc(2020, 01, 04));
       expect(testRes.created.isBefore(_now), true);
       expect(testRes.modified.isBefore(_now), true);
     });
 
-    test('Change Reservation', () async {
+    test('Copy Reservation', () async {
       var _now = DateTime.now();
 
       await Future.delayed(Duration(milliseconds: 50));
 
-      testRes.employee = 'Gunter';
-      testRes.customerName = 'Ludwig Maximilian';
-      testRes.customerMail = 'sexy-tiger@neuland.de';
-      testRes.customerPhone = '';
-      testRes.item = testItem2;
-      testRes.startDate = DateTime.utc(2020, 02, 01);
-      testRes.endDate = DateTime.utc(2020, 02, 04);
-      testRes.fetchedOn = DateTime.utc(2020, 02, 01);
-      testRes.returnedOn = DateTime.utc(2020, 05, 04);
+      var testResCopy = testRes.copyWith(testRes,
+        employee: 'Gunter',
+        customerName: 'Ludwig Maximilian',
+        customerMail: 'sexy-tiger@neuland.de',
+        customerPhone: '',
+        startDate: DateTime.utc(2020, 02, 01),
+        endDate: DateTime.utc(2020, 02, 04),
+        fetchedOn: DateTime.utc(2020, 02, 01),
+        returnedOn: DateTime.utc(2020, 05, 04)
+      );
 
-      testRes.update();
-      expect(testRes.employee, 'Gunter');
-      expect(testRes.customerName, 'Ludwig Maximilian');
-      expect(testRes.customerMail, 'sexy-tiger@neuland.de');
-      expect(testRes.customerPhone, '');
-      expect(testRes.id, isNotNull);
-      expect(testRes.itemId, testItem2.id);
-      expect(testRes.item, testItem2);
-      expect(testRes.startDate, DateTime.utc(2020, 02, 01));
-      expect(testRes.endDate, DateTime.utc(2020, 02, 04));
-      expect(testRes.fetchedOn, DateTime.utc(2020, 02, 01));
-      expect(testRes.returnedOn, DateTime.utc(2020, 05, 04));
-      expect(testRes.modified.isAfter(_now), true);
+      /// Checks the ID
+      expect(testResCopy, testRes);
+
+      /// Checks all other data
+      expect(testResCopy.employee, 'Gunter');
+      expect(testResCopy.customerName, 'Ludwig Maximilian');
+      expect(testResCopy.customerMail, 'sexy-tiger@neuland.de');
+      expect(testResCopy.customerPhone, '');
+      expect(testResCopy.itemId, testItem.id);
+      expect(testResCopy.startDate, DateTime.utc(2020, 02, 01));
+      expect(testResCopy.endDate, DateTime.utc(2020, 02, 04));
+      expect(testResCopy.fetchedOn, DateTime.utc(2020, 02, 01));
+      expect(testResCopy.returnedOn, DateTime.utc(2020, 05, 04));
+      expect(testResCopy.modified.isAfter(_now), true);
     });
 
     test('Error-Handling', () async {
       /// Set invalid start date
-      testRes.endDate = DateTime.utc(2020, 02, 01);
-      testRes.fetchedOn = DateTime.utc(2020, 02, 01);
-      testRes.startDate = DateTime.utc(2020, 03, 01);
+      var testResCopy = testRes.copyWith(testRes,
+        endDate: DateTime.utc(2020, 02, 01),
+        fetchedOn: DateTime.utc(2020, 02, 01),
+        startDate: DateTime.utc(2020, 03, 01)
+      );
 
-      testRes.update();
-      expect(testRes.startDate, DateTime.utc(2020, 03, 01));
-      expect(testRes.endDate, DateTime.utc(2020, 03, 02));
-      expect(testRes.fetchedOn, DateTime.utc(2020, 02, 01));
+      expect(testResCopy.startDate, DateTime.utc(2020, 03, 01));
+      expect(testResCopy.endDate, DateTime.utc(2020, 03, 02));
+      expect(testResCopy.fetchedOn, DateTime.utc(2020, 02, 01));
 
       /// Set invalid end date
-      testRes.fetchedOn = DateTime.utc(2020, 02, 01);
-      testRes.startDate = DateTime.utc(2020, 02, 01);
-      testRes.endDate = DateTime.utc(2020, 01, 02);
+      testResCopy = testRes.copyWith(testRes,
+        fetchedOn: DateTime.utc(2020, 02, 01),
+        startDate: DateTime.utc(2020, 02, 01),
+        endDate: DateTime.utc(2020, 01, 02)
+      );
       
-      testRes.update();
-      expect(testRes.startDate, DateTime.utc(2020, 02, 01));
-      expect(testRes.endDate, DateTime.utc(2020, 02, 02));
-      expect(testRes.fetchedOn, DateTime.utc(2020, 02, 01));
+      expect(testResCopy.startDate, DateTime.utc(2020, 02, 01));
+      expect(testResCopy.endDate, DateTime.utc(2020, 02, 02));
+      expect(testResCopy.fetchedOn, DateTime.utc(2020, 02, 01));
 
       /// Set invalid fetched-on date
-      testRes.startDate = DateTime.utc(2020, 02, 01);
-      testRes.endDate = DateTime.utc(2020, 03, 01);
-      testRes.fetchedOn = DateTime.utc(2020, 04, 01);
+      testResCopy = testRes.copyWith(testRes,
+        startDate: DateTime.utc(2020, 02, 01),
+        endDate: DateTime.utc(2020, 03, 01),
+        fetchedOn: DateTime.utc(2020, 04, 01)
+      );
       
-      testRes.update();
-      expect(testRes.startDate, DateTime.utc(2020, 02, 01));
-      expect(testRes.endDate, DateTime.utc(2020, 04, 02));
-      expect(testRes.fetchedOn, DateTime.utc(2020, 04, 01));
+      expect(testResCopy.startDate, DateTime.utc(2020, 02, 01));
+      expect(testResCopy.endDate, DateTime.utc(2020, 04, 02));
+      expect(testResCopy.fetchedOn, DateTime.utc(2020, 04, 01));
 
       /// Set invalid returned-on date
-      testRes.startDate = DateTime.utc(2020, 02, 01);
-      testRes.endDate = DateTime.utc(2020, 04, 01);
-      testRes.fetchedOn = DateTime.utc(2020, 03, 01);
-      testRes.returnedOn = DateTime.utc(2020, 01, 01);
+      testResCopy = testRes.copyWith(testRes,
+        startDate: DateTime.utc(2020, 02, 01),
+        endDate: DateTime.utc(2020, 04, 01),
+        fetchedOn: DateTime.utc(2020, 03, 01),
+        returnedOn: DateTime.utc(2020, 01, 01)
+      );
       
-      testRes.update();
-      expect(testRes.startDate, DateTime.utc(2020, 02, 01));
-      expect(testRes.endDate, DateTime.utc(2020, 04, 01));
-      expect(testRes.fetchedOn, DateTime.utc(2019, 12, 31));
-      expect(testRes.returnedOn, DateTime.utc(2020, 01, 01));
+      expect(testResCopy.startDate, DateTime.utc(2020, 02, 01));
+      expect(testResCopy.endDate, DateTime.utc(2020, 04, 01));
+      expect(testResCopy.fetchedOn, DateTime.utc(2019, 12, 31));
+      expect(testResCopy.returnedOn, DateTime.utc(2020, 01, 01));
     });
   });
 
@@ -169,6 +176,9 @@ void main() {
 
   group('Item', () {
     var testCat = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'black',
       title: 'Some Title',
       icon: 'blender',
@@ -176,6 +186,9 @@ void main() {
     );
 
     var testCat2 = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'white',
       title: 'Some Title',
       icon: 'blender',
@@ -183,11 +196,14 @@ void main() {
     );
 
     var testItem = Item(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       title: 'New Item',
       size: 'L',
       type: 'm',
       description: 'This is a test-item',
-      category: testCat
+      categoryId: testCat.id
     );
 
     test('Create new Item', () async {
@@ -198,53 +214,33 @@ void main() {
       expect(testItem.type, 'm');
       expect(testItem.active, true);
       expect(testItem.description, 'This is a test-item');
-      expect(testItem.category.id, testCat.id);
+      expect(testItem.categoryId, testCat.id);
       expect(testItem.id, isNotNull);
-      expect(testItem.hiveId, isNotNull);
       expect(testItem.created.isBefore(_now), true);
       expect(testItem.modified.isBefore(_now), true);
     });
 
-    test('Change Item', () async {
+    test('Copy Item', () async {
       var _now = DateTime.now();
 
       await Future.delayed(Duration(milliseconds: 50));
 
-      testItem.title = 'New Title';
-      testItem.size = 'M';
-      testItem.type = 'f';
-      testItem.description = 'Changed';
-      testItem.active = false;
-      testItem.category = testCat2;
+      var testItemCopy = testItem.copyWith(testItem,
+        title: 'New Title',
+        size: 'M',
+        type: 'f',
+        description: 'Changed',
+        active: false,
+        categoryId: testCat2.id
+      );
 
-      testItem.update();
-      expect(testItem.title, 'New Title');
-      expect(testItem.size, 'M');
-      expect(testItem.type, 'f');
-      expect(testItem.active, false);
-      expect(testItem.description, 'Changed');
-      expect(testItem.category.id, testCat2.id);
-      expect(testItem.modified.isAfter(_now), true);
-    });
-
-    test('Raise Errors in Items', () async {
-      expect(() => 
-        Item(
-          title: 'New Item',
-          size: 'L',
-          type: 'mf',
-          description: 'This is a test-item',
-          category: testCat
-        ), throwsException);
-      
-      expect(() => 
-        Item(
-          title: 'New Item',
-          size: 'L',
-          type: 'k',
-          description: 'This is a test-item',
-          category: testCat
-        ), throwsException);
+      expect(testItemCopy.title, 'New Title');
+      expect(testItemCopy.size, 'M');
+      expect(testItemCopy.type, 'f');
+      expect(testItemCopy.active, false);
+      expect(testItemCopy.description, 'Changed');
+      expect(testItemCopy.categoryId, testCat2.id);
+      expect(testItemCopy.modified.isAfter(_now), true);
     });
   });
 

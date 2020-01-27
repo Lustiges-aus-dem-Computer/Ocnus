@@ -3,7 +3,6 @@ import 'package:hive/hive.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-
 import 'package:rentables/rentables.dart';
 
 void main() {
@@ -14,6 +13,9 @@ void main() {
   Hive.registerAdapter(ItemAdapter());
 
   var testCat = Category(
+    created: DateTime.now(),
+    modified: DateTime.now(),
+    id: LocalIdGenerator().getId(),
     color: 'black',
     title: 'Some Title',
     icon: 'blender',
@@ -21,24 +23,33 @@ void main() {
   );
 
   var testItem = Item(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       title: 'New Item',
       size: 'L',
       type: 'm',
       description: 'This is a test item',
-      category: testCat
+      categoryId: testCat.id
     );
 
   var testItem2 = Item(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       title: 'Second',
       size: 'L',
       type: 'm',
       description: 'This is a test item',
-      category: testCat
+      categoryId: testCat.id
     );
 
   var testRes = Reservation(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       employee: 'Jürgen',
-      item: testItem,
+      itemId: testItem.id,
       customerName: 'Ernst August',
       customerMail: 'ernst_august@neuland.de',
       customerPhone: '+49 3094 988 78 00',
@@ -116,10 +127,11 @@ void main() {
       await _hiveManager.initialize();
       await _hiveManager.putReservations([testRes]);
 
-      List<dynamic> _readRes = await _hiveManager.getReservations(testRes.item);
+      List<dynamic> _readRes = 
+      await _hiveManager.getReservations(testRes.itemId);
 
       expect(_readRes[0].id, testRes.id);
-      expect(_readRes[0].item, testRes.item);
+      expect(_readRes[0].item, testRes.itemId);
       expect(_readRes[0].customerMail, testRes.customerMail);
       expect(_readRes[0].customerName, testRes.customerName);
       expect(_readRes[0].employee, testRes.employee);
@@ -129,15 +141,6 @@ void main() {
       expect(_readRes[0].endDate.day, testRes.endDate.day);
       expect(_readRes[0].fetchedOn.day, testRes.fetchedOn.day);
       expect(_readRes[0].returnedOn.day, testRes.returnedOn.day);
-
-      /// Test nested properties
-      expect(_readRes[0].item.category.id, testRes.item.category.id);
-      expect(_readRes[0].item.category.location, 
-      testRes.item.category.location);
-      expect(_readRes[0].item.category.modified, 
-      testRes.item.category.modified);
-      expect(_readRes[0].item.category.created, 
-      testRes.item.category.created);
 
       await _hiveManager.clear();
     });
@@ -151,7 +154,7 @@ void main() {
 
       expect(_readItems[0].id, testItem.id);
       expect(_readItems[0].active, testItem.active);
-      expect(_readItems[0].category.id, testItem.category.id);
+      expect(_readItems[0].categoryId, testItem.categoryId);
       expect(_readItems[0].description, testItem.description);
       expect(_readItems[0].size, testItem.size);
       expect(_readItems[0].title, testItem.title);
@@ -172,18 +175,18 @@ void main() {
       await _hiveManager.putItems([testItem, testItem2]);
       await _hiveManager.putCategories([testCat]);
 
-      expect(testItem.category, isNotNull);
-      expect(testItem2.category, isNotNull);
+      expect(testItem.categoryId, isNotNull);
+      expect(testItem2.categoryId, isNotNull);
 
       await _hiveManager.deleteCategories([testCat.id]);
       expect((await _hiveManager.getCategories()).length, 0);
 
       /// Check that categories have been removed from linked items
       var _items = 
-      await _hiveManager.getItems(idList: [testItem.id, testItem2.id]);
+      await _hiveManager.getItems([testItem.id, testItem2.id]);
 
-      expect(_items[0].category, null);
-      expect(_items[1].category, null);
+      expect(_items[0].categoryId, null);
+      expect(_items[1].categoryId, null);
 
       await _hiveManager.clear();
     });
@@ -193,7 +196,7 @@ void main() {
       await _hiveManager.initialize();
       await _hiveManager.putReservations([testRes]);
       await _hiveManager.deleteReservations([testRes.id]);
-      expect((await _hiveManager.getReservations(testRes.item)).length, 0);
+      expect((await _hiveManager.getReservations(testRes.itemId)).length, 0);
 
       await _hiveManager.clear();
     });
@@ -209,7 +212,7 @@ void main() {
       expect((await _hiveManager.getItems()).length, 0);
 
       /// Check that reservations have been removed
-      var _reservations = await _hiveManager.getReservations(testItem);
+      var _reservations = await _hiveManager.getReservations(testItem.id);
       expect(_reservations, []);
 
 

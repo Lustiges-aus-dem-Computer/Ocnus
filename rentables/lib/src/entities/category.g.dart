@@ -6,7 +6,7 @@ part of 'category.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-/// Hive-Adapter for the Cagtegory class (auto-generated)
+/// Auto-generated Hive-adapter for the category class
 class CategoryAdapter extends TypeAdapter<Category> {
   @override
   final int typeId = 0;

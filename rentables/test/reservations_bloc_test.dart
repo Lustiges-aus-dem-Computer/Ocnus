@@ -2,7 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
 import 'package:rentables/rentables.dart';
 
 /// Mocking the database manager
@@ -16,14 +15,16 @@ void main() {
       title: 'Local',
       size: 'L',
       type: 'm',
-      description: 'This is a test-item'
+      description: 'This is a test-item',
+      thumbnailLink: 'http:://api_request',
     );
 
     var testItemRemote = Item(
       title: 'Remote',
       size: 'L',
       type: 'm',
-      description: 'This is a test-item'
+      description: 'This is a test-item',
+      thumbnailLink: 'http:://api_request',
     );
 
     var testResLocal = Reservation(
