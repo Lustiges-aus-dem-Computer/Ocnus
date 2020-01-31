@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:rentables/rentables.dart';
 
-/// List of possivle app-texts
+/// List of possible app-texts
 enum AppTexts {
   /// Name of the app
   appTitle
@@ -10,8 +9,6 @@ enum AppTexts {
 
 /// Class for handling localizations in the app
 class FlutterBlocLocalizations {
-  final _log = getLogger();
-
   /// Localizer
   final Locale locale;
 
@@ -37,7 +34,6 @@ class FlutterBlocLocalizations {
 
   /// Return the title of the app
   String get appTitle {
-    _log.d('Returning texts for language: ', locale.languageCode);
     return _localizedValues[locale.languageCode][AppTexts.appTitle];
   }
 }

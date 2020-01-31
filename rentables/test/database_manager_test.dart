@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +32,7 @@ void main() {
       size: 'L',
       type: 'm',
       description: 'This is a test item',
+      images: [],
       categoryId: testCat.id
     );
 
@@ -41,7 +44,8 @@ void main() {
       size: 'L',
       type: 'm',
       description: 'This is a test item',
-      categoryId: testCat.id
+      images: [],
+      categoryId: testCat.id,
     );
 
   var testRes = Reservation(
@@ -58,6 +62,10 @@ void main() {
       fetchedOn: DateTime.now().add(Duration(days: 2)),
       returnedOn: DateTime.now().add(Duration(days: 5))
     );
+
+    testItem = testItem.copyWith(reservations: [testRes.id]);
+
+    var imageBytes =  Uint8List(1234);
 
   setUpAll(() async {
     // Create a temporary directory.
@@ -107,6 +115,26 @@ void main() {
       await _hiveManager.clear();
     });
 
+    test('Write Thumbnail to box', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putImages(
+        imageBytes: [imageBytes],
+        keys: [testItem.id], thumbnail: true);
+
+      await _hiveManager.clear();
+    });
+
+    test('Write detail-images to box', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putImages(
+          imageBytes: [imageBytes],
+          keys: [testItem.id], thumbnail: false);
+
+      await _hiveManager.clear();
+    });
+
     test('Read Categories from box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
@@ -125,13 +153,14 @@ void main() {
     test('Read Reservations from box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
+      await _hiveManager.putItems([testItem]);
       await _hiveManager.putReservations([testRes]);
 
-      List<dynamic> _readRes = 
-      await _hiveManager.getReservations(testRes.itemId);
+      var _readRes = 
+      await _hiveManager.getReservations(testItem.id);
 
       expect(_readRes[0].id, testRes.id);
-      expect(_readRes[0].item, testRes.itemId);
+      expect(_readRes[0].itemId, testRes.itemId);
       expect(_readRes[0].customerMail, testRes.customerMail);
       expect(_readRes[0].customerName, testRes.customerName);
       expect(_readRes[0].employee, testRes.employee);
@@ -169,6 +198,34 @@ void main() {
       await _hiveManager.clear();
     });
 
+    test('Read Thumbnail from box', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putImages(
+        imageBytes: [imageBytes],
+        keys: [testItem.id], thumbnail: true);
+
+      var _image =
+      await _hiveManager.getImages([testItem.id], thumbnail: true);
+      expect(Image.memory(_image[0]), isNotNull);
+
+      await _hiveManager.clear();
+    });
+
+    test('Read detal-images from box', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putImages(
+          imageBytes: [imageBytes],
+          keys: [testItem.id], thumbnail: false);
+
+      var _image =
+      await _hiveManager.getImages([testItem.id], thumbnail: false);
+      expect(Image.memory(_image[0]), isNotNull);
+
+      await _hiveManager.clear();
+    });
+
     test('Delete Categories from box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
@@ -181,19 +238,13 @@ void main() {
       await _hiveManager.deleteCategories([testCat.id]);
       expect((await _hiveManager.getCategories()).length, 0);
 
-      /// Check that categories have been removed from linked items
-      var _items = 
-      await _hiveManager.getItems([testItem.id, testItem2.id]);
-
-      expect(_items[0].categoryId, null);
-      expect(_items[1].categoryId, null);
-
       await _hiveManager.clear();
     });
 
     test('Delete Reservations from box', () async {
       var _hiveManager = HiveManager();
       await _hiveManager.initialize();
+      await _hiveManager.putItems([testItem]);
       await _hiveManager.putReservations([testRes]);
       await _hiveManager.deleteReservations([testRes.id]);
       expect((await _hiveManager.getReservations(testRes.itemId)).length, 0);
@@ -206,15 +257,8 @@ void main() {
       await _hiveManager.initialize();
       await _hiveManager.putItems([testItem]);
 
-      expect(testItem.reservations.length, 1);
-
       await _hiveManager.deleteItems([testItem.id]);
       expect((await _hiveManager.getItems()).length, 0);
-
-      /// Check that reservations have been removed
-      var _reservations = await _hiveManager.getReservations(testItem.id);
-      expect(_reservations, []);
-
 
       await _hiveManager.clear();
     });
@@ -234,6 +278,20 @@ void main() {
       expect(_readCats[0].color, testCat.color);
       expect(_readCats[0].icon, testCat.icon);
       expect(_readCats[0].active, testCat.active);
+
+      await _hiveManager.clear();
+    });
+
+    test('Delete Images from box', () async {
+      var _hiveManager = HiveManager();
+      await _hiveManager.initialize();
+      await _hiveManager.putImages(
+        imageBytes: [imageBytes],
+        keys: [testItem.id]);
+
+      expect((await _hiveManager.getImages([testItem.id])).length, 1);
+      await _hiveManager.deleteImages([testItem.id]);
+      expect((await _hiveManager.getImages([testItem.id])).length, 0);
 
       await _hiveManager.clear();
     });

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../services/logger.dart';
@@ -6,32 +7,32 @@ part 'category.g.dart';
 
 /// Class handling categories of rentable items
 @HiveType(typeId: 0)
-class Category{
+class Category extends Equatable{
   /// Is the category active
   @HiveField(0)
-  bool active;
+  final bool active;
   /// ID of the category
   @HiveField(1)
-  String id;
+  final String id;
   /// Name of the category
   @HiveField(2)
-  String title;
+  final String title;
   /// Location of the category in the store
   @HiveField(3)
-  String location;
+  final String location;
   /// Color of the category in the UI
   @HiveField(4)
-  String color;
+  final String color;
   /// Icon of the category in the UI
   @HiveField(5)
-  String icon;
+  final String icon;
 
   /// Creation date of the instance
   @HiveField(6)
-  DateTime created;
+  final DateTime created;
   /// Date the instance was last modified
   @HiveField(7)
-  DateTime modified;
+  final DateTime modified;
 
   final _log = getLogger();
 
@@ -52,7 +53,6 @@ class Category{
  
   /// Create a copy of an item and take in changing parameters
   Category copyWith(
-    Category _category,
     {
       String color,
       String title,
@@ -60,28 +60,28 @@ class Category{
       String icon,
       DateTime created,
       DateTime modified,
-      String id,
       bool active = true,
     }){
 
-    color ??= color;
-    title ??= title;
-    location ??= location;
-    icon ??= icon;
-    active ??= active;
+    color ??= this.color;
+    title ??= this.title;
+    location ??= this.location;
+    icon ??= this.icon;
+    active ??= this.active;
 
     return Category(
       color: color,
       title: title,
       location: location,
       icon: icon,
-      id: _category.id,
-      created: _category.created,
+      id: id,
+      created: this.created,
       active: active,
       modified: DateTime.now(),
       );
   }
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [color, title, location,
+    icon, id, created,  modified, active];
 }

@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -18,8 +17,6 @@ abstract class DatabaseManager {
   Future<List<Category>> getCategories();
 
   /// API-wrapper to request deleting categories from the database
-  /// Databases should handle removing all references to the deleted
-  /// category in linked items before commiting the category deletion
   Future<void> deleteCategories(List<String> idList);
 
   /// API-wrapper to request saving categories to the database
@@ -34,7 +31,7 @@ abstract class DatabaseManager {
   Future<void> deleteReservations(List<String> idList);
 
   /// API-wrapper to request saving reservations to the database
-  /// Returns true if the reservation was sucessfull
+  /// Returns true if the reservation was successful
   Future<void> putReservations(List<Reservation> _reservationList);
 
   /// API-wrapper to request loading items from the database
@@ -43,12 +40,28 @@ abstract class DatabaseManager {
   Future<List<Item>> getItems([List<String> idList]);
 
   /// API-wrapper to request deletion of items from the database
-  /// Databases should take care of deleting all linked reservations
-  /// before commiting the item deletion
   Future<void> deleteItems(List<String> idList);
 
   /// API-wrapper to request saving items to the database
   Future<void> putItems(List<Item> _itemList);
+
+  // API-wrapper to request loading images from the database
+  /// provided a list of item IDs
+  /// If no image is found, an empty list should be returned
+  /// The "thumbnail" switch should be used to indicate whether the
+  /// image is a thumbnail or a details image
+  Future<List<Uint8List>> getImages(List<String> idList, {bool thumbnail=true});
+
+  /// API-wrapper to request deletion of thumbnails from the database
+  /// The "thumbnail" switch should be used to indicate whether the
+  /// image is a thumbnail or a details image
+  Future<void> deleteImages(List<String> idList, {bool thumbnail=true});
+
+  /// API-wrapper to request saving thumbnails to the database
+  /// The "thumbnail" switch should be used to indicate whether the
+  /// image is a thumbnail or a details image
+  Future<void> putImages({List<String> keys, 
+  List<Uint8List> imageBytes, bool thumbnail=true});
 }
 
 /// Database interface (manager) for the Hive database
@@ -65,9 +78,12 @@ class HiveManager implements DatabaseManager {
   /// Hive box for saving items -> lazy because there
   /// might be a significant amount of data stored
   LazyBox<Item> itemCageBox;
-  /// Hive box for saving images -> lazy because there
+  /// Hive box for saving thumbnails -> lazy because there
   /// might be a significant amount of data stored
-  LazyBox<List<int>> thumbnailCageBox;
+  LazyBox<Uint8List> thumbnailCageBox;
+  /// Hive box for saving deatail images -> lazy because there
+  /// might be a significant amount of data stored
+  LazyBox<Uint8List> detailImagesCageBox;
 
   /// Initialize the hive box
   @override
@@ -81,9 +97,12 @@ class HiveManager implements DatabaseManager {
     _log.d('Opening reservations box');
     reservationCageBox = 
     await Hive.openLazyBox<Reservation>('reservationCageBox');
-    _log.d('Opening image box');
+    _log.d('Opening Thumbnail box');
     thumbnailCageBox = 
-    await Hive.openLazyBox<Uint8List>('imageCagedBox');
+    await Hive.openLazyBox<Uint8List>('thumbnailCageBox');
+    _log.d('Opening Detail-Images box');
+    detailImagesCageBox = 
+    await Hive.openLazyBox<Uint8List>('detailImagesCageBox');
   }
 
   @override
@@ -93,37 +112,71 @@ class HiveManager implements DatabaseManager {
     await itemCageBox.close();
     await reservationCageBox.close();
     await thumbnailCageBox.close();
+    await detailImagesCageBox.close();
   }
 
   /// Needed for testing to clean-up the boxes
-  @visibleForTesting
   Future<void> clear() async {
     _log.d('Clear Hive database manager');
     await categoryCageBox.clear();
     await itemCageBox.clear();
     await reservationCageBox.clear();
     await thumbnailCageBox.clear();
+    await detailImagesCageBox.clear();
   }
 
-  /// Writing thumbnail image to the local cage
-  Future<void> putThumbnail(Uint8List _imageBytes, {String imageId}) async{
-    _log.d('Writing thumbnail to Hive');
-    thumbnailCageBox.put(LocalIdGenerator()
-    .getHiveIdFromString(imageId), _imageBytes);
+  @override
+  Future<void> putImages({List<String> keys, 
+  List<Uint8List> imageBytes, bool thumbnail=true}) async{
+
+    if(keys == null || imageBytes == null||
+    keys.length != imageBytes.length){
+      _log.e('Length of keys and images is different when trying'
+      'to save thumbnails to hive');
+      throw Exception('Inconsistend key and images list lengths');
+    }
+
+    _log.d('Writing thumbnails to Hive');
+    for(var i=0;i<keys.length; i++){
+      var _key = LocalIdGenerator().getHiveIdFromString(keys[i]);
+      await (thumbnail
+        ?thumbnailCageBox.put(_key, imageBytes[i])
+        :detailImagesCageBox.put(_key, imageBytes[i]));
+    }
     return;
   }
 
-  /// Reading thumbnail image from the local cage
-  Future<Uint8List> getThumbnail(String imageId) async{
-    _log.d('Reading thumbnail from Hive');
-    return thumbnailCageBox.get(LocalIdGenerator()
-    .getHiveIdFromString(imageId));
+  Future<List<Uint8List>> getImages(List<String> idList, 
+  {bool thumbnail=true})async{
+    _log.d('Reading thumbnails from Hive');
+    var _box = thumbnail?thumbnailCageBox:detailImagesCageBox;
+
+    print(_box.keys);
+    var _images = <Uint8List>[];
+    for(var _id in idList){
+      var _img = await _box.get(LocalIdGenerator().getHiveIdFromString(_id));
+      if(_img != null){_images.add(_img);}
+    }
+    return _images;
+  }
+
+  Future<void> deleteImages(List<String> idList, 
+  {bool thumbnail=true})async{
+    _log.d('Deleting thumbnails from Hive');
+    var _box = thumbnail?thumbnailCageBox:detailImagesCageBox;
+    for(var _id in idList){
+      await _box.delete(LocalIdGenerator().getHiveIdFromString(_id));
+    }
+    return;
   }
 
   @override
   Future<List<Category>> getCategories() async {
     _log.d('Loading categories from Hive');
-    return List<Category>.from(categoryCageBox.toMap().values);
+    var _categories = List<Category>.from(categoryCageBox.toMap().values);
+    _categories ??= <Category>[];
+    return _categories;
+
   }
 
   @override
@@ -148,21 +201,28 @@ class HiveManager implements DatabaseManager {
   @override
   Future<List<Reservation>> getReservations(String _itemId) async {
     _log.d('Loading reservations for item $_itemId from Hive');
-    var reservationsHive = 
-    List<String>.from((await getItems([_itemId]))[0]
+
+    var _item = await getItems([_itemId]);
+    if(_item.length == 0){
+      _log.e('No item found for the reservation');
+      throw Exception('Linked item not found!');
+    }
+
+    var reservationsHive =
+    List<int>.from((await getItems([_itemId]))[0]
     .reservations.map((_id) => 
     LocalIdGenerator().getHiveIdFromString(_id)));
-    return Future.wait(
-      List.from(
-        reservationCageBox.keys.where((_key) => 
-        reservationsHive.contains(_key)).map(
-          (_key) async {
-            var _reservation = await reservationCageBox.get(_key);
-            return _reservation;
-          }
-        )
-      )
-    );
+
+    var _reservations = <Reservation>[];
+
+    for(var _key in reservationCageBox.keys){
+      if(reservationsHive.contains(_key)){
+        var _res = await reservationCageBox.get(_key);
+        if(_res!=null){_reservations.add(_res);}
+      }
+    }
+
+    return _reservations;
   }
 
   @override
@@ -193,7 +253,7 @@ class HiveManager implements DatabaseManager {
       /// into the corresponding Hive keys before the call
       var _item = await itemCageBox.get(
         idList == null ? _id : LocalIdGenerator().getHiveIdFromString(_id));
-        _itemList.add(_item);
+        if(_item!=null){_itemList.add(_item);}
     }
     return _itemList;
   }

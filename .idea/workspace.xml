@@ -1,36 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lib/main.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
   </component>
-  <component name="ToolWindowManager">
-    <editor active="true" />
-    <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-    </layout>
+  <component name="ChangeListManager">
+    <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_for_Android.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/KotlinJavaRuntime.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/main_dart.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/services/localization.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/services/localization.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_events.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/category.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/category.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/category.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/category.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/item.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/database_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/services/database_manager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/database_manager_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/database_manager_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/repository_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/repository_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <option name="show-excluded-files" value="false" />
-      </pane>
-    </panes>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1X6ZELw1IuSKjZ6b2WEKdYHsgPs" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="dart.analysis.tool.window.force.activate" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="dart.analysis.tool.window.force.activate" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/rentables/lib/src" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/rentables/lib/src" />
+      <recent name="$PROJECT_DIR$/rentables/test" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="" />
+      <created>1580368392144</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1580368392144</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="731" y="400" width="518" height="314" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1580368941289">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="731" y="400" width="518" height="314" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/70.27.1850.1053@70.27.1850.1053" timestamp="1580368941289" />
+    <state x="371" y="202" width="1022" height="737" key="SettingsEditor" timestamp="1580369019264">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="371" y="202" width="1022" height="737" key="SettingsEditor/70.27.1850.1053@70.27.1850.1053" timestamp="1580369019264" />
+    <state x="651" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1580368399081">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="651" y="380" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1580368399081" />
   </component>
 </project>

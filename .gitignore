@@ -16,5 +16,7 @@ pubspec.lock
 *.js.deps
 *.js.map
 
+*.flutter-plugins*
+
 #Avoid comitting keys
 android/app/google-services.json

@@ -22,10 +22,10 @@ class CategoryAdapter extends TypeAdapter<Category> {
       title: fields[2] as String,
       location: fields[3] as String,
       icon: fields[5] as String,
-      active: fields[0] as bool,
       id: fields[1] as String,
       created: fields[6] as DateTime,
       modified: fields[7] as DateTime,
+      active: fields[0] as bool,
     );
   }
 

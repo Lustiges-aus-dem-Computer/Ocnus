@@ -73,7 +73,6 @@ class Reservation extends Equatable{
 
   /// Create a copy of a reservation and take in changing parameters
   Reservation copyWith(
-    Reservation _reservation,
     {
       String employee,
       String customerName,
@@ -85,14 +84,14 @@ class Reservation extends Equatable{
       DateTime returnedOn,
     }){
 
-    employee ??= _reservation.employee;
-    customerName ??= _reservation.customerName;
-    customerPhone ??= _reservation.customerPhone;
-    customerMail ??= _reservation.customerMail;
-    startDate ??= _reservation.startDate;
-    endDate ??= _reservation.endDate;
-    fetchedOn ??= _reservation.fetchedOn;
-    returnedOn ??= _reservation.returnedOn;
+    employee ??= this.employee;
+    customerName ??= this.customerName;
+    customerPhone ??= this.customerPhone;
+    customerMail ??= this.customerMail;
+    startDate ??= this.startDate;
+    endDate ??= this.endDate;
+    fetchedOn ??= this.fetchedOn;
+    returnedOn ??= this.returnedOn;
 
     /// Sanity checks for dates
     /// All rentals last at least for minimumRentalPeriod
@@ -120,12 +119,14 @@ class Reservation extends Equatable{
       itemId: itemId,
       fetchedOn: fetchedOn,
       returnedOn: returnedOn,
-      created: _reservation.created,
+      created: created,
       modified: DateTime.now(),
-      id: _reservation.id
+      id: id
       );
   }
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [employee, customerName, customerPhone,
+  customerMail, startDate, endDate, itemId,  created,
+    modified, id, fetchedOn, returnedOn];
 }

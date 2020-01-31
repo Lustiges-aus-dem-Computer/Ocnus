@@ -22,14 +22,14 @@ class ItemAdapter extends TypeAdapter<Item> {
       title: fields[2] as String,
       description: fields[3] as String,
       type: fields[4] as String,
-      thumbnailLink: fields[10] as String,
-      active: fields[0] as bool,
+      created: fields[9] as DateTime,
+      modified: fields[10] as DateTime,
       id: fields[1] as String,
-      created: fields[8] as DateTime,
-      modified: fields[9] as DateTime,
-    )
-      ..reservationsHive = (fields[6] as List)?.cast<int>()
-      ..categoryId = fields[7] as String;
+      images: (fields[8] as List)?.cast<String>(),
+      reservations: (fields[6] as List)?.cast<String>(),
+      categoryId: fields[7] as String,
+      active: fields[0] as bool,
+    );
   }
 
   @override
@@ -49,14 +49,14 @@ class ItemAdapter extends TypeAdapter<Item> {
       ..writeByte(5)
       ..write(obj.size)
       ..writeByte(6)
-      ..write(obj.reservationsHive)
+      ..write(obj.reservations)
       ..writeByte(7)
       ..write(obj.categoryId)
       ..writeByte(8)
-      ..write(obj.created)
+      ..write(obj.images)
       ..writeByte(9)
-      ..write(obj.modified)
+      ..write(obj.created)
       ..writeByte(10)
-      ..write(obj.thumbnailLink);
+      ..write(obj.modified);
   }
 }

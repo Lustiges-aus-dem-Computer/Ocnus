@@ -6,10 +6,10 @@ export 'states.dart';
 /// Bloc element (https://bloclibrary.dev/#/) for handling categories
 class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
   /// Repository managing the database interactions for categories
-  final CategoryRepository categoryRepository;
+  final Repository repository;
 
   /// Constructor for the category bloc element
-  CategoryBlock({@required this.categoryRepository});
+  CategoryBlock({@required this.repository});
 
   /// Initially, categories are still being loaded
   @override
@@ -38,7 +38,7 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
   Stream<CategoriesState> _mapLoadCategoriesToState({bool remote}) async* {
     try {
       final categories = 
-      await categoryRepository.loadCategories(remote: remote);
+      await repository.loadCategories(remote: remote);
       yield CategoriesLoaded(categories);
     }
     /// In case we have no valid cage
@@ -57,7 +57,7 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
         ..add(_category);
       yield CategoriesLoaded(_newCategories);
       /// Save updated list to cage and server (if available)
-      categoryRepository.saveCategories([_category]);
+      repository.saveCategories([_category]);
     }
   }
 
@@ -70,7 +70,7 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
         ));
       yield CategoriesLoaded(_newCategories);
       /// Save updated list to cage and server (if available)
-      categoryRepository.saveCategories([_category]);
+      repository.saveCategories([_category]);
     }
   }
 
@@ -83,7 +83,7 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
         ));
       yield CategoriesLoaded(_newCategories);
       /// Delete category from cage and server (if available)
-      categoryRepository.deleteCategories([_category.id]);
+      repository.deleteCategories([_category.id]);
     }
   }
 }

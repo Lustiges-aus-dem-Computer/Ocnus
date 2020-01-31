@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../entities/item.dart';
 import '../entities/reservation.dart';
 
@@ -37,9 +39,11 @@ class AddReservation extends ReservationsEvent {
 class UpdateReservation extends ReservationsEvent {
   /// Reservation to be updated
   final Reservation reservation;
+  /// Used to make updates work in testing
+  final bool testing;
 
   /// Constructor for update reservation event
-  UpdateReservation(this.reservation);
+  UpdateReservation(this.reservation, {this.testing = false});
 }
 
 /// Evend triggering deletion of a reservation

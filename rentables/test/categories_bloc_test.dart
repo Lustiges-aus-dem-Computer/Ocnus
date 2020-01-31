@@ -13,25 +13,56 @@ void main() {
     Logger.level = Level.debug;
 
     var testCatLocal = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'black',
       title: 'Local',
       icon: 'blender',
       location: 'Local',
     );
     var testCatRemote = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'black',
       title: 'Remote',
       icon: 'blender',
       location: 'Remote',
     );
     var testCatRemoteUpdate = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'black',
       title: 'Update',
       icon: 'blender',
       location: 'Remote',
     );
-    testCatRemoteUpdate.id = testCatRemote.id;
-    testCatRemoteUpdate.update();
+    var testItemLocal = Item(
+        created: DateTime.now(),
+        modified: DateTime.now(),
+        id: LocalIdGenerator().getId(),
+        title: 'Local',
+        size: 'L',
+        type: 'm',
+        description: 'This is a test-item',
+        images: [],
+        categoryId: testCatLocal.id
+    );
+    var testItemRemote = Item(
+        created: DateTime.now(),
+        modified: DateTime.now(),
+        id: LocalIdGenerator().getId(),
+        title: 'Remote',
+        size: 'L',
+        type: 'm',
+        description: 'This is a test-item',
+        images: [],
+        categoryId: testCatRemote.id
+    );
+
+    testCatRemoteUpdate = testCatRemote.copyWith();
 
     var mockManagerLocal = MockManager();
     when(mockManagerLocal.putCategories([testCatLocal]))
@@ -39,6 +70,9 @@ void main() {
 
     when(mockManagerLocal.getCategories())
       .thenAnswer((_) => Future.value([testCatLocal]));
+
+    when(mockManagerLocal.getItems())
+        .thenAnswer((_) => Future.value([testItemLocal, testItemRemote]));
 
     var mockManagerRemote = MockManager();
       when(mockManagerRemote.putCategories([testCatRemote]))
@@ -48,47 +82,47 @@ void main() {
     .thenAnswer((_) => Future.value([testCatRemote]));
 
     var _catRepLocal = 
-    CategoryRepository(localDatabaseManager: mockManagerLocal);
-    var _catRepRemote = 
-    CategoryRepository(remoteDatabaseManager: mockManagerRemote);
+    Repository(localDatabaseManager: mockManagerLocal);
+    var _catRepRemote =
+    Repository(remoteDatabaseManager: mockManagerRemote);
 
     blocTest(
     'Initialize Bloc',
-    build: () => CategoryBlock(categoryRepository: _catRepLocal),
+    build: () => CategoryBlock(repository: _catRepLocal),
     expect: [CategoriesLoading()],
     );
 
     blocTest(
     'Loading from Cage -> Loaded',
-    build: () => CategoryBlock(categoryRepository: _catRepLocal),
+    build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc) => bloc.add(LoadCategoriesFromCage()),
     expect: [CategoriesLoading(), CategoriesLoaded([testCatLocal])],
     );
 
     blocTest(
     'Loading from Cage -> Loaded - Error',
-    build: () => CategoryBlock(categoryRepository: _catRepRemote),
+    build: () => CategoryBlock(repository: _catRepRemote),
     act: (bloc) => bloc.add(LoadCategoriesFromCage()),
     expect: [CategoriesLoading(), CategoriesNotLoaded()],
     );
 
     blocTest(
     'Loading from Server -> Loaded',
-    build: () => CategoryBlock(categoryRepository: _catRepRemote),
+    build: () => CategoryBlock(repository: _catRepRemote),
     act: (bloc) => bloc.add(LoadCategoriesFromServer()),
     expect: [CategoriesLoading(), CategoriesLoaded([testCatRemote])],
     );
 
     blocTest(
     'Loading from Server -> Loaded - Error',
-    build: () => CategoryBlock(categoryRepository: _catRepLocal),
+    build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc) => bloc.add(LoadCategoriesFromServer()),
     expect: [CategoriesLoading(), CategoriesNotLoaded()],
     );
 
     blocTest(
     'Add Category -> Loaded',
-    build: () => CategoryBlock(categoryRepository: _catRepLocal),
+    build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
       bloc.add(LoadCategoriesFromCage());
       bloc.add(AddCategory(testCatRemote));
@@ -100,7 +134,7 @@ void main() {
 
     blocTest(
     'Update Category -> Loaded',
-    build: () => CategoryBlock(categoryRepository: _catRepLocal),
+    build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
       bloc.add(LoadCategoriesFromCage());
       bloc.add(AddCategory(testCatRemote));
@@ -114,7 +148,7 @@ void main() {
 
     blocTest(
     'Delete Category -> Loaded',
-    build: () => CategoryBlock(categoryRepository: _catRepLocal),
+    build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
       bloc.add(LoadCategoriesFromCage());
       bloc.add(AddCategory(testCatRemote));

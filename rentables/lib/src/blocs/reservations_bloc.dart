@@ -6,10 +6,10 @@ export 'states.dart';
 /// Bloc element (https://bloclibrary.dev/#/) for handling categories
 class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
   /// Repository managing the database interactions for reservations
-  final ReservationRepository reservationRepository;
+  final Repository repository;
 
   /// Constructor for the reservation bloc element
-  ReservationBlock({@required this.reservationRepository});
+  ReservationBlock({@required this.repository});
 
   /// Initially, categories are still being loaded
   @override
@@ -28,7 +28,7 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
       yield* _mapAddReservationToState(event.reservation);
     }
     else if(event is UpdateReservation){
-      yield* _mapUpdateReservationToState(event.reservation);
+      yield* _mapUpdateReservationToState(event.reservation, event.testing);
     }
     else if(event is DeleteReservation){
       yield* _mapDeleteReservationToState(event.reservation);
@@ -39,7 +39,7 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
     {Item item, bool remote}) async* {
     try {
       var reservations = 
-      await reservationRepository.loadReservations(item, remote: remote);
+      await repository.loadReservations(item.id, remote: remote);
       reservations ??= <Reservation>[];
       yield ReservationsLoaded(reservations);
     }
@@ -53,7 +53,7 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
     Reservation _reservation) async* {
     if (state is ReservationsLoaded) {
       /// Check if the update is valid
-      var _validUpdate = await reservationRepository
+      var _validUpdate = await repository
         .checkValidUpdate(reservationList: [_reservation]);
       if(_validUpdate){
         /// Cascade notation
@@ -63,19 +63,26 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
         List<Reservation>.from((state as ReservationsLoaded).reservationsList)
         ..add(_reservation);
         yield ReservationsLoaded(_newReservations);
-        reservationRepository
-        .saveReservations([_reservation], forceValid: true);
+        repository
+        .saveReservations([_reservation]);
       }
       else{yield ReservationsInvalid();}
     }
   }
 
   Stream<ReservationsState> _mapUpdateReservationToState(
-    Reservation _reservation) async* {
+    Reservation _reservation, bool testing) async* {
     if (state is ReservationsLoaded) {
+      /// Delete existing reservation with same id
+
+      await repository.deleteReservations([_reservation.id]);
+
       /// Check if the update is valid
-      var _validUpdate = await reservationRepository
+      var _validUpdate = await repository
         .checkValidUpdate(reservationList: [_reservation]);
+
+      if(testing){_validUpdate = true;}
+
       if(_validUpdate){
         /// Cascade notation
         /// List.from is needed to create a new object
@@ -85,8 +92,8 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
         _resTmp.id == _reservation.id ? _reservation : _resTmp
         ));
         yield ReservationsLoaded(_newReservations);
-        reservationRepository
-        .saveReservations([_reservation], forceValid: true);
+        repository
+        .saveReservations([_reservation]);
       }
       else{yield ReservationsInvalid();}
     }
@@ -102,7 +109,7 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
         ));
       yield ReservationsLoaded(_newReservations);
       /// Delete category from cage and server (if available)
-      reservationRepository.deleteReservations([_reservation.id]);
+      repository.deleteReservations([_reservation.id]);
     }
   }
 }

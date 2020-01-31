@@ -15,6 +15,9 @@ void main() {
     Logger.level = Level.debug;
 
     var testCatLocal = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'black',
       title: 'Some Title',
       icon: 'blender',
@@ -22,44 +25,54 @@ void main() {
     );
 
     var testCatRemote = Category(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
       color: 'white',
       title: 'Some Title',
       icon: 'blender',
       location: 'Behind the cat',
     );
-
     var testItemLocal = Item(
-      title: 'Local',
-      size: 'L',
-      type: 'm',
-      description: 'This is a test-item',
-      thumbnailLink: 'http:://api_request',
-      category: testCatLocal
+        created: DateTime.now(),
+        modified: DateTime.now(),
+        id: LocalIdGenerator().getId(),
+        title: 'Local',
+        size: 'L',
+        type: 'm',
+        description: 'This is a test-item',
+        images: [],
+        categoryId: testCatLocal.id
     );
     var testItemRemote = Item(
-      title: 'Remote',
-      size: 'L',
-      type: 'm',
-      description: 'This is a test-item',
-      thumbnailLink: 'http:://api_request',
-      category: testCatRemote
+        created: DateTime.now(),
+        modified: DateTime.now(),
+        id: LocalIdGenerator().getId(),
+        title: 'Remote',
+        size: 'L',
+        type: 'm',
+        description: 'This is a test-item',
+        images: [],
+        categoryId: testCatRemote.id
     );
     var testItemLocalUpdate = Item(
-      title: 'Update',
-      size: 'L',
-      type: 'm',
-      description: 'This is a test-item',
-      thumbnailLink: 'http:://api_request',
-      category: testCatLocal
+        created: DateTime.now(),
+        modified: DateTime.now(),
+        id: LocalIdGenerator().getId(),
+        title: 'Update',
+        size: 'L',
+        type: 'm',
+        description: 'This is a test-item',
+        images: [],
+        categoryId: testCatRemote.id
     );
-    testItemLocalUpdate.id = testItemLocal.id;
-    testItemLocalUpdate.update();
+    testItemLocalUpdate = testItemLocal.copyWith();
 
     var mockManagerLocal = MockManager();
     when(mockManagerLocal.putItems([testItemLocal]))
       .thenAnswer((_) => Future.value());
 
-    when(mockManagerLocal.getItems(idList: [testItemLocal.id]))
+    when(mockManagerLocal.getItems([testItemLocal.id]))
       .thenAnswer((_) => Future.value([testItemLocal]));
 
     when(mockManagerLocal.getItems())
@@ -69,30 +82,30 @@ void main() {
       when(mockManagerRemote.putItems([testItemRemote]))
       .thenAnswer((_) => Future.value());
 
-    when(mockManagerRemote.getItems(idList: [testItemRemote.id]))
+    when(mockManagerRemote.getItems([testItemRemote.id]))
     .thenAnswer((_) => Future.value([testItemRemote]));
 
     var _itmRepLocal = 
-    ItemRepository(localDatabaseManager: mockManagerLocal);
-    var _itmRepRemote = 
-    ItemRepository(remoteDatabaseManager: mockManagerRemote);
+    Repository(localDatabaseManager: mockManagerLocal);
+    var _itmRepRemote =
+    Repository(remoteDatabaseManager: mockManagerRemote);
 
     blocTest(
     'Initialize Bloc',
-    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    build: () => ItemBloc(repository: _itmRepLocal),
     expect: [ItemsLoading()],
     );
 
     blocTest(
     'Loading from Cage -> Loaded',
-    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc) => bloc.add(LoadItemsFromCage([testItemLocal.id])),
     expect: [ItemsLoading(), ItemsLoaded([testItemLocal])],
     );
     
     blocTest(
     'Loading Search Terms -> Search Terms Loaded',
-    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc) => bloc.add(LoadItemSearchParameters()),
     expect: [ItemsLoading(), ItemsSearchParametersLoaded({testItemLocal.id: 
     {searchParameters.category: testItemLocal.categoryId,
@@ -102,28 +115,28 @@ void main() {
 
     blocTest(
     'Loading from Cage -> Loaded - Error',
-    build: () => ItemBloc(itemRepository: _itmRepRemote),
+    build: () => ItemBloc(repository: _itmRepRemote),
     act: (bloc) => bloc.add(LoadItemsFromCage([testItemRemote.id])),
     expect: [ItemsLoading(), ItemsNotLoaded()],
     );
 
     blocTest(
     'Loading from Server -> Loaded',
-    build: () => ItemBloc(itemRepository: _itmRepRemote),
+    build: () => ItemBloc(repository: _itmRepRemote),
     act: (bloc) => bloc.add(LoadItemsFromServer([testItemRemote.id])),
     expect: [ItemsLoading(), ItemsLoaded([testItemRemote])],
     );
 
     blocTest(
     'Loading from Server -> Loaded - Error',
-    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc) => bloc.add(LoadItemsFromServer([testItemLocal.id])),
     expect: [ItemsLoading(), ItemsNotLoaded()],
     );
 
     blocTest(
     'Add Item -> Loaded',
-    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc){
       bloc.add(LoadItemsFromCage([testItemLocal.id]));
       bloc.add(AddItem(testItemRemote));
@@ -135,7 +148,7 @@ void main() {
 
     blocTest(
     'Update Item -> Loaded',
-    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc){
       bloc.add(LoadItemsFromCage([testItemLocal.id]));
       bloc.add(AddItem(testItemRemote));
@@ -149,7 +162,7 @@ void main() {
 
     blocTest(
     'Delete Item -> Loaded',
-    build: () => ItemBloc(itemRepository: _itmRepLocal),
+    build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc){
       bloc.add(LoadItemsFromCage([testItemLocal.id]));
       bloc.add(AddItem(testItemRemote));

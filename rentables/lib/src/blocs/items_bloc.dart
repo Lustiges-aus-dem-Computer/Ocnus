@@ -7,10 +7,10 @@ export 'states.dart';
 /// Bloc element (https://bloclibrary.dev/#/) for handling items
 class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
   /// Repository managing the database interactions for items
-  final ItemRepository itemRepository;
+  final Repository repository;
 
   /// Constructor for the items bloc element
-  ItemBloc({@required this.itemRepository});
+  ItemBloc({@required this.repository});
 
   /// Initially, items are still being loaded
   @override
@@ -42,7 +42,7 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
   Stream<ItemsState> _mapLoadSearchParametersToState() async* {
     try {
       yield ItemsSearchParametersLoaded(
-        await itemRepository.getSearchParameters());
+        await repository.getSearchParameters());
     }
     /// In case we have no valid cage
     on Exception catch (_) {
@@ -54,7 +54,7 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
     {List<String> itemsList, bool remote}) async* {
     try {
       var items = 
-      await itemRepository.loadItems(idList: itemsList, remote: remote);
+      await repository.loadItems(idList: itemsList, remote: remote);
       items ??= <Item>[];
       yield ItemsLoaded(items);
     }
@@ -74,7 +74,7 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
         ..add(_item);
       yield ItemsLoaded(_newItems);
       /// Save updated list to cage and server (if available)
-      itemRepository.saveItems([_item]);
+      repository.saveItems([_item]);
     }
   }
 
@@ -87,7 +87,7 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
         ));
       yield ItemsLoaded(_newItems);
       /// Save updated list to cage and server (if available)
-      itemRepository.saveItems([_item]);
+      repository.saveItems([_item]);
     }
   }
 
@@ -100,7 +100,7 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
         ));
       yield ItemsLoaded(_newItems);
       /// Delete category from cage and server (if available)
-      itemRepository.deleteItems([_item.id]);
+      repository.deleteItems([_item.id]);
     }
   }
 }

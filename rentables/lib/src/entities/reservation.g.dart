@@ -24,12 +24,13 @@ class ReservationAdapter extends TypeAdapter<Reservation> {
       customerMail: fields[4] as String,
       startDate: fields[6] as DateTime,
       endDate: fields[7] as DateTime,
-      fetchedOn: fields[8] as DateTime,
-      returnedOn: fields[9] as DateTime,
-      id: fields[0] as String,
+      itemId: fields[5] as String,
       created: fields[10] as DateTime,
       modified: fields[11] as DateTime,
-    )..itemId = fields[5] as String;
+      id: fields[0] as String,
+      fetchedOn: fields[8] as DateTime,
+      returnedOn: fields[9] as DateTime,
+    );
   }
 
   @override
