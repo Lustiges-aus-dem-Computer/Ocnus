@@ -7,31 +7,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_for_Android.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/KotlinJavaRuntime.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/main_dart.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/profile/gen/com/example/ocnus/BuildConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/profile/gen/com/example/ocnus/Manifest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/profile/gen/com/example/ocnus/R.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/services/localization.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/services/localization.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_events.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/items_events.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_bloc.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_events.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/category.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/category.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/category.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/category.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/item.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.g.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/database_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/services/database_manager.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/reservation_check.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/services/reservation_check.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/database_manager_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/database_manager_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/repository_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/repository_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" afterDir="false" />
@@ -40,6 +31,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -92,9 +90,9 @@
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
     <state x="371" y="202" width="1022" height="737" key="SettingsEditor/70.27.1850.1053@70.27.1850.1053" timestamp="1580369019264" />
-    <state x="651" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1580368399081">
+    <state x="651" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1580711129654">
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
-    <state x="651" y="380" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1580368399081" />
+    <state x="651" y="380" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1580711129654" />
   </component>
 </project>

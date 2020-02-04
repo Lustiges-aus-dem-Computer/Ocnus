@@ -55,9 +55,15 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
       final _newCategories = 
       List<Category>.from((state as CategoriesLoaded).categoriesList)
         ..add(_category);
-      yield CategoriesLoaded(_newCategories);
-      /// Save updated list to cage and server (if available)
-      repository.saveCategories([_category]);
+      try{
+        /// Save updated list to cage and server (if available)
+        await repository.saveCategories([_category]);
+        yield CategoriesLoaded(_newCategories);
+      }
+      /// In case the update was unsuccessful
+      on Exception catch (_) {
+        yield CategoriesUpdateFailed();
+      }
     }
   }
 
@@ -68,9 +74,14 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
         (state as CategoriesLoaded).categoriesList.map((_catTmp) =>
         _catTmp.id == _category.id ? _category : _catTmp
         ));
-      yield CategoriesLoaded(_newCategories);
-      /// Save updated list to cage and server (if available)
-      repository.saveCategories([_category]);
+      try {
+        /// Save updated list to cage and server (if available)
+        await repository.saveCategories([_category]);
+        yield CategoriesLoaded(_newCategories);
+      }
+      on Exception catch (_) {
+        yield CategoriesUpdateFailed();
+      }
     }
   }
 
@@ -81,9 +92,14 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
         (state as CategoriesLoaded).categoriesList.where(
           (_catTmp) => _catTmp.id != _category.id
         ));
-      yield CategoriesLoaded(_newCategories);
-      /// Delete category from cage and server (if available)
-      repository.deleteCategories([_category.id]);
+      try {
+        /// Delete category from cage and server (if available)
+        await repository.deleteCategories([_category.id]);
+        yield CategoriesLoaded(_newCategories);
+      }
+      on Exception catch (_) {
+        yield CategoriesUpdateFailed();
+      }
     }
   }
 }

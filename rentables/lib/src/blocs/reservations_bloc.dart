@@ -28,7 +28,7 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
       yield* _mapAddReservationToState(event.reservation);
     }
     else if(event is UpdateReservation){
-      yield* _mapUpdateReservationToState(event.reservation, event.testing);
+      yield* _mapUpdateReservationToState(event.reservation);
     }
     else if(event is DeleteReservation){
       yield* _mapDeleteReservationToState(event.reservation);
@@ -62,26 +62,25 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
         final _newReservations = 
         List<Reservation>.from((state as ReservationsLoaded).reservationsList)
         ..add(_reservation);
-        yield ReservationsLoaded(_newReservations);
-        repository
-        .saveReservations([_reservation]);
+        try {
+          await repository
+              .saveReservations([_reservation]);
+          yield ReservationsLoaded(_newReservations);
+        }
+        on Exception catch (_) {
+          yield ReservationsUpdateFailed();
+        }
       }
       else{yield ReservationsInvalid();}
     }
   }
 
   Stream<ReservationsState> _mapUpdateReservationToState(
-    Reservation _reservation, bool testing) async* {
+    Reservation _reservation) async* {
     if (state is ReservationsLoaded) {
-      /// Delete existing reservation with same id
-
-      await repository.deleteReservations([_reservation.id]);
-
       /// Check if the update is valid
       var _validUpdate = await repository
         .checkValidUpdate(reservationList: [_reservation]);
-
-      if(testing){_validUpdate = true;}
 
       if(_validUpdate){
         /// Cascade notation
@@ -91,9 +90,14 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
         (state as ReservationsLoaded).reservationsList.map((_resTmp) =>
         _resTmp.id == _reservation.id ? _reservation : _resTmp
         ));
-        yield ReservationsLoaded(_newReservations);
-        repository
-        .saveReservations([_reservation]);
+        try {
+          await repository
+              .saveReservations([_reservation]);
+          yield ReservationsLoaded(_newReservations);
+        }
+        on Exception catch (_) {
+          yield ReservationsUpdateFailed();
+        }
       }
       else{yield ReservationsInvalid();}
     }
@@ -107,9 +111,14 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
         (state as ReservationsLoaded).reservationsList.where(
           (_resTmp) => _resTmp.id != _reservation.id
         ));
-      yield ReservationsLoaded(_newReservations);
-      /// Delete category from cage and server (if available)
-      repository.deleteReservations([_reservation.id]);
+      try {
+        /// Delete category from cage and server (if available)
+        await repository.deleteReservations([_reservation.id]);
+        yield ReservationsLoaded(_newReservations);
+      }
+      on Exception catch (_) {
+        yield ReservationsUpdateFailed();
+      }
     }
   }
 }

@@ -72,9 +72,14 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
       final _newItems = 
       List<Item>.from((state as ItemsLoaded).itemList)
         ..add(_item);
-      yield ItemsLoaded(_newItems);
-      /// Save updated list to cage and server (if available)
-      repository.saveItems([_item]);
+      try {
+        /// Save updated list to cage and server (if available)
+        await repository.saveItems([_item]);
+        yield ItemsLoaded(_newItems);
+      }
+      on Exception catch (_) {
+        yield ItemsUpdateFailed();
+      }
     }
   }
 
@@ -85,9 +90,14 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
         (state as ItemsLoaded).itemList.map((_itmTmp) =>
         _itmTmp.id == _item.id ? _item : _itmTmp
         ));
-      yield ItemsLoaded(_newItems);
-      /// Save updated list to cage and server (if available)
-      repository.saveItems([_item]);
+      try {
+        /// Save updated list to cage and server (if available)
+        await repository.saveItems([_item]);
+        yield ItemsLoaded(_newItems);
+      }
+      on Exception catch (_) {
+        yield ItemsUpdateFailed();
+      }
     }
   }
 
@@ -98,9 +108,14 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
         (state as ItemsLoaded).itemList.where(
           (_itmTmp) => _itmTmp.id != _item.id
         ));
-      yield ItemsLoaded(_newItems);
-      /// Delete category from cage and server (if available)
-      repository.deleteItems([_item.id]);
+      try {
+        /// Delete category from cage and server (if available)
+        await repository.deleteItems([_item.id]);
+        yield ItemsLoaded(_newItems);
+      }
+      on Exception catch (_) {
+        yield ItemsUpdateFailed();
+      }
     }
   }
 }

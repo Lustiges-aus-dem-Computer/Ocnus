@@ -24,7 +24,7 @@ class LoadReservationsFromCage extends ReservationsEvent {
   LoadReservationsFromCage(this.item);
 }
 
-/// Evend triggering addition of a new reservation
+/// Event triggering addition of a new reservation
 /// This should only be allowed in offline mode for the store-app
 /// A verification for that should be added later
 class AddReservation extends ReservationsEvent {
@@ -35,18 +35,16 @@ class AddReservation extends ReservationsEvent {
   AddReservation(this.reservation);
 }
 
-/// Evend triggering updating of a reservation
+/// Event triggering updating of a reservation
 class UpdateReservation extends ReservationsEvent {
   /// Reservation to be updated
   final Reservation reservation;
-  /// Used to make updates work in testing
-  final bool testing;
 
   /// Constructor for update reservation event
-  UpdateReservation(this.reservation, {this.testing = false});
+  UpdateReservation(this.reservation);
 }
 
-/// Evend triggering deletion of a reservation
+/// Event triggering deletion of a reservation
 class DeleteReservation extends ReservationsEvent {
   /// Reservation to be updated
   final Reservation reservation;

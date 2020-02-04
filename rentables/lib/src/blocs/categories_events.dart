@@ -9,7 +9,7 @@ class LoadCategoriesFromServer extends CategoriesEvent {}
 /// Event triggering loading of categories
 class LoadCategoriesFromCage extends CategoriesEvent {}
 
-/// Evend triggering addition of a new category
+/// Event triggering addition of a new category
 class AddCategory extends CategoriesEvent {
   /// Category to be added
   final Category category;
@@ -18,7 +18,7 @@ class AddCategory extends CategoriesEvent {
   AddCategory(this.category);
 }
 
-/// Evend triggering updating of a category
+/// Event triggering updating of a category
 class UpdateCategory extends CategoriesEvent {
   /// Category to be updated
   final Category category;
@@ -27,7 +27,7 @@ class UpdateCategory extends CategoriesEvent {
   UpdateCategory(this.category);
 }
 
-/// Evend triggering deletion of a category
+/// Event triggering deletion of a category
 class DeleteCategory extends CategoriesEvent {
   /// Category to be updated
   final Category category;

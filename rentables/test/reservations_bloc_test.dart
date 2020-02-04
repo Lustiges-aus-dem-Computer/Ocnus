@@ -46,6 +46,19 @@ void main() {
         endDate: DateTime.utc(2020, 01, 04)
     );
 
+    var testResLocalConflict = Reservation(
+        created: DateTime.now(),
+        modified: DateTime.now(),
+        id: LocalIdGenerator().getId(),
+        employee: 'Jürgen Zuhause',
+        itemId: testItemLocal.id,
+        customerName: 'Ernst August',
+        customerMail: 'ernst_august@neuland.de',
+        customerPhone: '+49 3094 988 78 00',
+        startDate: DateTime.utc(2020, 01, 02),
+        endDate: DateTime.utc(2020, 01, 06)
+    );
+
     var testResRemote = Reservation(
         created: DateTime.now(),
         modified: DateTime.now(),
@@ -106,6 +119,36 @@ void main() {
     when(mockManagerRemote.getItems([testItemRemote.id]))
         .thenAnswer((_) => Future.value([testItemRemote]));
 
+    var mockManagerLocalError= MockManager();
+    when(mockManagerLocalError.putReservations([testResLocal]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.putReservations([testResRemote]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.putReservations([testResLocalUpdate]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.getReservations(testItemLocal.id))
+        .thenAnswer((_) => Future.value([testResLocal]));
+
+    when(mockManagerLocalError.deleteReservations([testResLocal.id]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.deleteReservations([testResRemote.id]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.getItems([testItemLocal.id]))
+        .thenAnswer((_) => Future.value([testItemLocal]));
+
+    when(mockManagerLocalError.getItems([testItemRemote.id]))
+        .thenAnswer((_) => Future.value([testItemRemote]));
+
+    when(mockManagerLocalError.getItems())
+        .thenAnswer((_) => Future.value([testItemLocal]));
+
+    var _resRepLocalError =
+    Repository(localDatabaseManager: mockManagerLocalError);
     var _resRepLocal = 
     Repository(localDatabaseManager: mockManagerLocal);
     var _resRepRemote = 
@@ -162,11 +205,23 @@ void main() {
     build: () => ReservationBlock(repository: _resRepLocal),
     act: (bloc){
       bloc.add(LoadReservationsFromCage(testItemLocal));
-      bloc.add(AddReservation(testResLocal));
+      bloc.add(AddReservation(testResLocalConflict));
       return;
       },
     expect: [ReservationsLoading(), ReservationsLoaded([testResLocal]), 
     ReservationsInvalid()],
+    );
+
+    blocTest(
+      'Add Reservation -> Failed',
+      build: () => ReservationBlock(repository: _resRepLocalError),
+      act: (bloc){
+        bloc.add(LoadReservationsFromCage(testItemLocal));
+        bloc.add(AddReservation(testResRemote));
+        return;
+      },
+      expect: [ReservationsLoading(), ReservationsLoaded([testResLocal]),
+        ReservationsUpdateFailed()],
     );
 
     blocTest(
@@ -175,7 +230,7 @@ void main() {
     act: (bloc){
       bloc.add(LoadReservationsFromCage(testItemLocal));
       bloc.add(AddReservation(testResRemote));
-      bloc.add(UpdateReservation(testResLocalUpdate, testing: true));
+      bloc.add(UpdateReservation(testResLocalUpdate));
       return;
       },
     expect: [ReservationsLoading(), ReservationsLoaded([testResLocal]), 
@@ -189,7 +244,7 @@ void main() {
     act: (bloc){
       bloc.add(LoadReservationsFromCage(testItemLocal));
       bloc.add(AddReservation(testResRemote));
-      bloc.add(UpdateReservation(testResLocal));
+      bloc.add(UpdateReservation(testResLocalConflict));
       return;
       },
     expect: [ReservationsLoading(), ReservationsLoaded([testResLocal]), 
@@ -198,7 +253,19 @@ void main() {
     );
 
     blocTest(
-    'Delete Category -> Loaded',
+      'Update Reservation -> Failed',
+      build: () => ReservationBlock(repository: _resRepLocalError),
+      act: (bloc){
+        bloc.add(LoadReservationsFromCage(testItemLocal));
+        bloc.add(UpdateReservation(testResLocalUpdate));
+        return;
+      },
+      expect: [ReservationsLoading(), ReservationsLoaded([testResLocal]),
+        ReservationsUpdateFailed()],
+    );
+
+    blocTest(
+    'Delete Reservation -> Loaded',
     build: () => ReservationBlock(repository: _resRepLocal),
     act: (bloc){
       bloc.add(LoadReservationsFromCage(testItemLocal));
@@ -209,6 +276,18 @@ void main() {
     expect: [ReservationsLoading(), ReservationsLoaded([testResLocal]), 
     ReservationsLoaded([testResLocal, testResRemote]),
     ReservationsLoaded([testResRemote])],
+    );
+
+    blocTest(
+      'Delete Reservation -> Failed',
+      build: () => ReservationBlock(repository: _resRepLocalError),
+      act: (bloc){
+        bloc.add(LoadReservationsFromCage(testItemLocal));
+        bloc.add(DeleteReservation(testResLocal));
+        return;
+      },
+      expect: [ReservationsLoading(), ReservationsLoaded([testResLocal]),
+        ReservationsUpdateFailed()],
     );
   });
 }

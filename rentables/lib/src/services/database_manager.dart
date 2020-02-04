@@ -13,7 +13,7 @@ abstract class DatabaseManager {
   Future<void> dismiss();
 
   /// API-wrapper to request loading categories from the database
-  /// If no categories are found, an empty list should be returned
+  /// If a category is not found, null should be returned in its position
   Future<List<Category>> getCategories();
 
   /// API-wrapper to request deleting categories from the database
@@ -24,7 +24,7 @@ abstract class DatabaseManager {
 
   /// API-wrapper to request loading reservations for 
   /// a given item from the database
-  /// If no reservations are found, an empty list should be returned
+  /// If a reservation is not found, null should be returned in its position
   Future<List<Reservation>> getReservations(String _itemId);
 
   /// API-wrapper to request deleting reservations from the database
@@ -36,7 +36,7 @@ abstract class DatabaseManager {
 
   /// API-wrapper to request loading items from the database
   /// provided a list of IDs
-  /// If no items are found, an empty list should be returned
+  /// If an item is not found, null should be returned in its position
   Future<List<Item>> getItems([List<String> idList]);
 
   /// API-wrapper to request deletion of items from the database
@@ -47,7 +47,7 @@ abstract class DatabaseManager {
 
   // API-wrapper to request loading images from the database
   /// provided a list of item IDs
-  /// If no image is found, an empty list should be returned
+  /// If an image is not found, null should be returned in its position
   /// The "thumbnail" switch should be used to indicate whether the
   /// image is a thumbnail or a details image
   Future<List<Uint8List>> getImages(List<String> idList, {bool thumbnail=true});
@@ -151,11 +151,9 @@ class HiveManager implements DatabaseManager {
     _log.d('Reading thumbnails from Hive');
     var _box = thumbnail?thumbnailCageBox:detailImagesCageBox;
 
-    print(_box.keys);
     var _images = <Uint8List>[];
     for(var _id in idList){
-      var _img = await _box.get(LocalIdGenerator().getHiveIdFromString(_id));
-      if(_img != null){_images.add(_img);}
+      _images.add(await _box.get(LocalIdGenerator().getHiveIdFromString(_id)));
     }
     return _images;
   }
@@ -174,7 +172,6 @@ class HiveManager implements DatabaseManager {
   Future<List<Category>> getCategories() async {
     _log.d('Loading categories from Hive');
     var _categories = List<Category>.from(categoryCageBox.toMap().values);
-    _categories ??= <Category>[];
     return _categories;
 
   }
@@ -217,8 +214,7 @@ class HiveManager implements DatabaseManager {
 
     for(var _key in reservationCageBox.keys){
       if(reservationsHive.contains(_key)){
-        var _res = await reservationCageBox.get(_key);
-        if(_res!=null){_reservations.add(_res);}
+        _reservations.add(await reservationCageBox.get(_key));
       }
     }
 
@@ -249,11 +245,10 @@ class HiveManager implements DatabaseManager {
     _log.d('Loading Items $idList from Hive');
     var _itemList = <Item>[];
     for (var _id in idList ?? itemCageBox.keys) {
-      /// idList contatins the string keys so they need to be transformed
+      /// idList contains the string keys so they need to be transformed
       /// into the corresponding Hive keys before the call
-      var _item = await itemCageBox.get(
-        idList == null ? _id : LocalIdGenerator().getHiveIdFromString(_id));
-        if(_item!=null){_itemList.add(_item);}
+      _itemList.add(await itemCageBox.get(
+        idList == null ? _id : LocalIdGenerator().getHiveIdFromString(_id)));
     }
     return _itemList;
   }

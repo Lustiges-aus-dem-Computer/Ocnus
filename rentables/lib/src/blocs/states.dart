@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import '../../rentables.dart';
 
 /// We need to use immutable objects here
@@ -7,9 +8,6 @@ import '../../rentables.dart';
 /// instead of mutating the existing state. This is because every time 
 /// we yield, bloc will compare the state to the nextState and will only 
 /// trigger a state change (transition) if the two states are not equal.
-/// Given this. we can use immutable objects here in the spirit of
-/// functional programming. This also allows us to use Equatable which
-/// is nice :-)
 
 /// Abstract class for possible category states
 abstract class CategoriesState extends Equatable{
@@ -18,7 +16,7 @@ abstract class CategoriesState extends Equatable{
   const CategoriesState();
 }
 
-/// State for when catefories are loading
+/// State for when categories are loading
 class CategoriesLoading extends CategoriesState {
   @override
   List<Object> get props => [];
@@ -38,6 +36,12 @@ class CategoriesLoaded extends CategoriesState {
 
 /// State for when categories have not been loaded
 class CategoriesNotLoaded extends CategoriesState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when updating the categories has failed
+class CategoriesUpdateFailed extends CategoriesState {
   @override
   List<Object> get props => [];
 }
@@ -77,6 +81,12 @@ class ReservationsInvalid extends ReservationsState {
 
 /// State for when reservations have not been loaded
 class ReservationsNotLoaded extends ReservationsState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when updating the reservations has failed
+class ReservationsUpdateFailed extends ReservationsState {
   @override
   List<Object> get props => [];
 }
@@ -123,6 +133,12 @@ class ItemsSearchParametersLoaded extends ItemsState {
 /// State for when items have not been loaded
 /// Will be used for both items and search strings alike
 class ItemsNotLoaded extends ItemsState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when updating the item has failed
+class ItemsUpdateFailed extends ItemsState {
   @override
   List<Object> get props => [];
 }

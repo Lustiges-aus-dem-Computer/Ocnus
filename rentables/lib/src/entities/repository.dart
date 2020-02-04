@@ -26,16 +26,15 @@ class Repository {
     }
   }
 
-  /// Call the save-method of the associaded database managers
+  /// Call the save-method of the associated database managers
   Future<void> saveCategories(List<Category> _categoryList) async {
     if (remoteDatabaseManager != null) {
-      // Should we be awaiting this?
       _log.d('Saving Categories to remote database');
-      await remoteDatabaseManager.putCategories(_categoryList);
+      remoteDatabaseManager.putCategories(_categoryList);
     }
     if (localDatabaseManager != null) {
       _log.d('Saving Categories to local database');
-      await localDatabaseManager.putCategories(_categoryList);
+      localDatabaseManager.putCategories(_categoryList);
     }
   }
 
@@ -73,11 +72,11 @@ class Repository {
 
     if (localDatabaseManager != null) {
       _log.d('Delete Categories from local database');
-      await localDatabaseManager.deleteCategories(idList);
+      localDatabaseManager.deleteCategories(idList);
     }
     if (remoteDatabaseManager != null) {
       _log.e('Delete Categories from remote database');
-      await remoteDatabaseManager.deleteCategories(idList);
+      remoteDatabaseManager.deleteCategories(idList);
     }
   }
 
@@ -113,16 +112,15 @@ class Repository {
       }
     }
 
-    await saveItems(_itemList, cageOnly: true);
+    await saveItems(_itemList);
 
     if(remoteDatabaseManager != null){
-      // Should we be awaiting this?
       _log.d('Saving reservations to remote database');
-      await remoteDatabaseManager.putReservations(_reservationList);
+      remoteDatabaseManager.putReservations(_reservationList);
     }
     if (localDatabaseManager != null) {
       _log.d('Saving reservations to local database');
-      await localDatabaseManager.putReservations(_reservationList);
+      localDatabaseManager.putReservations(_reservationList);
     }
     return;
   }
@@ -151,28 +149,27 @@ class Repository {
   Future<void> deleteReservations(List<String> idList) async {
     if (localDatabaseManager != null) {
       _log.d('Delete Reservations from local database');
-      await localDatabaseManager.deleteReservations(idList);
+      localDatabaseManager.deleteReservations(idList);
     }
     if (remoteDatabaseManager != null) {
       _log.e('Delete Reservations from remote database');
-      await remoteDatabaseManager.deleteReservations(idList);
+      remoteDatabaseManager.deleteReservations(idList);
     }
   }
   
-  /// Call the save-method of the associaded database managers
-  Future<void> saveItems(List<Item> _itemList, {bool cageOnly = false}) async {
-    if (remoteDatabaseManager != null ?? ! cageOnly) {
-      // Should we be awaiting this?
+  /// Call the save-method of the associated database managers
+  Future<void> saveItems(List<Item> _itemList) async {
+    if (remoteDatabaseManager != null) {
       _log.d('Saving items to remote database');
-      await remoteDatabaseManager.putItems(_itemList);
+      remoteDatabaseManager.putItems(_itemList);
     }
     if (localDatabaseManager != null) {
       _log.d('Saving items to local database');
-      await localDatabaseManager.putItems(_itemList);
+      localDatabaseManager.putItems(_itemList);
     }
   }
 
-  /// Call the load-method of the associaded database managers
+  /// Call the load-method of the associated database managers
   Future<List<Item>> loadItems({List<String> idList,
   bool remote = false}) async {
     if (remote) {
@@ -215,11 +212,11 @@ class Repository {
 
     if (localDatabaseManager != null) {
       _log.d('Delete Items from local database');
-      await localDatabaseManager.deleteItems(idList);
+      localDatabaseManager.deleteItems(idList);
     }
     if (remoteDatabaseManager != null) {
       _log.e('Delete Items from remote database');
-      await remoteDatabaseManager.deleteItems(idList);
+      remoteDatabaseManager.deleteItems(idList);
     }
   }
 
@@ -227,19 +224,18 @@ class Repository {
   Future<void> saveImages({List<String> keys, 
   List<Uint8List> imageBytes}) async {
     if (remoteDatabaseManager != null) {
-      // Should we be awaiting this?
       _log.d('Saving Categories to remote database');
-      await remoteDatabaseManager.putImages(keys: keys, 
+      remoteDatabaseManager.putImages(keys: keys,
       imageBytes: imageBytes, thumbnail: false);
     }
     if (localDatabaseManager != null) {
       _log.d('Saving Categories to local database');
-      await localDatabaseManager.putImages(keys: keys, 
+      localDatabaseManager.putImages(keys: keys,
       imageBytes: imageBytes, thumbnail: false);
     }
   }
 
-  /// Call the load-method of the associaded database managers
+  /// Call the load-method of the associated database managers
   Future<List<Uint8List>> loadImages(List<String> idList, 
   {bool remote = false}) async {
     if (remote) {
@@ -259,30 +255,29 @@ class Repository {
     }
   }
 
-  /// Call the delete-method of the associaded database managers
+  /// Call the delete-method of the associated database managers
   Future<void> deleteImages(List<String> idList) async {
     if (localDatabaseManager != null) {
       _log.d('Delete Images from local database');
-      await localDatabaseManager.deleteImages(idList, thumbnail: false);
+      localDatabaseManager.deleteImages(idList, thumbnail: false);
     }
     if (remoteDatabaseManager != null) {
       _log.e('Delete Images from remote database');
-      await remoteDatabaseManager.deleteImages(idList, thumbnail: false);
+      remoteDatabaseManager.deleteImages(idList, thumbnail: false);
     }
   }
 
-  /// Call the save-method of the associaded database managers
+  /// Call the save-method of the associated database managers
   Future<void> saveThumbnails({List<String> keys, 
   List<Uint8List> imageBytes}) async {
     if (remoteDatabaseManager != null) {
-      // Should we be awaiting this?
       _log.d('Saving Categories to remote database');
-      await remoteDatabaseManager.putImages(keys: keys, 
+      remoteDatabaseManager.putImages(keys: keys,
       imageBytes: imageBytes, thumbnail: true);
     }
     if (localDatabaseManager != null) {
       _log.d('Saving Categories to local database');
-      await localDatabaseManager.putImages(keys: keys, 
+      localDatabaseManager.putImages(keys: keys,
       imageBytes: imageBytes, thumbnail: true);
     }
   }
@@ -307,15 +302,15 @@ class Repository {
     }
   }
 
-  /// Call the delete-method of the associaded database managers
+  /// Call the delete-method of the associated database managers
   Future<void> deleteThumbnails(List<String> idList) async {
     if (localDatabaseManager != null) {
       _log.d('Delete Images from local database');
-      await localDatabaseManager.deleteImages(idList, thumbnail: true);
+      localDatabaseManager.deleteImages(idList, thumbnail: true);
     }
     if (remoteDatabaseManager != null) {
       _log.e('Delete Images from remote database');
-      await remoteDatabaseManager.deleteImages(idList, thumbnail: true);
+      remoteDatabaseManager.deleteImages(idList, thumbnail: true);
     }
   }
 

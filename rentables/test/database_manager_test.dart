@@ -291,7 +291,7 @@ void main() {
 
       expect((await _hiveManager.getImages([testItem.id])).length, 1);
       await _hiveManager.deleteImages([testItem.id]);
-      expect((await _hiveManager.getImages([testItem.id])).length, 0);
+      expect((await _hiveManager.getImages([testItem.id]))[0], null);
 
       await _hiveManager.clear();
     });

@@ -24,7 +24,7 @@ class LoadItemsFromCage extends ItemsEvent {
 /// Event triggering loading of items
 class LoadItemSearchParameters extends ItemsEvent {}
 
-/// Evend triggering addition of a new item
+/// Event triggering addition of a new item
 class AddItem extends ItemsEvent {
   /// Item to be added
   final Item item;
@@ -33,7 +33,7 @@ class AddItem extends ItemsEvent {
   AddItem(this.item);
 }
 
-/// Evend triggering updating of an item
+/// Event triggering updating of an item
 class UpdateItem extends ItemsEvent {
   /// Item to be updated
   final Item item;
@@ -42,7 +42,7 @@ class UpdateItem extends ItemsEvent {
   UpdateItem(this.item);
 }
 
-/// Evend triggering deletion of an item
+/// Event triggering deletion of an item
 class DeleteItem extends ItemsEvent {
   /// Item to be updated
   final Item item;

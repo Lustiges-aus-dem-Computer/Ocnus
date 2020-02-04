@@ -85,6 +85,27 @@ void main() {
     when(mockManagerRemote.getItems([testItemRemote.id]))
     .thenAnswer((_) => Future.value([testItemRemote]));
 
+    var mockManagerLocalError= MockManager();
+    when(mockManagerLocalError.putItems([testItemLocal]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.putItems([testItemRemote]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.putItems([testItemLocalUpdate]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.getItems([testItemLocal.id]))
+        .thenAnswer((_) => Future.value([testItemLocal]));
+
+    when(mockManagerLocalError.deleteReservations(testItemLocal.reservations))
+        .thenAnswer((_) => Future.value(null));
+
+    when(mockManagerLocalError.deleteItems([testItemLocal.id]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    var _itemRepLocalError =
+    Repository(localDatabaseManager: mockManagerLocalError);
     var _itmRepLocal = 
     Repository(localDatabaseManager: mockManagerLocal);
     var _itmRepRemote =
@@ -147,6 +168,18 @@ void main() {
     );
 
     blocTest(
+      'Add Item -> Failed',
+      build: () => ItemBloc(repository: _itemRepLocalError),
+      act: (bloc){
+        bloc.add(LoadItemsFromCage([testItemLocal.id]));
+        bloc.add(AddItem(testItemRemote));
+        return;
+      },
+      expect: [ItemsLoading(), ItemsLoaded([testItemLocal]),
+        ItemsUpdateFailed()],
+    );
+
+    blocTest(
     'Update Item -> Loaded',
     build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc){
@@ -161,6 +194,18 @@ void main() {
     );
 
     blocTest(
+      'Update Item -> Failed',
+      build: () => ItemBloc(repository: _itemRepLocalError),
+      act: (bloc){
+        bloc.add(LoadItemsFromCage([testItemLocal.id]));
+        bloc.add(UpdateItem(testItemLocalUpdate));
+        return;
+      },
+      expect: [ItemsLoading(), ItemsLoaded([testItemLocal]),
+        ItemsUpdateFailed()],
+    );
+
+    blocTest(
     'Delete Item -> Loaded',
     build: () => ItemBloc(repository: _itmRepLocal),
     act: (bloc){
@@ -172,6 +217,18 @@ void main() {
     expect: [ItemsLoading(), ItemsLoaded([testItemLocal]), 
     ItemsLoaded([testItemLocal, testItemRemote]), 
     ItemsLoaded([testItemRemote])],
+    );
+
+    blocTest(
+      'Delete Item -> Failed',
+      build: () => ItemBloc(repository: _itemRepLocalError),
+      act: (bloc){
+        bloc.add(LoadItemsFromCage([testItemLocal.id]));
+        bloc.add(DeleteItem(testItemLocal));
+        return;
+      },
+      expect: [ItemsLoading(), ItemsLoaded([testItemLocal]),
+        ItemsUpdateFailed()],
     );
   });
 }

@@ -68,6 +68,21 @@ void main() {
     returnedOn: DateTime.now().add(Duration(days: 2))
   );
 
+  var testResLocalConflict = Reservation(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
+      employee: 'Jürgen',
+      itemId: testItemLocal.id,
+      customerName: 'Local',
+      customerMail: 'ernst_august@neuland.de',
+      customerPhone: '+49 3094 988 78 00',
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 3)),
+      fetchedOn: DateTime.now().add(Duration(days: 1)),
+      returnedOn: DateTime.now().add(Duration(days: 3))
+  );
+
   var testResRemote = Reservation(
     created: DateTime.now(),
     modified: DateTime.now(),
@@ -81,6 +96,21 @@ void main() {
     endDate: DateTime.now().add(Duration(days: 15)),
     fetchedOn: DateTime.now().add(Duration(days: 9)),
     returnedOn: DateTime.now().add(Duration(days: 18))
+  );
+
+  var testResRemoteConflict = Reservation(
+      created: DateTime.now(),
+      modified: DateTime.now(),
+      id: LocalIdGenerator().getId(),
+      employee: 'Jürgen',
+      itemId: testItemRemote.id,
+      customerName: 'Remote',
+      customerMail: 'ernst_august@neuland.de',
+      customerPhone: '+49 3094 988 78 00',
+      startDate: DateTime.now().add(Duration(days: 1)),
+      endDate: DateTime.now().add(Duration(days: 20)),
+      fetchedOn: DateTime.now().add(Duration(days: 1)),
+      returnedOn: DateTime.now().add(Duration(days: 22))
   );
 
   testItemLocal = testItemLocal.copyWith(reservations: [testResLocal.id]);
@@ -237,9 +267,9 @@ var mockManagerLocal = MockManager();
       await _repository.saveItems([testItemLocal]);
 
       expect(await _repository.checkValidUpdate(
-        reservationList: [testResRemote], remote: true), false);
+        reservationList: [testResRemoteConflict], remote: true), false);
       expect(await _repository.checkValidUpdate(
-        reservationList: [testResLocal], remote: false), false);
+        reservationList: [testResLocalConflict], remote: false), false);
     });
     test('Save Reservation to remote Repository', () async {
       var _repository = Repository(

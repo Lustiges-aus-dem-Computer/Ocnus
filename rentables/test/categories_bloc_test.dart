@@ -71,8 +71,34 @@ void main() {
     when(mockManagerLocal.getCategories())
       .thenAnswer((_) => Future.value([testCatLocal]));
 
+    when(mockManagerLocal.deleteCategories([testCatLocal.id]))
+        .thenAnswer((_) => Future.value());
+
     when(mockManagerLocal.getItems())
         .thenAnswer((_) => Future.value([testItemLocal, testItemRemote]));
+
+    var mockManagerLocalError= MockManager();
+    when(mockManagerLocalError.putCategories([testCatLocal]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.putCategories([testCatRemote]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.putCategories([testCatRemoteUpdate]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.getCategories())
+        .thenAnswer((_) => Future.value([testCatLocal]));
+
+    when(mockManagerLocalError.deleteCategories([testCatLocal.id]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.deleteCategories([testCatRemote.id]))
+        .thenAnswer((_) => throw Exception('Error'));
+
+    when(mockManagerLocalError.getItems())
+        .thenAnswer((_) => Future.value([testItemLocal, testItemRemote]));
+
 
     var mockManagerRemote = MockManager();
       when(mockManagerRemote.putCategories([testCatRemote]))
@@ -81,6 +107,8 @@ void main() {
     when(mockManagerRemote.getCategories())
     .thenAnswer((_) => Future.value([testCatRemote]));
 
+    var _catRepLocalError =
+    Repository(localDatabaseManager: mockManagerLocalError);
     var _catRepLocal = 
     Repository(localDatabaseManager: mockManagerLocal);
     var _catRepRemote =
@@ -133,6 +161,18 @@ void main() {
     );
 
     blocTest(
+      'Add Category -> Failed',
+      build: () => CategoryBlock(repository: _catRepLocalError),
+      act: (bloc){
+        bloc.add(LoadCategoriesFromCage());
+        bloc.add(AddCategory(testCatRemote));
+        return;
+      },
+      expect: [CategoriesLoading(), CategoriesLoaded([testCatLocal]),
+        CategoriesUpdateFailed()],
+    );
+
+    blocTest(
     'Update Category -> Loaded',
     build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
@@ -147,6 +187,18 @@ void main() {
     );
 
     blocTest(
+    'Update Category -> Failed',
+    build: () => CategoryBlock(repository: _catRepLocalError),
+    act: (bloc){
+    bloc.add(LoadCategoriesFromCage());
+    bloc.add(UpdateCategory(testCatRemoteUpdate));
+    return;
+    },
+    expect: [CategoriesLoading(), CategoriesLoaded([testCatLocal]),
+    CategoriesUpdateFailed()],
+    );
+
+    blocTest(
     'Delete Category -> Loaded',
     build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
@@ -158,6 +210,18 @@ void main() {
     expect: [CategoriesLoading(), CategoriesLoaded([testCatLocal]), 
     CategoriesLoaded([testCatLocal, testCatRemote]),
     CategoriesLoaded([testCatLocal])],
+    );
+
+    blocTest(
+      'Delete Category -> Failed',
+      build: () => CategoryBlock(repository: _catRepLocalError),
+      act: (bloc){
+        bloc.add(LoadCategoriesFromCage());
+        bloc.add(DeleteCategory(testCatLocal));
+        return;
+      },
+      expect: [CategoriesLoading(), CategoriesLoaded([testCatLocal]),
+        CategoriesUpdateFailed()],
     );
   });
 }
