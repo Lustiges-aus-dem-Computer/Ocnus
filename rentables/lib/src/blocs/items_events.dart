@@ -3,22 +3,13 @@ import '../entities/item.dart';
 /// Abstract class for events to be handled by the items bloc
 abstract class ItemsEvent {}
 
-/// Event triggering loading of items from the remote database
-class LoadItemsFromServer extends ItemsEvent {
-  /// List if keys for the items that should be loaded
-  final List<String> itemList;
-
-  /// Constructor for load tiems event
-  LoadItemsFromServer(this.itemList);
-}
-
 /// Event triggering loading of items
-class LoadItemsFromCage extends ItemsEvent {
+class LoadItems extends ItemsEvent {
   /// List if keys for the items that should be loaded
   final List<String> itemList;
 
-  /// Constructor for load tiems event
-  LoadItemsFromCage(this.itemList);
+  /// Constructor for load items event
+  LoadItems(this.itemList);
 }
 
 /// Event triggering loading of items

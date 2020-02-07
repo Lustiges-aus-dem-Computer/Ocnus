@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../services/connectivity.dart';
 import '../services/database_manager.dart';
 import '../services/logger.dart';
 import '../services/reservation_check.dart';
@@ -10,6 +11,8 @@ import 'reservation.dart';
 /// Abstract class for all types of repositories
 class Repository {
   final _log = getLogger();
+  /// Class for checking app-connectivity
+  final Connectivity connectivity;
 
   /// References the remote database
   final DatabaseManager remoteDatabaseManager;
@@ -18,7 +21,8 @@ class Repository {
   final DatabaseManager localDatabaseManager;
 
   /// Constructor for abstract repository class
-  Repository({this.remoteDatabaseManager, this.localDatabaseManager}) {
+  Repository({this.remoteDatabaseManager, this.localDatabaseManager,
+  this.connectivity}) {
     if (remoteDatabaseManager == null && localDatabaseManager == null) {
       _log.e('Cannot initialize repository without'
           ' eigther a local or remote database manager');
@@ -80,31 +84,25 @@ class Repository {
     }
   }
 
-  /// Check if a save-operation could be performed without conflicts
-  Future<bool> checkValidUpdate({List<Reservation> reservationList, 
-  bool remote}) async {
+  /// Check if a save-operation can be performed without conflicts
+  Future<List<bool>> checkValidUpdate(List<Reservation> reservationList) async {
+    var _valid = <bool>[];
     _log.d('Checking reservations-update for validity');
-    remote ??= remoteDatabaseManager != null;
     /// Check if the reservations to be saved are actually valid
-    for(var _reservation in reservationList){
+    for(var _reservation in reservationList) {
       /// Load all reservations for the relevant item
-      if(!checkReservationValidity(existingReservations: 
-        await loadReservations(_reservation.itemId, remote: remote),
-        newReservation: _reservation)){
-           _log.d('Update NOT valid');
-          return false;
-          }
+      _valid.add(checkReservationValidity(existingReservations:
+      await loadReservations(_reservation.itemId),
+          newReservation: _reservation));
     }
-    _log.d('Update valid');
-    return true;
+    return _valid;
   }
 
   /// Call the save-method of the associated database managers
   Future<void> saveReservations(List<Reservation> _reservationList) async {
     /// Add the new reservation to the item and save it
-    var _itemList = await loadItems(idList:
-    List <String>.from(_reservationList.map((_res) => _res.itemId)),
-    remote: !(remoteDatabaseManager == null));
+    var _itemList = await loadItems(List <String>
+        .from(_reservationList.map((_res) => _res.itemId)));
 
     for(var i=0; i<_itemList.length; i++){
       if(!_itemList[i].reservations.contains(_reservationList[i].id)){
@@ -126,22 +124,13 @@ class Repository {
   }
 
   /// Call the load-method of the associated database managers
-  Future<List<Reservation>> loadReservations(String _itemId,
-  {bool remote = false}) async {
-    if (remote) {
-      if(remoteDatabaseManager == null){
-        _log.e('Requested server update but no remote manager specified');
-        throw Exception('No active remote database manager found');
-      }
-      _log.d('Loading reservations for item $_itemId from remote database');
+  Future<List<Reservation>> loadReservations(String _itemId) async {
+    /// If we are online, we load the reservations from the server
+    if(await connectivity.isOnline() && remoteDatabaseManager != null){
       return remoteDatabaseManager.getReservations(_itemId);
     }
-    if (localDatabaseManager != null) {
-      _log.d('Loading reservations for item $_itemId from local database');
+    else{
       return localDatabaseManager.getReservations(_itemId);
-    } else {
-      _log.e('Found valid database for loading reservation data');
-      throw Exception('No valid database manager specified');
     }
   }
 
@@ -170,30 +159,21 @@ class Repository {
   }
 
   /// Call the load-method of the associated database managers
-  Future<List<Item>> loadItems({List<String> idList,
-  bool remote = false}) async {
-    if (remote) {
-      if(remoteDatabaseManager == null){
-        _log.e('Requested server update but no remote manager specified');
-        throw Exception('No active remote database manager found');
-      }
-      _log.d('Loading items from remote database by list of IDs');
+  Future<List<Item>> loadItems([List<String> idList]) async {
+    /// If we are online, we load the items from the server
+    if(await connectivity.isOnline() && remoteDatabaseManager != null){
       return remoteDatabaseManager.getItems(idList);
     }
-    if (localDatabaseManager != null) {
-      _log.d('Loading items from local database by list of IDs');
+    else{
       return localDatabaseManager.getItems(idList);
-    } else {
-      _log.e('Found valid database for loading item data');
-      throw Exception('No valid database manager specified');
     }
   }
 
-  /// Load itmes from box and construct search-keys needed
+  /// Load items from box and construct search-keys needed
   /// for fuzzy searching in the UI
   Future<Map<String,Map<searchParameters, String>>> 
   getSearchParameters() async {
-    var _itemList = await loadItems(remote: false);
+    var _itemList = await loadItems();
     var _searchParameters = <String,Map<searchParameters, String>>{};
     for(var _item in _itemList){
       _searchParameters[_item.id] = {
@@ -206,7 +186,7 @@ class Repository {
   /// Call the delete-method of the associated database managers
   Future<void> deleteItems(List<String> idList) async {
     /// Delete reservations associated with the deleted item
-    for(var _item in await loadItems(idList: idList)){
+    for(var _item in await loadItems(idList)){
       await deleteReservations(_item.reservations);
     }
 
@@ -221,7 +201,7 @@ class Repository {
   }
 
   /// Call the save-method of the associated database managers
-  Future<void> saveImages({List<String> keys, 
+  Future<void> saveDetailImages({List<String> keys, 
   List<Uint8List> imageBytes}) async {
     if (remoteDatabaseManager != null) {
       _log.d('Saving Categories to remote database');
@@ -236,27 +216,18 @@ class Repository {
   }
 
   /// Call the load-method of the associated database managers
-  Future<List<Uint8List>> loadImages(List<String> idList, 
-  {bool remote = false}) async {
-    if (remote) {
-      if(remoteDatabaseManager == null){
-        _log.e('Requested server update but no remote manager specified');
-        throw Exception('No active remote database manager found');
-      }
-      _log.d('Loading Images from remote database');
+  Future<List<Uint8List>> loadDetailImages(List<String> idList) async {
+    /// If we are online, we load the items from the server
+    if(await connectivity.isOnline() && remoteDatabaseManager != null){
       return remoteDatabaseManager.getImages(idList, thumbnail: false);
     }
-    if (localDatabaseManager != null) {
-      _log.d('Loading Images from local database');
+    else{
       return localDatabaseManager.getImages(idList, thumbnail: false);
-    } else {
-      _log.e('Found valid database for loading category data');
-      throw Exception('No valid database manager specified');
     }
   }
 
   /// Call the delete-method of the associated database managers
-  Future<void> deleteImages(List<String> idList) async {
+  Future<void> deleteDetailImages(List<String> idList) async {
     if (localDatabaseManager != null) {
       _log.d('Delete Images from local database');
       localDatabaseManager.deleteImages(idList, thumbnail: false);
@@ -283,22 +254,13 @@ class Repository {
   }
 
   /// Call the load-method of the associaded database managers
-  Future<List<Uint8List>> loadThumbnails(List<String> idList, 
-  {bool remote = false}) async {
-    if (remote) {
-      if(remoteDatabaseManager == null){
-        _log.e('Requested server update but no remote manager specified');
-        throw Exception('No active remote database manager found');
-      }
-      _log.d('Loading Images from remote database');
+  Future<List<Uint8List>> loadThumbnails(List<String> idList) async {
+    /// If we are online, we load the items from the server
+    if(await connectivity.isOnline() && remoteDatabaseManager != null){
       return remoteDatabaseManager.getImages(idList, thumbnail: true);
     }
-    if (localDatabaseManager != null) {
-      _log.d('Loading Images from local database');
+    else{
       return localDatabaseManager.getImages(idList, thumbnail: true);
-    } else {
-      _log.e('Found valid database for loading category data');
-      throw Exception('No valid database manager specified');
     }
   }
 

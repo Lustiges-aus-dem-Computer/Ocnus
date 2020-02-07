@@ -1,5 +1,5 @@
+import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import '../../rentables.dart';
 
 /// We need to use immutable objects here
@@ -139,6 +139,50 @@ class ItemsNotLoaded extends ItemsState {
 
 /// State for when updating the item has failed
 class ItemsUpdateFailed extends ItemsState {
+  @override
+  List<Object> get props => [];
+}
+
+
+
+/// Abstract class for possible detail-images states
+abstract class DetailImagesState extends Equatable{
+  /// Constructor is constant because this and inheriting
+  /// classes need to be immutable
+  const DetailImagesState();
+}
+
+/// State for when detail-images are loading
+class DetailImagesLoading extends DetailImagesState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when detail-images have been loaded
+class DetailImagesLoaded extends DetailImagesState {
+  /// List of items that have been loaded
+  final List<Uint8List> detailImagesList;
+  /// List of image IDs
+  final List<String> imageIds;
+  /// Id of the item the image belongs to
+  final String itemId;
+
+  /// Constructor initializing an empty detail-images list
+  const DetailImagesLoaded({this.detailImagesList = const [],
+    this.itemId, this.imageIds});
+
+  @override
+  List<Uint8List> get props => detailImagesList;
+}
+
+/// State for when detail-images have not been loaded
+class DetailImagesNotLoaded extends DetailImagesState {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when updating the detail-images has failed
+class DetailImagesUpdateFailed extends DetailImagesState {
   @override
   List<Object> get props => [];
 }

@@ -10,8 +10,8 @@ Reservation newReservation}){
     if(newReservation.id != _itemRes.id) {
       if (
         /// Check if the two data ranges overlap
-        !(newReservation.startDate.isAfter(_itemRes.endDate)) ||
-          !(newReservation.endDate.isBefore(_itemRes.startDate))
+        !newReservation.startDate.isAfter(_itemRes.endDate)&&
+        !newReservation.endDate.isBefore(_itemRes.startDate)
       ) {
         return false;
       }

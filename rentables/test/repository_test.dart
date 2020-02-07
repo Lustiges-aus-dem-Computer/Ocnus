@@ -3,12 +3,49 @@ import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rentables/rentables.dart';
+import 'package:rentables/src/services/connectivity.dart';
 
 /// Mocking the database manager
 class MockManager extends Mock implements DatabaseManager {}
 
+/// Mocking the DNS service
+class MockDNS extends Mock {
+  /// Mocked DNS package returned from the server
+  Future<DnsPacket> lookupPacket(String _);
+}
+
+class Answer{
+  String name;
+  Answer(this.name);
+}
+
+class DnsPacket{
+  bool isResponse;
+  List<Answer> answers;
+
+  DnsPacket(this.answers, {this.isResponse});
+}
+
 void main() {
   Logger.level = Level.debug;
+
+  var _validAnswers = [Answer('google.com')];
+  var _invalidAnswers = [null];
+
+  var _validPacket = DnsPacket(_validAnswers, isResponse: true);
+  var _invalidPacket= DnsPacket(_invalidAnswers, isResponse: false);
+
+  var validMockDNS = MockDNS();
+  when(validMockDNS.lookupPacket('google.com'))
+      .thenAnswer((_) => Future.value(_validPacket));
+
+  var invalidMockDNS = MockDNS();
+  when(invalidMockDNS.lookupPacket('google.com'))
+      .thenAnswer((_) => Future.value(_invalidPacket));
+
+  var onlineConnect = Connectivity(client: validMockDNS);
+  var offlineConnect = Connectivity(client: invalidMockDNS);
+
   var testCatLocal = Category(
     created: DateTime.now(),
     modified: DateTime.now(),
@@ -176,6 +213,9 @@ var mockManagerLocal = MockManager();
     when(mockManagerRemote.getItems([testItemRemote.id]))
         .thenAnswer((_) => Future.value([testItemRemote]));
 
+  when(mockManagerRemote.getItems())
+      .thenAnswer((_) => Future.value([testItemRemote]));
+
     when(mockManagerRemote.deleteItems([testItemRemote.id]))
         .thenAnswer((_) => Future.value());
     
@@ -224,6 +264,7 @@ var mockManagerLocal = MockManager();
   group('Category Repository', () {
     test('Save to Category Repository', () async {
       var _repository = Repository(
+          connectivity: onlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
@@ -231,6 +272,7 @@ var mockManagerLocal = MockManager();
     });
     test('Delete from Category Repository', () async {
       var _repository = Repository(
+          connectivity: offlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
@@ -239,15 +281,21 @@ var mockManagerLocal = MockManager();
     });
     test('Get Data from local Category Repository', () async {
       var _repository =
-          Repository(localDatabaseManager: mockManagerLocal);
+          Repository(
+              connectivity: offlineConnect,
+              localDatabaseManager: mockManagerLocal);
       await _repository.saveCategories([testCatLocal]);
       expect(await _repository.loadCategories(), [testCatLocal]);
     });
     test('Get Data from remote Category Repository', () async {
       var _repository =
-          Repository(remoteDatabaseManager: mockManagerRemote);
+          Repository(
+              connectivity: onlineConnect,
+              remoteDatabaseManager: mockManagerRemote);
       var _repositoryLoc =
-          Repository(localDatabaseManager: mockManagerLocal);
+          Repository(
+              connectivity: offlineConnect,
+              localDatabaseManager: mockManagerLocal);
       await _repository.saveCategories([testCatRemote]);
       expect(() async => await _repository.loadCategories(remote: false),
           throwsException);
@@ -258,21 +306,31 @@ var mockManagerLocal = MockManager();
   });
 
   group('Reservation Repository', () {
-    test('Check if an update would be valid', () async {
+    test('Check if an update would be valid - offlint', () async {
       var _repository = Repository(
+          connectivity: offlineConnect,
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      await _repository.saveItems([testItemLocal]);
+
+      expect(await _repository.checkValidUpdate(
+          [testResLocalConflict]), [false]);
+    });
+    test('Check if an update would be valid - online', () async {
+      var _repository = Repository(
+          connectivity: onlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
       await _repository.saveItems([testItemRemote]);
-      await _repository.saveItems([testItemLocal]);
 
       expect(await _repository.checkValidUpdate(
-        reservationList: [testResRemoteConflict], remote: true), false);
-      expect(await _repository.checkValidUpdate(
-        reservationList: [testResLocalConflict], remote: false), false);
+          [testResRemoteConflict]), [false]);
     });
     test('Save Reservation to remote Repository', () async {
       var _repository = Repository(
+          connectivity: onlineConnect,
           localDatabaseManager: null,
           remoteDatabaseManager: mockManagerRemote);
 
@@ -280,6 +338,7 @@ var mockManagerLocal = MockManager();
     });
     test('Save Reservation to local Repository', () async {
       var _repository = Repository(
+          connectivity: offlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: null);
 
@@ -287,6 +346,7 @@ var mockManagerLocal = MockManager();
     });
     test('Delete from Reservation Repository', () async {
       var _repository = Repository(
+          connectivity: onlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
@@ -294,7 +354,9 @@ var mockManagerLocal = MockManager();
     });
     test('Get Data from local Reservation Repository', () async {
       var _repository =
-          Repository(localDatabaseManager: mockManagerLocal);
+          Repository(
+              connectivity: offlineConnect,
+              localDatabaseManager: mockManagerLocal);
       await _repository.saveReservations([testResLocal]);
       await _repository.saveItems([testItemLocal]);
       expect(await _repository
@@ -302,22 +364,18 @@ var mockManagerLocal = MockManager();
     });
     test('Get Data from remote Reservation Repository', () async {
       var _repository =
-          Repository(remoteDatabaseManager: mockManagerRemote);
-      var _repositoryLoc =
-          Repository(localDatabaseManager: mockManagerLocal);
-      expect(() async => await _repository.loadReservations(testItemLocal.id, 
-      remote: false), throwsException);
-      expect(() async 
-      => await _repositoryLoc.loadReservations(testItemRemote.id, 
-      remote: true), throwsException);
-      expect(await _repository.loadReservations(testItemRemote.id, 
-      remote: true), [testResRemote]);
+          Repository(
+              connectivity: onlineConnect,
+              remoteDatabaseManager: mockManagerRemote);
+      expect(await _repository
+          .loadReservations(testItemRemote.id), [testResRemote]);
     });
   });
 
   group('Item Repository', () {
     test('Save to Item Repository', () async {
       var _repository = Repository(
+          connectivity: onlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
@@ -325,6 +383,7 @@ var mockManagerLocal = MockManager();
     });
     test('Delete from Item Repository', () async {
       var _repository = Repository(
+          connectivity: offlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
@@ -333,15 +392,18 @@ var mockManagerLocal = MockManager();
     });
     test('Get Data from local Item Repository', () async {
       var _repository =
-          Repository(localDatabaseManager: mockManagerLocal);
+          Repository(
+              connectivity: offlineConnect,
+              localDatabaseManager: mockManagerLocal);
       await _repository.saveItems([testItemLocal, testItemRemote]);
       /// Load a specific list of items
-      expect(await _repository.loadItems(
-        idList: [testItemLocal.id]), [testItemLocal]);
+      expect(await _repository.loadItems([testItemLocal.id]), [testItemLocal]);
     });
     test('Get item search terms', () async {
       var _repository =
-          Repository(localDatabaseManager: mockManagerLocal);
+          Repository(
+              connectivity: onlineConnect,
+              localDatabaseManager: mockManagerLocal);
 
       expect(await _repository.getSearchParameters(), {testItemLocal.id:
       {searchParameters.category: testItemLocal.categoryId,
@@ -350,54 +412,56 @@ var mockManagerLocal = MockManager();
     });
     test('Get Data from remote Item Repository', () async {
       var _repository =
-          Repository(remoteDatabaseManager: mockManagerRemote);
-      var _repositoryLoc =
-          Repository(localDatabaseManager: mockManagerLocal);
+          Repository(
+              connectivity: onlineConnect,
+              remoteDatabaseManager: mockManagerRemote);
       await _repository.saveItems([testItemRemote]);
-      expect(() async => await _repository
-      .loadItems(idList: [testItemRemote.id], remote: false), throwsException);
-      expect(() async => await _repositoryLoc
-      .loadItems(idList: [testItemRemote.id], remote: true), throwsException);
       expect(await _repository
-      .loadItems(idList: [testItemRemote.id], remote: true), [testItemRemote]);
+      .loadItems([testItemRemote.id]), [testItemRemote]);
     });
   });
 
   group('Image Repository', () {
     test('Save to Item Repository', () async {
       var _repository = Repository(
+          connectivity: onlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
-      await _repository.saveImages(
+      await _repository.saveDetailImages(
         imageBytes: [imageBytes], keys: [testItemLocal.id]);
     });
     test('Delete from Image Repository', () async {
       var _repository = Repository(
+          connectivity: onlineConnect,
           localDatabaseManager: mockManagerLocal,
           remoteDatabaseManager: mockManagerRemote);
 
-      await _repository.saveImages(
+      await _repository.saveDetailImages(
         imageBytes: [imageBytes], keys: [testItemLocal.id]);
-      await _repository.deleteImages([testItemLocal.id]);
+      await _repository.deleteDetailImages([testItemLocal.id]);
     });
     test('Get Data from local Image Repository', () async {
       var _repository =
-          Repository(localDatabaseManager: mockManagerLocal);
-      await _repository.saveImages(
+          Repository(
+              connectivity: offlineConnect,
+              localDatabaseManager: mockManagerLocal);
+      await _repository.saveDetailImages(
         imageBytes: [imageBytes], keys: [testItemLocal.id]);
       /// Load a specific list of images
-      expect((await _repository.loadImages(
+      expect((await _repository.loadDetailImages(
         [testItemLocal.id]))[0], imageBytes);
     });
     test('Get Data from remote Image Repository', () async {
       var _repository =
-          Repository(remoteDatabaseManager: mockManagerRemote);
-      await _repository.saveImages(
+          Repository(
+              connectivity: onlineConnect,
+              remoteDatabaseManager: mockManagerRemote);
+      await _repository.saveDetailImages(
         imageBytes: [imageBytes], keys: [testItemLocal.id]);
       /// Load a specific list of images
-      expect((await _repository.loadImages(
-        [testItemLocal.id], remote: true))[0], imageBytes);
+      expect((await _repository
+          .loadDetailImages([testItemLocal.id]))[0], imageBytes);
     });
   });
 }

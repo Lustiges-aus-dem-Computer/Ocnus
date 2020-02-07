@@ -60,7 +60,7 @@ class Category extends Equatable{
       String icon,
       DateTime created,
       DateTime modified,
-      bool active = true,
+      bool active,
     }){
 
     color ??= this.color;

@@ -2,8 +2,26 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
 import 'package:rentables/rentables.dart';
+import 'package:rentables/src/services/connectivity.dart';
+
+/// Mocking the DNS service
+class MockDNS extends Mock {
+  /// Mocked DNS package returned from the server
+  Future<DnsPacket> lookupPacket(String _);
+}
+
+class Answer{
+  String name;
+  Answer(this.name);
+}
+
+class DnsPacket{
+  bool isResponse;
+  List<Answer> answers;
+
+  DnsPacket(this.answers, {this.isResponse});
+}
 
 /// Mocking the database manager
 class MockManager extends Mock implements DatabaseManager {}
@@ -11,6 +29,23 @@ class MockManager extends Mock implements DatabaseManager {}
 void main() {
   group('Category Bloc tests', (){
     Logger.level = Level.debug;
+
+    var _validAnswers = [Answer('google.com')];
+    var _invalidAnswers = [null];
+
+    var _validPacket = DnsPacket(_validAnswers, isResponse: true);
+    var _invalidPacket= DnsPacket(_invalidAnswers, isResponse: false);
+
+    var validMockDNS = MockDNS();
+    when(validMockDNS.lookupPacket('google.com'))
+        .thenAnswer((_) => Future.value(_validPacket));
+
+    var invalidMockDNS = MockDNS();
+    when(invalidMockDNS.lookupPacket('google.com'))
+        .thenAnswer((_) => Future.value(_invalidPacket));
+
+    var onlineConnect = Connectivity(client: validMockDNS);
+    var offlineConnect = Connectivity(client: invalidMockDNS);
 
     var testCatLocal = Category(
       created: DateTime.now(),
@@ -108,11 +143,17 @@ void main() {
     .thenAnswer((_) => Future.value([testCatRemote]));
 
     var _catRepLocalError =
-    Repository(localDatabaseManager: mockManagerLocalError);
+    Repository(
+        connectivity: offlineConnect,
+        localDatabaseManager: mockManagerLocalError);
     var _catRepLocal = 
-    Repository(localDatabaseManager: mockManagerLocal);
+    Repository(
+        connectivity: offlineConnect,
+        localDatabaseManager: mockManagerLocal);
     var _catRepRemote =
-    Repository(remoteDatabaseManager: mockManagerRemote);
+    Repository(
+        connectivity: onlineConnect,
+        remoteDatabaseManager: mockManagerRemote);
 
     blocTest(
     'Initialize Bloc',

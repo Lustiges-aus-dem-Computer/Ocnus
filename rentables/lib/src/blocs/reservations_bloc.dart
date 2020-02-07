@@ -18,11 +18,8 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
   @override
   Stream<ReservationsState> mapEventToState(ReservationsEvent event) async*{
     /// Cannot use switch due to type mismatch
-    if(event is LoadReservationsFromCage){
-      yield* _mapLoadReservationsToState(item: event.item, remote: false);
-    }
-    else if(event is LoadReservationsFromServer){
-      yield* _mapLoadReservationsToState(item: event.item, remote: true);
+    if(event is LoadReservations){
+      yield* _mapLoadReservationsToState(item: event.item);
     }
     else if(event is AddReservation){
       yield* _mapAddReservationToState(event.reservation);
@@ -39,7 +36,7 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
     {Item item, bool remote}) async* {
     try {
       var reservations = 
-      await repository.loadReservations(item.id, remote: remote);
+      await repository.loadReservations(item.id);
       reservations ??= <Reservation>[];
       yield ReservationsLoaded(reservations);
     }
@@ -54,8 +51,8 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
     if (state is ReservationsLoaded) {
       /// Check if the update is valid
       var _validUpdate = await repository
-        .checkValidUpdate(reservationList: [_reservation]);
-      if(_validUpdate){
+        .checkValidUpdate([_reservation]);
+      if(_validUpdate[0]){
         /// Cascade notation
         /// List.from is needed to create a new object
         /// and not alter the state
@@ -80,9 +77,9 @@ class ReservationBlock extends Bloc<ReservationsEvent, ReservationsState>{
     if (state is ReservationsLoaded) {
       /// Check if the update is valid
       var _validUpdate = await repository
-        .checkValidUpdate(reservationList: [_reservation]);
+        .checkValidUpdate([_reservation]);
 
-      if(_validUpdate){
+      if(_validUpdate[0]){
         /// Cascade notation
         /// List.from is needed to create a new object
         /// and not alter the state

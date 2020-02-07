@@ -19,11 +19,8 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
   @override
   Stream<ItemsState> mapEventToState(ItemsEvent event) async*{
     /// Cannot use switch due to type mismatch
-    if(event is LoadItemsFromCage){
-      yield* _mapLoadItemsToState(itemsList: event.itemList, remote: false);
-    }
-    else if(event is LoadItemsFromServer){
-      yield* _mapLoadItemsToState(itemsList: event.itemList, remote: true);
+    if(event is LoadItems){
+      yield* _mapLoadItemsToState(itemsList: event.itemList);
     }
     else if(event is LoadItemSearchParameters){
       yield* _mapLoadSearchParametersToState();
@@ -51,10 +48,10 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
   }
 
   Stream<ItemsState> _mapLoadItemsToState(
-    {List<String> itemsList, bool remote}) async* {
+    {List<String> itemsList}) async* {
     try {
       var items = 
-      await repository.loadItems(idList: itemsList, remote: remote);
+      await repository.loadItems(itemsList);
       items ??= <Item>[];
       yield ItemsLoaded(items);
     }

@@ -3,6 +3,25 @@ import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rentables/rentables.dart';
+import 'package:rentables/src/services/connectivity.dart';
+
+/// Mocking the DNS service
+class MockDNS extends Mock {
+  /// Mocked DNS package returned from the server
+  Future<DnsPacket> lookupPacket(String _);
+}
+
+class Answer{
+  String name;
+  Answer(this.name);
+}
+
+class DnsPacket{
+  bool isResponse;
+  List<Answer> answers;
+
+  DnsPacket(this.answers, {this.isResponse});
+}
 
 /// Mocking the database manager
 class MockManager extends Mock implements DatabaseManager {}
@@ -10,6 +29,22 @@ class MockManager extends Mock implements DatabaseManager {}
 void main() {
   group('Reservations Bloc tests', (){
     Logger.level = Level.debug;
+
+    var _validAnswers = [Answer('google.com')];
+    var _invalidAnswers = [null];
+
+    var _validPacket = DnsPacket(_validAnswers, isResponse: true);
+    var _invalidPacket= DnsPacket(_invalidAnswers, isResponse: false);
+
+    var validMockDNS = MockDNS();
+    when(validMockDNS.lookupPacket('google.com'))
+        .thenAnswer((_) => Future.value(_validPacket));
+
+    var invalidMockDNS = MockDNS();
+    when(invalidMockDNS.lookupPacket('google.com'))
+        .thenAnswer((_) => Future.value(_invalidPacket));
+
+    var offlineConnect = Connectivity(client: invalidMockDNS);
 
     var testItemLocal = Item(
         created: DateTime.now(),
@@ -109,16 +144,6 @@ void main() {
     when(mockManagerLocal.getItems())
         .thenAnswer((_) => Future.value([testItemLocal]));
 
-    var mockManagerRemote = MockManager();
-      when(mockManagerRemote.putReservations([testResRemote]))
-      .thenAnswer((_) => Future.value());
-
-    when(mockManagerRemote.getReservations(testItemRemote.id))
-    .thenAnswer((_) => Future.value([testResRemote]));
-
-    when(mockManagerRemote.getItems([testItemRemote.id]))
-        .thenAnswer((_) => Future.value([testItemRemote]));
-
     var mockManagerLocalError= MockManager();
     when(mockManagerLocalError.putReservations([testResLocal]))
         .thenAnswer((_) => throw Exception('Error'));
@@ -147,12 +172,24 @@ void main() {
     when(mockManagerLocalError.getItems())
         .thenAnswer((_) => Future.value([testItemLocal]));
 
+    var mockManagerLocalLoadError= MockManager();
+    when(mockManagerLocalLoadError.getItems([testItemLocal.id]))
+        .thenAnswer((_) => throw Exception('Error'));
+    when(mockManagerLocalLoadError.getReservations(testItemLocal.id))
+        .thenAnswer((_) => throw Exception('Error'));
+
     var _resRepLocalError =
-    Repository(localDatabaseManager: mockManagerLocalError);
+    Repository(
+        connectivity: offlineConnect,
+        localDatabaseManager: mockManagerLocalError);
     var _resRepLocal = 
-    Repository(localDatabaseManager: mockManagerLocal);
-    var _resRepRemote = 
-    Repository(remoteDatabaseManager: mockManagerRemote);
+    Repository(
+        connectivity: offlineConnect,
+        localDatabaseManager: mockManagerLocal);
+    var _itemRepLocalLoadError =
+    Repository(
+        connectivity: offlineConnect,
+        localDatabaseManager: mockManagerLocalLoadError);
 
     blocTest(
     'Initialize Bloc',
@@ -163,28 +200,14 @@ void main() {
     blocTest(
     'Loading from Cage -> Loaded',
     build: () => ReservationBlock(repository: _resRepLocal),
-    act: (bloc) => bloc.add(LoadReservationsFromCage(testItemLocal)),
+    act: (bloc) => bloc.add(LoadReservations(testItemLocal)),
     expect: [ReservationsLoading(), ReservationsLoaded([testResLocal])],
     );
     
     blocTest(
     'Loading from Cage -> Loaded - Error',
-    build: () => ReservationBlock(repository: _resRepRemote),
-    act: (bloc) => bloc.add(LoadReservationsFromCage(testItemRemote)),
-    expect: [ReservationsLoading(), ReservationsNotLoaded()],
-    );
-
-    blocTest(
-    'Loading from Server -> Loaded',
-    build: () => ReservationBlock(repository: _resRepRemote),
-    act: (bloc) => bloc.add(LoadReservationsFromServer(testItemRemote)),
-    expect: [ReservationsLoading(), ReservationsLoaded([testResRemote])],
-    );
-
-    blocTest(
-    'Loading from Server -> Loaded - Error',
-    build: () => ReservationBlock(repository: _resRepLocal),
-    act: (bloc) => bloc.add(LoadReservationsFromServer(testItemLocal)),
+    build: () => ReservationBlock(repository: _itemRepLocalLoadError),
+    act: (bloc) => bloc.add(LoadReservations(testItemLocal)),
     expect: [ReservationsLoading(), ReservationsNotLoaded()],
     );
 
@@ -192,7 +215,7 @@ void main() {
     'Add Reservation -> Loaded',
     build: () => ReservationBlock(repository: _resRepLocal),
     act: (bloc){
-      bloc.add(LoadReservationsFromCage(testItemLocal));
+      bloc.add(LoadReservations(testItemLocal));
       bloc.add(AddReservation(testResRemote));
       return;
       },
@@ -204,7 +227,7 @@ void main() {
     'Add Reservation -> Invalid',
     build: () => ReservationBlock(repository: _resRepLocal),
     act: (bloc){
-      bloc.add(LoadReservationsFromCage(testItemLocal));
+      bloc.add(LoadReservations(testItemLocal));
       bloc.add(AddReservation(testResLocalConflict));
       return;
       },
@@ -216,7 +239,7 @@ void main() {
       'Add Reservation -> Failed',
       build: () => ReservationBlock(repository: _resRepLocalError),
       act: (bloc){
-        bloc.add(LoadReservationsFromCage(testItemLocal));
+        bloc.add(LoadReservations(testItemLocal));
         bloc.add(AddReservation(testResRemote));
         return;
       },
@@ -228,7 +251,7 @@ void main() {
     'Update Reservation -> Loaded',
     build: () => ReservationBlock(repository: _resRepLocal),
     act: (bloc){
-      bloc.add(LoadReservationsFromCage(testItemLocal));
+      bloc.add(LoadReservations(testItemLocal));
       bloc.add(AddReservation(testResRemote));
       bloc.add(UpdateReservation(testResLocalUpdate));
       return;
@@ -242,7 +265,7 @@ void main() {
     'Update Reservation -> Invalid',
     build: () => ReservationBlock(repository: _resRepLocal),
     act: (bloc){
-      bloc.add(LoadReservationsFromCage(testItemLocal));
+      bloc.add(LoadReservations(testItemLocal));
       bloc.add(AddReservation(testResRemote));
       bloc.add(UpdateReservation(testResLocalConflict));
       return;
@@ -256,7 +279,7 @@ void main() {
       'Update Reservation -> Failed',
       build: () => ReservationBlock(repository: _resRepLocalError),
       act: (bloc){
-        bloc.add(LoadReservationsFromCage(testItemLocal));
+        bloc.add(LoadReservations(testItemLocal));
         bloc.add(UpdateReservation(testResLocalUpdate));
         return;
       },
@@ -268,7 +291,7 @@ void main() {
     'Delete Reservation -> Loaded',
     build: () => ReservationBlock(repository: _resRepLocal),
     act: (bloc){
-      bloc.add(LoadReservationsFromCage(testItemLocal));
+      bloc.add(LoadReservations(testItemLocal));
       bloc.add(AddReservation(testResRemote));
       bloc.add(DeleteReservation(testResLocal));
       return;
@@ -282,7 +305,7 @@ void main() {
       'Delete Reservation -> Failed',
       build: () => ReservationBlock(repository: _resRepLocalError),
       act: (bloc){
-        bloc.add(LoadReservationsFromCage(testItemLocal));
+        bloc.add(LoadReservations(testItemLocal));
         bloc.add(DeleteReservation(testResLocal));
         return;
       },

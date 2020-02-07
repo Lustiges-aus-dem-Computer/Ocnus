@@ -1,27 +1,16 @@
-import 'package:flutter/cupertino.dart';
-
 import '../entities/item.dart';
 import '../entities/reservation.dart';
 
 /// Abstract class for events to be handled by the reservation bloc
 abstract class ReservationsEvent {}
 
-/// Event triggering loading of reservations from the remote database
-class LoadReservationsFromServer extends ReservationsEvent {
-  /// Item for which the reservation should be loaded
-  final Item item;
-
-  /// Constructor for load reservation event
-  LoadReservationsFromServer(this.item);
-}
-
 /// Event triggering loading of reservations
-class LoadReservationsFromCage extends ReservationsEvent {
+class LoadReservations extends ReservationsEvent {
   /// Item for which the reservation should be loaded
   final Item item;
 
   /// Constructor for load reservation event
-  LoadReservationsFromCage(this.item);
+  LoadReservations(this.item);
 }
 
 /// Event triggering addition of a new reservation

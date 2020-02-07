@@ -4,11 +4,50 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 
 import 'package:rentables/rentables.dart';
+import 'package:rentables/src/services/connectivity.dart';
+import 'package:mockito/mockito.dart';
+
+/// Mocking the DNS service
+class MockDNS extends Mock {
+  /// Mocked DNS package returned from the server
+  Future<DnsPacket> lookupPacket(String _);
+}
+
+class Answer{
+  String name;
+  Answer(this.name);
+}
+
+class DnsPacket{
+  bool isResponse;
+  List<Answer> answers;
+
+  DnsPacket(this.answers, {this.isResponse});
+}
 
 void main() {
   Logger.level = Level.debug;
 
-  group('Services', () {
+  var _validAnswers = [Answer('google.com')];
+  var _invalidAnswers = [null];
+
+  var _validPacket = DnsPacket(_validAnswers, isResponse: true);
+  var _invalidPacket= DnsPacket(_invalidAnswers, isResponse: false);
+
+  var validMockDNS = MockDNS();
+  when(validMockDNS.lookupPacket('google.com'))
+      .thenAnswer((_) => Future.value(_validPacket));
+
+  var invalidMockDNS = MockDNS();
+  when(invalidMockDNS.lookupPacket('google.com'))
+      .thenAnswer((_) => Future.value(_invalidPacket));
+
+  var brokenMockDNS = MockDNS();
+  when(brokenMockDNS.lookupPacket('google.com'))
+      .thenAnswer((_) => throw Exception('Error'));
+
+
+  group('Design', () {
     test('Get Icons by Name', () async {
       expect(() => getIconByName('kjbsdciugcsd'), throwsException);
       for (var _icon in availableIcons) {
@@ -19,6 +58,21 @@ void main() {
       expect(() => getColorByName('kjbsdciugcsd'), throwsException);
       expect(getColorByName('black'), Colors.black);
       expect(getColorByName('white'), Colors.white);
+    });
+  });
+
+  group('Connectivity', () {
+    test('Test connected', () async {
+      var con = Connectivity(client: validMockDNS).isOnline();
+      expect(await con, true);
+    });
+    test('Test not-connected', () async {
+      var con = Connectivity(client: invalidMockDNS).isOnline();
+      expect(await con, false);
+    });
+    test('Test exception', () async {
+      var con = Connectivity(client: brokenMockDNS).isOnline();
+      expect(await con, false);
     });
   });
 
