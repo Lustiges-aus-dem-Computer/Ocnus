@@ -292,16 +292,8 @@ var mockManagerLocal = MockManager();
           Repository(
               connectivity: onlineConnect,
               remoteDatabaseManager: mockManagerRemote);
-      var _repositoryLoc =
-          Repository(
-              connectivity: offlineConnect,
-              localDatabaseManager: mockManagerLocal);
       await _repository.saveCategories([testCatRemote]);
-      expect(() async => await _repository.loadCategories(remote: false),
-          throwsException);
-      expect(() async => await _repositoryLoc.loadCategories(remote: true),
-          throwsException);
-      expect(await _repository.loadCategories(remote: true), [testCatRemote]);
+      expect(await _repository.loadCategories(), [testCatRemote]);
     });
   });
 

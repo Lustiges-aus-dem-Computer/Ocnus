@@ -162,17 +162,15 @@ class DetailImagesLoading extends DetailImagesState {
 class DetailImagesLoaded extends DetailImagesState {
   /// List of items that have been loaded
   final List<Uint8List> detailImagesList;
-  /// List of image IDs
-  final List<String> imageIds;
   /// Id of the item the image belongs to
   final String itemId;
 
   /// Constructor initializing an empty detail-images list
-  const DetailImagesLoaded({this.detailImagesList = const [],
-    this.itemId, this.imageIds});
+  const DetailImagesLoaded({this.detailImagesList,
+    this.itemId});
 
   @override
-  List<Uint8List> get props => detailImagesList;
+  List<Object> get props => [detailImagesList, itemId];
 }
 
 /// State for when detail-images have not been loaded

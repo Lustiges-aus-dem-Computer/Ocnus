@@ -26,10 +26,11 @@ class DetailImagesBloc extends Bloc<DetailImagesEvent, DetailImagesState>{
     }
     else if(event is AddDetailImage){
       yield* _mapAddDetailImageToState(image: event.image,
-          itemId: event.itemId);
+          itemId: event.itemId, imIdTest: event.imIdTest);
     }
     else if(event is DeleteDetailImage){
-      yield* _mapDeleteDetailImageToState(event.imageId);
+      yield* _mapDeleteDetailImageToState(imageId: event.imageId,
+          itemId: event.itemId);
     }
   }
 
@@ -37,12 +38,9 @@ class DetailImagesBloc extends Bloc<DetailImagesEvent, DetailImagesState>{
       {String itemId}) async* {
     try {
       var _item = (await repository.loadItems([itemId]))[0];
-      var imageIds = _item.images;
       var _images =
-      await repository.loadDetailImages(imageIds);
-      _images ??= <Uint8List>[];
-      yield DetailImagesLoaded(detailImagesList: _images, itemId: itemId,
-      imageIds: imageIds);
+      await repository.loadDetailImages(_item.images);
+      yield DetailImagesLoaded(detailImagesList: _images, itemId: itemId);
     }
     /// In case we have no valid cage / server
     on Exception catch (_) {
@@ -51,7 +49,7 @@ class DetailImagesBloc extends Bloc<DetailImagesEvent, DetailImagesState>{
   }
 
   Stream<DetailImagesState> _mapAddDetailImageToState({Uint8List image,
-      String itemId}) async* {
+      String itemId, String imIdTest}) async* {
     if (state is DetailImagesLoaded) {
       /// Cascade notation
       /// List.from is needed to create a new object
@@ -60,15 +58,16 @@ class DetailImagesBloc extends Bloc<DetailImagesEvent, DetailImagesState>{
       List<Uint8List>.from((state as DetailImagesLoaded).detailImagesList)
         ..add(image);
       try {
-        var _newImageId = LocalIdGenerator().getId();
-        var _imageIds = (state as DetailImagesLoaded).imageIds;
-        _imageIds.add(_newImageId);
+        var _item = (await repository.loadItems([itemId]))[0];
+        var _newImageId = imIdTest ?? LocalIdGenerator().getId();
+        var _imageIds = _item.images
+          ..add(_newImageId);
         /// Save updated list to cage and server (if available)
         await repository.saveDetailImages(keys: [_newImageId],
             imageBytes: [image]);
-        /// Update of the associated item is handled by the bloc-supervisor
-        yield DetailImagesLoaded(detailImagesList: _newImages,
-            itemId: itemId, imageIds: _imageIds);
+        /// Update associated item
+        await repository.saveItems([_item.copyWith(images: _imageIds)]);
+        yield DetailImagesLoaded(detailImagesList: _newImages, itemId: itemId);
       }
       on Exception catch (_) {
         yield DetailImagesUpdateFailed();
@@ -76,20 +75,23 @@ class DetailImagesBloc extends Bloc<DetailImagesEvent, DetailImagesState>{
     }
   }
 
-  Stream<DetailImagesState> _mapDeleteDetailImageToState(
-      String _imageId) async* {
+  Stream<DetailImagesState> _mapDeleteDetailImageToState({String itemId,
+      String imageId}) async* {
     if (state is DetailImagesLoaded) {
-      var detailImagesList = (state as DetailImagesLoaded).detailImagesList;
-      var imageIds = (state as DetailImagesLoaded).imageIds;
-      imageIds.remove(_imageId);
-      detailImagesList.removeAt(imageIds.indexOf(_imageId));
+      /// Copy so we don't alter the state
+      var _newImages = List<Uint8List>
+          .from((state as DetailImagesLoaded).detailImagesList);
+      var _item = (await repository.loadItems([itemId]))[0];
+      var _imageIds = _item.images;
+      _newImages.removeAt(_imageIds.indexOf(imageId));
+      _imageIds.remove(imageId);
       try {
         /// Delete image from cage and server (if available)
-        await repository.deleteDetailImages([_imageId]);
-        /// Update of the associated item is handled by the bloc-supervisor
-        yield DetailImagesLoaded(detailImagesList: detailImagesList,
-            imageIds: imageIds,
-            itemId: (state as DetailImagesLoaded).itemId);
+        await repository.deleteDetailImages([imageId]);
+        /// Update associated item
+        await repository.saveItems([_item.copyWith(images: _imageIds)]);
+        yield DetailImagesLoaded(detailImagesList: _newImages,
+            itemId: itemId);
       }
       on Exception catch (_) {
         yield DetailImagesUpdateFailed();

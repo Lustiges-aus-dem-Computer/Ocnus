@@ -4,10 +4,7 @@ import '../entities/category.dart';
 abstract class CategoriesEvent {}
 
 /// Event triggering loading of categories from the remote database
-class LoadCategoriesFromServer extends CategoriesEvent {}
-
-/// Event triggering loading of categories
-class LoadCategoriesFromCage extends CategoriesEvent {}
+class LoadCategories extends CategoriesEvent {}
 
 /// Event triggering addition of a new category
 class AddCategory extends CategoriesEvent {

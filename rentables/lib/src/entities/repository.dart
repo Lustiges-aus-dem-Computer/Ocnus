@@ -43,21 +43,13 @@ class Repository {
   }
 
   /// Call the load-method of the associated database managers
-  Future<List<Category>> loadCategories({bool remote = false}) async {
-    if (remote) {
-      if(remoteDatabaseManager == null){
-        _log.e('Requested server update but no remote manager specified');
-        throw Exception('No active remote database manager found');
-      }
-      _log.d('Loading Categories from remote database');
+  Future<List<Category>> loadCategories() async {
+    /// If we are online, we load the reservations from the server
+    if(await connectivity.isOnline() && remoteDatabaseManager != null){
       return remoteDatabaseManager.getCategories();
     }
-    if (localDatabaseManager != null) {
-      _log.d('Loading Categories from local database');
+    else{
       return localDatabaseManager.getCategories();
-    } else {
-      _log.e('Found valid database for loading category data');
-      throw Exception('No valid database manager specified');
     }
   }
 

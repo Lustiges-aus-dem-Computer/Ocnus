@@ -7,26 +7,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/delegate_blocs.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_bloc.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_events.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rentables/lib/src/services/connectivity.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rentables/test/detail_images_bloc_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/items_events.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_bloc.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_events.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/blocs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/blocs.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_events.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_events.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/category.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/category.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/reservation_check.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/services/reservation_check.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/pubspec.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/repository_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/repository_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/services_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/services_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

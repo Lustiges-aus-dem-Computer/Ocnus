@@ -18,11 +18,8 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
   @override
   Stream<CategoriesState> mapEventToState(CategoriesEvent event) async*{
     /// Cannot use switch due to type mismatch
-    if(event is LoadCategoriesFromCage){
-      yield* _mapLoadCategoriesToState(remote: false);
-    }
-    else if(event is LoadCategoriesFromServer){
-      yield* _mapLoadCategoriesToState(remote: true);
+    if(event is LoadCategories){
+      yield* _mapLoadCategoriesToState();
     }
     else if(event is AddCategory){
       yield* _mapAddCategoryToState(event.category);
@@ -35,10 +32,10 @@ class CategoryBlock extends Bloc<CategoriesEvent, CategoriesState>{
     }
   }
 
-  Stream<CategoriesState> _mapLoadCategoriesToState({bool remote}) async* {
+  Stream<CategoriesState> _mapLoadCategoriesToState() async* {
     try {
       final categories = 
-      await repository.loadCategories(remote: remote);
+      await repository.loadCategories();
       yield CategoriesLoaded(categories);
     }
     /// In case we have no valid cage

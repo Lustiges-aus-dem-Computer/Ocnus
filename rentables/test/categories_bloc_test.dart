@@ -44,7 +44,6 @@ void main() {
     when(invalidMockDNS.lookupPacket('google.com'))
         .thenAnswer((_) => Future.value(_invalidPacket));
 
-    var onlineConnect = Connectivity(client: validMockDNS);
     var offlineConnect = Connectivity(client: invalidMockDNS);
 
     var testCatLocal = Category(
@@ -134,6 +133,10 @@ void main() {
     when(mockManagerLocalError.getItems())
         .thenAnswer((_) => Future.value([testItemLocal, testItemRemote]));
 
+    var mockManagerLocalErrorLoad = MockManager();
+    when(mockManagerLocalErrorLoad.getCategories())
+        .thenAnswer((_) => throw Exception('Error'));
+
 
     var mockManagerRemote = MockManager();
       when(mockManagerRemote.putCategories([testCatRemote]))
@@ -146,14 +149,14 @@ void main() {
     Repository(
         connectivity: offlineConnect,
         localDatabaseManager: mockManagerLocalError);
+    var _catRepLocalErrorLoad =
+    Repository(
+        connectivity: offlineConnect,
+        localDatabaseManager: mockManagerLocalErrorLoad);
     var _catRepLocal = 
     Repository(
         connectivity: offlineConnect,
         localDatabaseManager: mockManagerLocal);
-    var _catRepRemote =
-    Repository(
-        connectivity: onlineConnect,
-        remoteDatabaseManager: mockManagerRemote);
 
     blocTest(
     'Initialize Bloc',
@@ -162,30 +165,16 @@ void main() {
     );
 
     blocTest(
-    'Loading from Cage -> Loaded',
+    'Loading -> Loaded',
     build: () => CategoryBlock(repository: _catRepLocal),
-    act: (bloc) => bloc.add(LoadCategoriesFromCage()),
+    act: (bloc) => bloc.add(LoadCategories()),
     expect: [CategoriesLoading(), CategoriesLoaded([testCatLocal])],
     );
 
     blocTest(
-    'Loading from Cage -> Loaded - Error',
-    build: () => CategoryBlock(repository: _catRepRemote),
-    act: (bloc) => bloc.add(LoadCategoriesFromCage()),
-    expect: [CategoriesLoading(), CategoriesNotLoaded()],
-    );
-
-    blocTest(
-    'Loading from Server -> Loaded',
-    build: () => CategoryBlock(repository: _catRepRemote),
-    act: (bloc) => bloc.add(LoadCategoriesFromServer()),
-    expect: [CategoriesLoading(), CategoriesLoaded([testCatRemote])],
-    );
-
-    blocTest(
-    'Loading from Server -> Loaded - Error',
-    build: () => CategoryBlock(repository: _catRepLocal),
-    act: (bloc) => bloc.add(LoadCategoriesFromServer()),
+    'Loading -> Error',
+    build: () => CategoryBlock(repository: _catRepLocalErrorLoad),
+    act: (bloc) => bloc.add(LoadCategories()),
     expect: [CategoriesLoading(), CategoriesNotLoaded()],
     );
 
@@ -193,7 +182,7 @@ void main() {
     'Add Category -> Loaded',
     build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
-      bloc.add(LoadCategoriesFromCage());
+      bloc.add(LoadCategories());
       bloc.add(AddCategory(testCatRemote));
       return;
       },
@@ -205,7 +194,7 @@ void main() {
       'Add Category -> Failed',
       build: () => CategoryBlock(repository: _catRepLocalError),
       act: (bloc){
-        bloc.add(LoadCategoriesFromCage());
+        bloc.add(LoadCategories());
         bloc.add(AddCategory(testCatRemote));
         return;
       },
@@ -217,7 +206,7 @@ void main() {
     'Update Category -> Loaded',
     build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
-      bloc.add(LoadCategoriesFromCage());
+      bloc.add(LoadCategories());
       bloc.add(AddCategory(testCatRemote));
       bloc.add(UpdateCategory(testCatRemoteUpdate));
       return;
@@ -231,7 +220,7 @@ void main() {
     'Update Category -> Failed',
     build: () => CategoryBlock(repository: _catRepLocalError),
     act: (bloc){
-    bloc.add(LoadCategoriesFromCage());
+    bloc.add(LoadCategories());
     bloc.add(UpdateCategory(testCatRemoteUpdate));
     return;
     },
@@ -243,7 +232,7 @@ void main() {
     'Delete Category -> Loaded',
     build: () => CategoryBlock(repository: _catRepLocal),
     act: (bloc){
-      bloc.add(LoadCategoriesFromCage());
+      bloc.add(LoadCategories());
       bloc.add(AddCategory(testCatRemote));
       bloc.add(DeleteCategory(testCatRemote));
       return;
@@ -257,7 +246,7 @@ void main() {
       'Delete Category -> Failed',
       build: () => CategoryBlock(repository: _catRepLocalError),
       act: (bloc){
-        bloc.add(LoadCategoriesFromCage());
+        bloc.add(LoadCategories());
         bloc.add(DeleteCategory(testCatLocal));
         return;
       },
