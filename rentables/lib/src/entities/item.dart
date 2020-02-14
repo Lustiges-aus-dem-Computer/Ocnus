@@ -101,8 +101,8 @@ class Item extends Equatable{
       DateTime created,
       DateTime modified,
       List<String> reservations,
-      String categoryId,
-      bool active = true,
+      String categoryId = '',
+      bool active,
     }){
 
     size ??= this.size;
@@ -115,7 +115,8 @@ class Item extends Equatable{
     description ??= this.description;
     type ??= this.type;
     active ??= this.active;
-    /// We don't check the category ID so it can be set to null
+    /// Allow categoryId to be set to null
+    categoryId = categoryId == '' ? this.categoryId : categoryId;
 
     return Item(
       size: size,

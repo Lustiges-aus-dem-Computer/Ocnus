@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:equatable/equatable.dart';
 import '../../rentables.dart';
 
@@ -123,7 +124,7 @@ class ItemsSearchParametersLoaded extends ItemsState {
   /// List of search strings that have been loaded
   final Map<String,Map<searchParameters, String>> itemSearchParameters;
 
-  /// Constructor initializing an emply term list
+  /// Constructor initializing an empty term list
   const ItemsSearchParametersLoaded([this.itemSearchParameters = const {}]);
 
   @override
@@ -183,4 +184,31 @@ class DetailImagesNotLoaded extends DetailImagesState {
 class DetailImagesUpdateFailed extends DetailImagesState {
   @override
   List<Object> get props => [];
+}
+
+
+/// Abstract class for filtered items states
+abstract class FilteredItemsState extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when filtered items are being loaded
+class FilteredItemsLoading extends FilteredItemsState {}
+
+/// State for when filtered items have been loaded
+class FilteredItemsLoaded extends FilteredItemsState {
+  /// List of filtered items
+  final List<String> filteredItemIds;
+  /// Search string for the filter
+  final String searchString;
+  /// Categories set in filter
+  final List<String> categoryIds;
+
+  /// Constructor for the filter class
+  FilteredItemsLoaded({@required this.filteredItemIds,
+    @required this.searchString, @required this.categoryIds});
+
+  @override
+  List<Object> get props => [filteredItemIds, searchString];
 }

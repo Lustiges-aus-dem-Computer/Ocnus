@@ -52,7 +52,6 @@ class ItemBloc extends Bloc<ItemsEvent, ItemsState>{
     try {
       var items = 
       await repository.loadItems(itemsList);
-      items ??= <Item>[];
       yield ItemsLoaded(items);
     }
     /// In case we have no valid cage / server
