@@ -61,7 +61,7 @@ class Repository {
     .where((_item) => idList.contains(_item.categoryId)));
 
     for(var i=0; i<_itemList.length; i++){
-      _itemList[i] = _itemList[i].deleteCategory();
+      _itemList[i] = _itemList[i].copyWith(categoryId: null);
     }
 
     await saveItems(_itemList);

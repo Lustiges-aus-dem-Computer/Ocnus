@@ -413,7 +413,7 @@ var mockManagerLocal = MockManager();
     });
   });
 
-  group('Image Repository', () {
+  group('Detail-Image Repository', () {
     test('Save to Item Repository', () async {
       var _repository = Repository(
           connectivity: onlineConnect,
@@ -454,6 +454,50 @@ var mockManagerLocal = MockManager();
       /// Load a specific list of images
       expect((await _repository
           .loadDetailImages([testItemLocal.id]))[0], imageBytes);
+    });
+  });
+
+  group('Thumbnail Repository', () {
+    test('Save to Thumbnail Repository', () async {
+      var _repository = Repository(
+          connectivity: onlineConnect,
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      await _repository.saveThumbnails(
+          imageBytes: [imageBytes], keys: [testItemLocal.id]);
+    });
+    test('Delete from Thumbnail Repository', () async {
+      var _repository = Repository(
+          connectivity: onlineConnect,
+          localDatabaseManager: mockManagerLocal,
+          remoteDatabaseManager: mockManagerRemote);
+
+      await _repository.saveThumbnails(
+          imageBytes: [imageBytes], keys: [testItemLocal.id]);
+      await _repository.deleteThumbnails([testItemLocal.id]);
+    });
+    test('Get Data from local Thumbnail Repository', () async {
+      var _repository =
+      Repository(
+          connectivity: offlineConnect,
+          localDatabaseManager: mockManagerLocal);
+      await _repository.saveThumbnails(
+          imageBytes: [imageBytes], keys: [testItemLocal.id]);
+      /// Load a specific list of images
+      expect((await _repository.loadThumbnails(
+          [testItemLocal.id]))[0], imageBytes);
+    });
+    test('Get Data from remote Thumbnail Repository', () async {
+      var _repository =
+      Repository(
+          connectivity: onlineConnect,
+          remoteDatabaseManager: mockManagerRemote);
+      await _repository.saveThumbnails(
+          imageBytes: [imageBytes], keys: [testItemLocal.id]);
+      /// Load a specific list of images
+      expect((await _repository
+          .loadThumbnails([testItemLocal.id]))[0], imageBytes);
     });
   });
 }

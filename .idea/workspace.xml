@@ -7,23 +7,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc_events.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rentables/test/filter_bloc_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/.flutter-plugins" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/blocs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/blocs.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/definitions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/services/definitions.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/pubspec.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/filter_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/filter_bloc_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/repository_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/repository_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,9 +87,21 @@
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
     <state x="651" y="380" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1581534018113" />
+    <state x="763" y="473" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581895360407">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="763" y="473" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/70.27.1850.1053@70.27.1850.1053" timestamp="1581895360407" />
     <state x="304" y="155" width="1372" height="803" key="new project wizard" timestamp="1581363312407">
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
     <state x="304" y="155" width="1372" height="803" key="new project wizard/70.27.1850.1053@70.27.1850.1053" timestamp="1581363312407" />
+    <state x="659" y="252" key="run.anything.popup" timestamp="1581895420586">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="659" y="252" key="run.anything.popup/70.27.1850.1053@70.27.1850.1053" timestamp="1581895420586" />
+    <state x="658" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1581923109568">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="658" y="259" width="672" height="678" key="search.everywhere.popup/70.27.1850.1053@70.27.1850.1053" timestamp="1581923109568" />
   </component>
 </project>

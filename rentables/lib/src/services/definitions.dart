@@ -1,6 +1,6 @@
 import 'package:fuzzy/fuzzy.dart';
 
-/// Length of the keys which are menat for human consumption
+/// Length of the keys which are meant for human consumption
 const int globalKeyLength = 6;
 
 /// Minimum length of any rental
@@ -14,6 +14,6 @@ FuzzyOptions fuzzySearchOptions = FuzzyOptions(
   matchAllTokens: true,
   minMatchCharLength: 3,
   shouldNormalize: true,
-  threshold: 0.8,
+  threshold: 0.2,
   tokenize: true,
 );

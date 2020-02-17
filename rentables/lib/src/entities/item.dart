@@ -15,14 +15,6 @@ enum searchParameters {
   searchTerm
 }
 
-/// Actions to be performed on the category ID linked to an item
-enum catIdActions {
-  /// Delete the category ID
-  deleteCat,
-  /// Update the category ID
-  updateCat
-}
-
 /// Class handling categories of rentable items
 @HiveType(typeId: 3)
 class Item extends Equatable{
@@ -84,15 +76,9 @@ class Item extends Equatable{
     _log.d('Item $id created');
   }
 
-  /// Delete the category ID from the Item and return a new item
-  Item deleteCategory(){
-    return copyWith(catAction: catIdActions.deleteCat);
-  }
-
   /// Create a copy of an item and take in changing parameters
   Item copyWith(
     {
-      catIdActions catAction = catIdActions.updateCat,
       String size,
       String title,
       String description,
@@ -106,9 +92,6 @@ class Item extends Equatable{
     }){
 
     size ??= this.size;
-    catAction == catIdActions.updateCat
-        ?categoryId ??= this.categoryId
-        :categoryId = null;
     images ??= this.images;
     reservations ??= this.reservations;
     title ??= this.title;

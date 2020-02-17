@@ -25,7 +25,8 @@ class FilteredItemsBloc extends Bloc<FilteredItemsEvent, FilteredItemsState> {
   FilteredItemsState get initialState {
     return itemBloc.state is ItemsSearchParametersLoaded
         ? FilteredItemsLoaded(filteredItemIds:
-      (itemBloc.state as ItemsSearchParametersLoaded).itemSearchParameters.keys,
+      List<String>.from((itemBloc.state as ItemsSearchParametersLoaded)
+          .itemSearchParameters.keys),
     categoryIds: [],
     searchString: '')
         : FilteredItemsLoading();
@@ -33,23 +34,8 @@ class FilteredItemsBloc extends Bloc<FilteredItemsEvent, FilteredItemsState> {
 
   @override
   Stream<FilteredItemsState> mapEventToState(FilteredItemsEvent event) async* {
-      if (event is UpdateFilter) {
-        yield* _mapUpdateFilterToState(event);
-      } else if (event is UpdateItems) {
-        yield* _maUpdateItemsToState(event);
-      }
+      yield* _mapUpdateToState(event);
     }
-
-  Stream<FilteredItemsState> _maUpdateItemsToState(UpdateItems event) async* {
-    var _categoryIds = (state as FilteredItemsLoaded).categoryIds;
-    var _searchString = (state as FilteredItemsLoaded).searchString;
-    yield FilteredItemsLoaded(
-      categoryIds: _categoryIds,
-      searchString: _searchString,
-      filteredItemIds: await _applyItemFilters(categoryIds: _categoryIds,
-        searchString: _searchString)
-    );
-  }
 
   Future<List<String>> _applyItemFilters({List<String> categoryIds,
     String searchString}) async{
@@ -83,18 +69,18 @@ class FilteredItemsBloc extends Bloc<FilteredItemsEvent, FilteredItemsState> {
     var _searchResults = searchString.length < 4
         ?_idsByCategory
         :Fuzzy(_searchStings, options: fuzzySearchOptions).search(searchString)
-        .map((_result) => _result.item as String);
+        .map((_result) => _result.item);
 
     return List<String>.from(_searchResults.map((_result) =>
         _idsByCategory[_searchStings
             .indexWhere((_element) => _element == _result)]));
   }
 
-  Stream<FilteredItemsState> _mapUpdateFilterToState(UpdateFilter event) async*{
-    var _categoryIds = event.categoryIds == null
-    ?(state as FilteredItemsLoaded).categoryIds :event.categoryIds;
-    var _searchString = event.searchString == null
-    ?(state as FilteredItemsLoaded).searchString :event.searchString;
+  Stream<FilteredItemsState> _mapUpdateToState(UpdateFilter event) async*{
+    var _categoryIds = event?.categoryIds
+        ?? (state as FilteredItemsLoaded).categoryIds;
+    var _searchString = event?.searchString
+        ?? (state as FilteredItemsLoaded).searchString;
 
     if (state is FilteredItemsLoaded) {
       yield FilteredItemsLoaded(
@@ -108,7 +94,7 @@ class FilteredItemsBloc extends Bloc<FilteredItemsEvent, FilteredItemsState> {
 
   @override
   Future<void> close() {
-    itemsSubscription.cancel();
+    itemsSubscription?.cancel();
     return super.close();
   }
 }

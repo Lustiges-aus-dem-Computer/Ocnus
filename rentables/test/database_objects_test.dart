@@ -247,17 +247,14 @@ void main() {
       expect(testItemCopy.description, 'Changed');
       expect(testItemCopy.categoryId, testCat2.id);
       expect(testItemCopy.modified.isAfter(_now), true);
+    });
 
-      testItemCopy = testItem.copyWith(
+    test('Delete Category ID', () async {
+      var testItemCopy = testItem.copyWith(
           categoryId: null
       );
 
       expect(testItemCopy.categoryId, isNull);
-    });
-
-    test('Delete Category ID', () async {
-      var testItemCopy = testItem.deleteCategory();
-      expect(testItemCopy.categoryId, null);
     });
   });
 
