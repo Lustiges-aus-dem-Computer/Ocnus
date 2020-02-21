@@ -212,3 +212,28 @@ class FilteredItemsLoaded extends FilteredItemsState {
   @override
   List<Object> get props => [filteredItemIds, searchString];
 }
+
+
+/// Abstract class for thumbnails states
+abstract class ThumbnailsState extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+/// State for when thumbnails are being loaded
+class ThumbnailsLoading extends ThumbnailsState {}
+
+/// State for when thumbnails have been loaded
+class ThumbnailsLoaded extends ThumbnailsState {
+  /// List of thumbnails
+  final Future<List<Uint8List>> thumbnails;
+  /// Number of thumbnails shown
+  final int nItems;
+
+  /// Constructor for the thumbnails loaded class
+  ThumbnailsLoaded({this.thumbnails, this.nItems});
+
+  @override
+  /// Can't use futures
+  List<Object> get props => [nItems];
+}

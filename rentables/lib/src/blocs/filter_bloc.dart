@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fuzzy/fuzzy.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../../rentables.dart';
 
 /// Filtered items bloc class

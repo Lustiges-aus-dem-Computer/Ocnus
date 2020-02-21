@@ -1,8 +1,5 @@
-import 'package:equatable/equatable.dart';
-
-
 /// Abstract class for filtered items
-abstract class FilteredItemsEvent extends Equatable {
+abstract class FilteredItemsEvent{
   /// Super constructor for the filter
   const FilteredItemsEvent();
 }
@@ -16,9 +13,6 @@ class UpdateFilter extends FilteredItemsEvent {
 
   /// Constructor for the update filter event
   const UpdateFilter({this.categoryIds, this.searchString});
-
-  @override
-  List<Object> get props => [categoryIds, searchString];
 }
 
 /// Update items
@@ -28,7 +22,4 @@ class UpdateItems extends FilteredItemsEvent {
 
   /// Constructor for the update filtered items class
   const UpdateItems(this.itemIds);
-
-  @override
-  List<String> get props => itemIds;
 }

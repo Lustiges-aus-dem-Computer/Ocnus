@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -27,6 +28,7 @@ class DnsPacket{
 class MockManager extends Mock implements DatabaseManager {}
 
 void main() {
+  BlocSupervisor.delegate = RentableBlocDelegate();
   group('Reservations Bloc tests', (){
     Logger.level = Level.debug;
 

@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -8,6 +9,7 @@ import 'package:rentables/rentables.dart';
 class MockItemBloc extends Mock implements ItemBloc {}
 
 void main() {
+  BlocSupervisor.delegate = RentableBlocDelegate();
   group('Filter Bloc tests', (){
     Logger.level = Level.debug;
 

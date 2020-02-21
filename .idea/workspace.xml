@@ -7,14 +7,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/bloc_delegate.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/thumbnails_bloc.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/thumbnails_events.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rentables/test/thumbnails_bloc_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/blocs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/blocs.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/definitions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/services/definitions.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc_events.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rentables/test/filter_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/filter_bloc_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/repository_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/repository_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +76,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="678" y="290" width="624" height="533" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1582101397348">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="678" y="290" width="624" height="533" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1582101397348" />
     <state x="731" y="400" width="518" height="314" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1580368941289">
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
@@ -83,10 +92,10 @@
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
     <state x="371" y="202" width="1022" height="737" key="SettingsEditor/70.27.1850.1053@70.27.1850.1053" timestamp="1580369019264" />
-    <state x="651" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1581534018113">
+    <state x="651" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1582101425671">
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
-    <state x="651" y="380" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1581534018113" />
+    <state x="651" y="380" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1582101425671" />
     <state x="763" y="473" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581895360407">
       <screen x="70" y="27" width="1850" height="1053" />
     </state>
