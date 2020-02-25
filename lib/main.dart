@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'src/services/localization.dart';
 
 void main() async {
-  runApp(Oknos());
+  runApp(Ocnus());
 }
 
 /// Main class of the app
-class Oknos extends StatelessWidget {
+class Ocnus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

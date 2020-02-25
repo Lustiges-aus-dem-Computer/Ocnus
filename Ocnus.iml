@@ -13,6 +13,11 @@
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/firebase_auth/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/firebase_auth/build" />
+      <excludeFolder url="file://$MODULE_DIR$/firebase_login/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/firebase_login/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/firebase_login/build" />
       <excludeFolder url="file://$MODULE_DIR$/rentables/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/rentables/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/rentables/build" />

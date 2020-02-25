@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      #Set-Up enviorment
+      #Set-Up environment
       - uses: subosito/flutter-action@v1
         with:
           channel: 'dev'
@@ -32,3 +32,9 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           minAnnotationLevel: info
+      -name: Godacov
+        uses: brpaz/godacov-action@v1
+          with:
+            reportPath: '../coverage/lcov.info'
+            codacyToken: ${{ secrets.CODACY_PROJECT_TOKEN }}
+            commitId: ${{ github.sha }}
