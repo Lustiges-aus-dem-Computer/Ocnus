@@ -21,7 +21,7 @@ jobs:
           flutter test --coverage .
           cat coverage/lcov.info >> ../coverage/lcov.info
       - name: Godacov
-        uses: brpaz/godacov-action@v1
+        uses: brpaz/godacov-action@v1.0.3
         with:
           reportPath: '../coverage/lcov.info'
           codacyToken: ${{ secrets.CODACY_PROJECT_TOKEN }}
