@@ -20,12 +20,12 @@ jobs:
           flutter pub get
           flutter test --coverage .
           cat coverage/lcov.info >> ../coverage/lcov.info
-      - name: Godacov
-        uses: brpaz/godacov-action@v1.0.3
+      - name: CodeCov
+        uses: codecov/codecov-action@v1
         with:
-          reportPath: '../coverage/lcov.info'
-          codacyToken: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          commitId: ${{ github.sha }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+          fail_ci_if_error: true
       #Dart/Flutter package analyzer
       - name: Dart Analysis
         uses: axel-op/dart-package-analyzer/with-full-sdk@stable
