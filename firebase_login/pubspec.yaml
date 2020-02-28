@@ -23,6 +23,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  google_sign_in_mocks: ^0.1.0+2
+  firebase_auth_mocks: ^0.1.2
+
   effective_dart: ^1.2.1
   hive_generator: ^0.7.0
   build_runner: ^1.7.3

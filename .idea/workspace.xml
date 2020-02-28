@@ -7,15 +7,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/firebase_login/lib/firebase_auth.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/firebase_login/pubspec.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/lmarsoner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase_login/lib/src/services/logger.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase_login/lib/src/user_repository.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase_login/test/repository_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/CI.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ocnus.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Ocnus.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebase_login/lib/firebase_auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/firebase_login/lib/firebase_auth.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebase_login/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/firebase_login/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/.flutter-plugins" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rentables/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/rentables/.flutter-plugins-dependencies" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,14 +46,16 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Blog" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/firebase_login/lib/src/services" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/firebase_login/lib/src/services" />
       <recent name="$PROJECT_DIR$/rentables/lib/src" />
       <recent name="$PROJECT_DIR$/rentables/test" />
     </key>
