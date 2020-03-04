@@ -7,76 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/src/users/user_class.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/user_class.freezed.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/users.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/user_class_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ocnus.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Ocnus.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase_login/lib/firebase_auth.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase_login/lib/src/services/logger.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase_login/lib/src/user_repository.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase_login/pubspec.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase_login/test/repository_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/services/localization.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/oknos.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/.flutter-plugins" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/.flutter-plugins-dependencies" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/coverage/lcov.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/rentables.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/bloc_delegate.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/blocs.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_bloc.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/categories_events.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/delegate_blocs.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_bloc.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/detail_images_events.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/filter_bloc_events.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_bloc.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/items_events.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_bloc.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/reservations_events.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/states.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/thumbnails_bloc.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/blocs/thumbnails_events.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/category.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/category.g.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/entities.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/item.g.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/repository.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/entities/reservation.g.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/connectivity.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/database_manager.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/definitions.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/hive_image_adopter.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/local_id_generator.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/logger.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/reservation_check.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/services.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/lib/src/services/style.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/pubspec.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/categories_bloc_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/database_manager_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/database_objects_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/detail_images_bloc_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/filter_bloc_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/items_bloc_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/repository_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/reservations_bloc_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/services_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rentables/test/thumbnails_bloc_test.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

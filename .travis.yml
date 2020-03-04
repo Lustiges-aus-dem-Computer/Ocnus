@@ -12,8 +12,15 @@ addons:
 before_script:
   - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
   - ./flutter/bin/flutter doctor
+  - sudo apt-get install jq
+  - curl -LSs "$(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')" -o codacy-coverage-reporter-assembly.jar
+
 script:
   - ./flutter/bin/flutter test
 cache:
   directories:
     - $HOME/.pub-cache
+
+after_success:
+  - java -jar codacy-coverage-reporter-assembly.jar report --language Dart --force-language -r coverage/lcov.info
+
