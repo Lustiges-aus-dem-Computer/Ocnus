@@ -7,38 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e09fa5f3-6e0d-4728-bd86-3d43d6f2b36c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/generated_plugin_registrant.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/bloc_supervisor.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/extension_funtions.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/authentication_bloc.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/authentication_events.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/authentication_events.freezed.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/authentication_states.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/authentication_states.freezed.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/firebase_auth_interface.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/login_bloc.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/login_events.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/login_events.freezed.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/login_state.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/login_state.freezed.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/users/user_account.freezed.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/home_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/login_splash_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/user_test.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/user_workflows_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ocnus.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Ocnus.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/users/user_class.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/users/user_account.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/users/user_class.freezed.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/users/users.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/users/users.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/user_class_test.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
