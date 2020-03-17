@@ -19,7 +19,6 @@ script:
 cache:
   directories:
     - $HOME/.pub-cache
-https://
 after_success:
   - java -jar codacy-coverage-reporter-assembly.jar report --language Dart --force-language -r coverage/lcov.info
 
