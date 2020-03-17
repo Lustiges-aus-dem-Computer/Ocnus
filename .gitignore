@@ -18,5 +18,5 @@ pubspec.lock
 
 *.flutter-plugins*
 
-#Avoid comitting keys
-android/app/google-services.json
+#Avoid comitting firebase keys
+*google-services.json
